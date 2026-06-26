@@ -1,0 +1,180 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Navbar from '../../components/Navbar.astro'
+import { getCollection, render } from 'astro:content'
+
+export async function getStaticPaths() {
+  const writeups = await getCollection('writeups')
+
+  return writeups.map((writeup) => ({
+    params: {
+      slug: writeup.data.slug,
+    },
+    props: {
+      writeup,
+    },
+  }))
+}
+
+const { writeup } = Astro.props
+const { Content } = await render(writeup)
+
+const files = writeup.data.files
+const hasFiles = files.length > 0
+const hasExternalLink = writeup.data.externalLink.length > 0
+---
+
+<Layout title={`${writeup.data.title} — Writeups`}>
+  <main class="min-h-screen bg-[#090909] text-[#f3efe4]">
+    <Navbar current="Writeups" />
+
+    <section class="site-grid px-6 pt-36 pb-20">
+      <div class="mx-auto max-w-7xl">
+        <a
+          href="/writeups"
+          class="font-mono text-xs uppercase tracking-widest text-[#a9a196] transition hover:text-[#c9ff5f]"
+        >
+          ← Back to writeups
+        </a>
+
+        <div class="mt-10 flex flex-wrap gap-3">
+          <span class="rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#c9ff5f]">
+            {writeup.data.category}
+          </span>
+
+          <span class="rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+            {writeup.data.difficulty}
+          </span>
+
+          <span class="rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+            {writeup.data.status}
+          </span>
+        </div>
+
+        <h1 class="display-text neon-cream mt-8 max-w-6xl text-6xl uppercase leading-none tracking-[-0.06em] md:text-8xl">
+          {writeup.data.title}
+        </h1>
+
+        <p class="mt-8 max-w-3xl text-base leading-8 text-[#a9a196]">
+          {writeup.data.summary}
+        </p>
+
+        {writeup.data.cover && (
+          <img
+            src={writeup.data.cover}
+            alt={writeup.data.title}
+            class="mt-10 max-h-[520px] w-full max-w-5xl rounded-3xl border border-white/10 object-cover"
+          />
+        )}
+      </div>
+    </section>
+
+    <section class="mx-auto grid max-w-7xl gap-8 px-6 pb-28 lg:grid-cols-[1fr_0.8fr]">
+      <div class="space-y-8">
+        <article class="neon-card rounded-3xl border border-white/10 bg-[#111111] p-8">
+          <p class="neon-lime font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+            Writeup Notes
+          </p>
+
+          <div class="mt-8 space-y-6 text-base leading-8 text-[#a9a196] [&_h2]:mt-10 [&_h2]:font-mono [&_h2]:text-xs [&_h2]:uppercase [&_h2]:tracking-[0.3em] [&_h2]:text-[#c9ff5f] [&_ol]:ml-5 [&_ol]:list-decimal [&_ul]:ml-5 [&_ul]:list-disc [&_li]:mt-2 [&_code]:rounded [&_code]:bg-black/40 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[#c9ff5f]">
+            <Content />
+          </div>
+        </article>
+
+        <article class="neon-card rounded-3xl border border-white/10 bg-[#111111] p-8">
+          <p class="neon-lime font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+            Lesson
+          </p>
+
+          <p class="mt-6 text-base leading-8 text-[#a9a196]">
+            {writeup.data.lesson}
+          </p>
+        </article>
+      </div>
+
+      <aside class="space-y-8">
+        <article class="neon-card rounded-3xl border border-white/10 bg-[#111111] p-8">
+          <p class="neon-lime font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+            Tools
+          </p>
+
+          <div class="mt-6 flex flex-wrap gap-2">
+            {writeup.data.tools.map((tool) => (
+              <span class="rounded-full border border-white/10 bg-black/30 px-3 py-2 font-mono text-xs uppercase tracking-widest text-[#c9c2b8]">
+                {tool}
+              </span>
+            ))}
+          </div>
+        </article>
+
+        <article class="neon-card rounded-3xl border border-white/10 bg-[#111111] p-8">
+          <p class="neon-lime font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+            Concepts
+          </p>
+
+          <div class="mt-6 grid gap-3">
+            {writeup.data.concepts.map((concept, index) => (
+              <div class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-black/30 p-4">
+                <span class="font-mono text-xs text-[#c9ff5f]">
+                  0{index + 1}
+                </span>
+
+                <span class="text-right text-sm font-bold text-[#f3efe4]">
+                  {concept}
+                </span>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        {hasExternalLink && (
+          <a
+            href={writeup.data.externalLink}
+            target="_blank"
+            class="block rounded-3xl border border-[#c9ff5f]/20 bg-[#c9ff5f] p-8 text-black transition hover:scale-[1.01]"
+          >
+            <p class="font-mono text-xs font-black uppercase tracking-[0.3em]">
+              External Link
+            </p>
+
+            <p class="mt-5 text-sm font-bold">
+              Open related challenge / reference →
+            </p>
+          </a>
+        )}
+
+        <article class="neon-card rounded-3xl border border-white/10 bg-[#111111] p-8">
+          <p class="neon-lime font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+            Attached Files
+          </p>
+
+          {hasFiles && (
+            <div class="mt-6 grid gap-3">
+              {files.map((file) => (
+                <a
+                  href={file.url}
+                  target="_blank"
+                  class="rounded-2xl border border-white/10 bg-black/30 p-4 transition hover:border-[#c9ff5f]/60"
+                >
+                  <p class="font-mono text-xs uppercase tracking-widest text-[#c9ff5f]">
+                    {file.type}
+                  </p>
+
+                  <p class="mt-2 text-sm font-bold text-[#f3efe4]">
+                    {file.name}
+                  </p>
+                </a>
+              ))}
+            </div>
+          )}
+
+          {!hasFiles && (
+            <p class="mt-6 text-sm leading-7 text-[#a9a196]">
+              No files attached yet.
+            </p>
+          )}
+        </article>
+      </aside>
+    </section>
+  </main>
+</Layout>

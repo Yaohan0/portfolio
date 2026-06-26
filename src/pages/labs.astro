@@ -1,0 +1,87 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Navbar from '../components/Navbar.astro'
+import { getCollection } from 'astro:content'
+
+const labs = await getCollection('labs')
+const sortedLabs = labs.sort((a, b) => a.data.order - b.data.order)
+---
+
+<Layout title="Labs — Yaohan">
+  <main class="min-h-screen bg-[#090909] text-[#f3efe4]">
+    <Navbar current="Labs" />
+
+    <section class="site-grid px-6 pt-36 pb-20">
+      <div class="mx-auto max-w-7xl">
+        <p class="neon-lime font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">
+          Hands-on Documentation
+        </p>
+
+        <h1 class="display-text neon-cream mt-5 text-7xl uppercase leading-none tracking-[-0.06em] md:text-9xl">
+          Labs
+        </h1>
+
+        <p class="mt-8 max-w-3xl text-base leading-8 text-[#a9a196]">
+          Practical cybersecurity, networking, cloud, Linux, and forensics lab
+          notes. Each subject stores tools, topics, screenshots, files, and
+          writeup notes.
+        </p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-6 pb-28">
+      <div class="grid gap-8 md:grid-cols-2">
+        {sortedLabs.map((lab) => (
+          <a
+            href={`/labs/${lab.data.slug}`}
+            class="neon-card group overflow-hidden rounded-3xl border border-white/10 bg-[#111111] transition duration-300 hover:-translate-y-1 hover:border-[#c9ff5f]/60 hover:bg-[#151515]"
+          >
+            {lab.data.cover && (
+              <img
+                src={lab.data.cover}
+                alt={lab.data.title}
+                class="h-64 w-full border-b border-white/10 object-cover"
+              />
+            )}
+
+            <div class="p-8">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <p class="neon-lime font-mono text-xs font-bold uppercase tracking-[0.3em] text-[#c9ff5f]">
+                  {lab.data.type}
+                </p>
+
+                <span class="rounded-full border border-white/10 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#a9a196]">
+                  {lab.data.status}
+                </span>
+              </div>
+
+              <h2 class="display-text mt-10 text-5xl uppercase leading-none tracking-[-0.06em] text-[#f3efe4]">
+                {lab.data.title}
+              </h2>
+
+              <p class="mt-6 text-base leading-8 text-[#a9a196]">
+                {lab.data.description}
+              </p>
+
+              <div class="mt-8 flex flex-wrap gap-2">
+                {lab.data.tools.slice(0, 5).map((tool) => (
+                  <span class="rounded-full border border-white/10 bg-black/30 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#c9c2b8]">
+                    {tool}
+                  </span>
+                ))}
+              </div>
+
+              <div class="mt-8 flex items-center justify-between border-t border-white/10 pt-5">
+                <span class="font-mono text-xs uppercase tracking-widest text-[#c9ff5f]">
+                  Open subject
+                </span>
+
+                <span class="text-2xl transition group-hover:translate-x-1">→</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>

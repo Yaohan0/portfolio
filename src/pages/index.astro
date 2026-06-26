@@ -1,11 +1,298 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from '../layouts/Layout.astro'
+import Navbar from '../components/Navbar.astro'
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const pages = [
+  {
+    title: 'Journal',
+    href: '/journal',
+    desc: 'Personal learning diary, reflections, mistakes, progress logs, and stories.',
+  },
+  {
+    title: 'Labs',
+    href: '/labs',
+    desc: 'Hands-on documentation for ethical hacking, networking, cloud, Linux, and forensics labs.',
+  },
+  {
+    title: 'Writeups',
+    href: '/writeups',
+    desc: 'CTF notes and challenge solutions for web, forensics, crypto, reverse engineering, pwn, and misc.',
+  },
+  {
+    title: 'Achievements',
+    href: '/achievements',
+    desc: 'Certifications, awards, competitions, school milestones, and completed goals.',
+  },
+  {
+    title: 'Skills',
+    href: '/skills',
+    desc: 'A living tracker of tools, topics, techniques, and things I am currently learning.',
+  },
+  {
+    title: 'Archive',
+    href: '/archive',
+    desc: 'Older notes, screenshots, experiments, references, drafts, and random documentation.',
+  },
+]
+
+const socials = [
+  {
+    label: 'Email',
+    href: 'mailto:2503587D@student.tp.edu.sg',
+    icon: '✉',
+  },
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/yaohan-wang-a22951363/',
+    icon: 'in',
+  },
+  {
+    label: 'GitHub',
+    href: 'https://github.com/Yaohan0',
+    icon: 'GH',
+  },
+]
+
+const badges = [
+  'Cybersecurity Student',
+  'Digital Forensics',
+  'CTF Writeups',
+  'Ethical Hacking Labs',
+]
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Yaohan — Home">
+  <main class="min-h-screen overflow-hidden bg-[#090909] text-[#f3efe4]">
+    <Navbar current="Home" />
+
+    <section class="relative min-h-screen">
+      <div class="site-grid absolute inset-0 opacity-35"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_72%_35%,rgba(201,255,95,0.08),transparent_30%),linear-gradient(120deg,transparent_0%,transparent_58%,rgba(255,255,255,0.03)_58%,rgba(255,255,255,0.01)_100%)]"></div>
+
+      <div class="relative mx-auto grid min-h-screen max-w-7xl items-center gap-20 px-6 pt-32 pb-24 lg:grid-cols-[1fr_0.8fr]">
+        <div class="reveal">
+          <p
+            id="type-handle"
+            class="mb-10 font-mono text-xs uppercase tracking-[0.35em] text-[#a9a196]"
+          >
+            @yaooohann
+          </p>
+
+          <h1 class="display-text neon-cream max-w-5xl text-[5.2rem] leading-[0.88] tracking-[-0.08em] text-[#f3efe4] sm:text-[7rem] md:text-[8.5rem] lg:text-[10rem]">
+            <span id="type-name">Yaohan</span>
+          </h1>
+
+          <div class="mt-8 h-px w-20 bg-[#ead27c]"></div>
+
+          <p class="serif-text mt-8 max-w-4xl text-2xl leading-9 text-[#a9a196] md:text-3xl">
+            Cybersecurity &amp; Digital Forensics
+            <span class="mx-2 text-[#ead27c]/70">·</span>
+            Year 2 Student
+            <span class="mx-2 text-[#ead27c]/70">·</span>
+            Temasek Polytechnic
+            <span class="mx-2 text-[#ead27c]/70">·</span>
+            Singapore
+          </p>
+
+          <p
+            id="typing-intro"
+            class="typing-cursor mt-8 min-h-[96px] max-w-3xl text-base leading-8 text-[#a9a196]"
+          >
+          </p>
+
+          <div class="mt-10 flex flex-wrap items-center gap-5">
+            {socials.map((social) => (
+              <a
+                href={social.href}
+                target={social.label === 'Email' ? '_self' : '_blank'}
+                aria-label={social.label}
+                class="group flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/30 font-mono text-sm font-bold text-[#a9a196] transition hover:border-[#c9ff5f] hover:text-[#c9ff5f] hover:shadow-[0_0_24px_rgba(201,255,95,0.18)]"
+              >
+                <span class="transition group-hover:scale-110">{social.icon}</span>
+              </a>
+            ))}
+
+            <div class="hidden h-px w-16 bg-white/10 md:block"></div>
+
+            <p class="font-mono text-xs uppercase tracking-[0.25em] text-[#a9a196]">
+              Discord:
+              <span class="text-[#f3efe4]">yaooohann</span>
+            </p>
+          </div>
+
+          <div class="mt-10 flex flex-wrap gap-3">
+            {badges.map((badge) => (
+              <span class="rounded-lg border border-[#ead27c]/25 bg-[#ead27c]/5 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+                {badge}
+              </span>
+            ))}
+          </div>
+
+          <div class="mt-12 flex flex-wrap gap-4">
+            <a
+              href="#explore"
+              class="rounded-full bg-[#c9ff5f] px-6 py-3 font-mono text-xs font-black uppercase tracking-widest text-black transition hover:scale-105 hover:shadow-[0_0_28px_rgba(201,255,95,0.35)]"
+            >
+              Explore Archive
+            </a>
+
+            <a
+              href="/achievements"
+              class="rounded-full border border-white/15 px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-[#f3efe4] transition hover:border-[#c9ff5f] hover:text-[#c9ff5f]"
+            >
+              Achievements
+            </a>
+          </div>
+        </div>
+
+        <div class="relative mx-auto w-full max-w-[500px] reveal">
+          <div class="absolute -inset-8 rounded-full bg-[#c9ff5f]/5 blur-3xl"></div>
+
+          <div class="relative mx-auto aspect-square w-full max-w-[460px] overflow-hidden rounded-full border border-[#ead27c]/30 bg-[#111111] p-3 shadow-[0_0_80px_rgba(0,0,0,0.45)]">
+            <img
+              src="/images/profile.jpeg"
+              alt="Yaohan profile photo"
+              class="h-full w-full rounded-full object-cover"
+            />
+          </div>
+
+          <div class="mx-auto mt-10 max-w-[460px] rounded-3xl border border-white/10 bg-[#111111]/70 p-6 backdrop-blur">
+            <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+              Contact
+            </p>
+
+            <div class="mt-5 space-y-3 text-sm leading-7 text-[#a9a196]">
+              <p>
+                <span class="font-mono text-[#f3efe4]">Email:</span>
+                2503587D@student.tp.edu.sg
+              </p>
+
+              <p>
+                <span class="font-mono text-[#f3efe4]">GitHub:</span>
+                Yaohan0
+              </p>
+
+              <p>
+                <span class="font-mono text-[#f3efe4]">Discord:</span>
+                yaooohann
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y border-white/10 bg-[#111111]">
+      <div class="mx-auto grid max-w-7xl gap-8 px-6 py-10 md:grid-cols-3">
+        <div class="neon-card rounded-3xl border border-white/10 bg-black/30 p-6">
+          <p class="neon-lime font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+            Purpose
+          </p>
+          <p class="mt-4 text-base leading-8 text-[#a9a196]">
+            A place to dump the useful stuff: stories, notes, screenshots,
+            writeups, and small discoveries I do not want to lose.
+          </p>
+        </div>
+
+        <div class="neon-card rounded-3xl border border-white/10 bg-black/30 p-6">
+          <p class="neon-lime font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+            Current stage
+          </p>
+          <p class="mt-4 text-base leading-8 text-[#a9a196]">
+            Still learning, still testing, still figuring things out. This is
+            just a clean way to track the process.
+          </p>
+        </div>
+
+        <div class="neon-card rounded-3xl border border-white/10 bg-black/30 p-6">
+          <p class="neon-lime font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+            Proof of work
+          </p>
+          <p class="mt-4 text-base leading-8 text-[#a9a196]">
+            Labs, certs, writeups, notes, and reflections — all kept here so I
+            can look back and see the progress.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="explore" class="mx-auto max-w-7xl px-6 py-32">
+      <div class="mb-16">
+        <p class="neon-lime font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">
+          Explore
+        </p>
+
+        <h2 class="display-text neon-cream mt-5 max-w-5xl text-6xl uppercase leading-none tracking-[-0.06em] text-[#f3efe4] md:text-8xl">
+          Separate rooms for separate records.
+        </h2>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {pages.map((page) => (
+          <a
+            href={page.href}
+            class="neon-card group min-h-[300px] rounded-3xl border border-white/10 bg-[#111111] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#c9ff5f]/60 hover:bg-[#151515]"
+          >
+            <p class="neon-lime font-mono text-xs font-bold uppercase tracking-[0.3em] text-[#c9ff5f]">
+              Open
+            </p>
+
+            <h3 class="display-text mt-12 text-5xl uppercase tracking-[-0.06em] text-[#f3efe4]">
+              {page.title}
+            </h3>
+
+            <p class="mt-6 text-base leading-8 text-[#a9a196]">
+              {page.desc}
+            </p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <footer class="border-t border-white/10 px-6 py-8">
+      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-3 font-mono text-xs uppercase tracking-widest text-[#a9a196] md:flex-row">
+        <p>Yaohan / Field Archive</p>
+        <p>Built with Astro + Tailwind + Decap CMS</p>
+      </div>
+    </footer>
+  </main>
+
+  <script is:inline>
+    window.addEventListener("DOMContentLoaded", () => {
+      const sleep = (ms) =>
+        new Promise((resolve) => window.setTimeout(resolve, ms));
+
+      const typeInto = async (elementId, text, speed = 45, delay = 0) => {
+        const element = document.getElementById(elementId);
+
+        if (!element) return;
+
+        element.textContent = "";
+        element.classList.add("typing-cursor");
+
+        await sleep(delay);
+
+        for (let index = 0; index <= text.length; index += 1) {
+          element.textContent = text.slice(0, index);
+          await sleep(speed);
+        }
+
+        element.classList.remove("typing-cursor");
+      };
+
+      const runTyping = async () => {
+        await typeInto("type-handle", "@yaooohann", 45, 250);
+        await typeInto("type-name", "Yaohan", 90, 100);
+
+        await typeInto(
+          "typing-intro",
+          "I’m building this archive to document labs, writeups, forensics notes, CTF attempts, school projects, and the small technical lessons that are easy to forget.",
+          22,
+          250
+        );
+      };
+
+      runTyping();
+    });
+  </script>
 </Layout>

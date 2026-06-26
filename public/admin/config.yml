@@ -1,0 +1,162 @@
+local_backend: true
+
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "labs"
+    label: "Labs"
+    folder: "src/content/labs"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int" }
+      - { label: "Status", name: "status", widget: "string" }
+      - { label: "Type", name: "type", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Tools", name: "tools", widget: "list", default: [] }
+      - { label: "Topics", name: "topics", widget: "list", default: [] }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false }
+      - label: "Files"
+        name: "files"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Name", name: "name", widget: "string" }
+          - { label: "Type", name: "type", widget: "string" }
+          - { label: "URL", name: "url", widget: "file" }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "writeups"
+    label: "Writeups"
+    folder: "src/content/writeups"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int" }
+      - { label: "Category", name: "category", widget: "string" }
+      - { label: "Difficulty", name: "difficulty", widget: "string" }
+      - { label: "Status", name: "status", widget: "string" }
+      - { label: "Date", name: "date", widget: "string" }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - { label: "Tools", name: "tools", widget: "list", default: [] }
+      - { label: "Concepts", name: "concepts", widget: "list", default: [] }
+      - { label: "Lesson", name: "lesson", widget: "text" }
+      - { label: "External Link", name: "externalLink", widget: "string", required: false }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false }
+      - label: "Files"
+        name: "files"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Name", name: "name", widget: "string" }
+          - { label: "Type", name: "type", widget: "string" }
+          - { label: "URL", name: "url", widget: "file" }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "journal"
+    label: "Journal"
+    folder: "src/content/journal"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int" }
+      - { label: "Date", name: "date", widget: "string" }
+      - { label: "Mood", name: "mood", widget: "string" }
+      - { label: "Category", name: "category", widget: "string" }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - { label: "Tags", name: "tags", widget: "list", default: [] }
+      - { label: "Lesson", name: "lesson", widget: "text" }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "archive"
+    label: "Archive"
+    folder: "src/content/archive"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int" }
+      - { label: "Type", name: "type", widget: "string" }
+      - { label: "Status", name: "status", widget: "string" }
+      - { label: "Date", name: "date", widget: "string" }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - { label: "Tags", name: "tags", widget: "list", default: [] }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false }
+      - label: "Links"
+        name: "links"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Name", name: "name", widget: "string" }
+          - { label: "URL", name: "url", widget: "string" }
+      - label: "Files"
+        name: "files"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Name", name: "name", widget: "string" }
+          - { label: "Type", name: "type", widget: "string" }
+          - { label: "URL", name: "url", widget: "file" }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "achievements"
+    label: "Achievements"
+    folder: "src/content/achievements"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int" }
+      - { label: "Type", name: "type", widget: "string" }
+      - { label: "Status", name: "status", widget: "string" }
+      - { label: "Date", name: "date", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Evidence", name: "evidence", widget: "list", default: [] }
+      - { label: "Related Link", name: "link", widget: "string", required: false }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "skills"
+    label: "Skills"
+    folder: "src/content/skills"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int" }
+      - { label: "Category", name: "category", widget: "string" }
+      - { label: "Level", name: "level", widget: "string" }
+      - { label: "Status", name: "status", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Evidence", name: "evidence", widget: "list", default: [] }
+      - { label: "Tools", name: "tools", widget: "list", default: [] }
+      - { label: "Notes", name: "notes", widget: "text" }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown", required: false }

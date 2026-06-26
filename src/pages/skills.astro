@@ -1,0 +1,142 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Navbar from '../components/Navbar.astro'
+import { getCollection } from 'astro:content'
+
+const skills = await getCollection('skills')
+const sortedSkills = skills.sort((a, b) => a.data.order - b.data.order)
+
+const categories = [
+  ...new Set(sortedSkills.map((skill) => skill.data.category)),
+]
+---
+
+<Layout title="Skills — Yaohan">
+  <main class="min-h-screen bg-[#090909] text-[#f3efe4]">
+    <Navbar current="Skills" />
+
+    <!-- HERO -->
+    <section class="site-grid px-6 pt-36 pb-20">
+      <div class="mx-auto max-w-7xl">
+        <p class="neon-lime font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">
+          Tools / Concepts / Current Ability
+        </p>
+
+        <h1 class="display-text neon-cream mt-5 text-7xl uppercase leading-none tracking-[-0.06em] md:text-9xl">
+          Skills
+        </h1>
+
+        <p class="mt-8 max-w-3xl text-base leading-8 text-[#a9a196]">
+          This page tracks what I am learning, what I have used in labs, and
+          what still needs more practice. It is not a fake expert list. It is a
+          live progress tracker.
+        </p>
+
+        <div class="mt-10 rounded-3xl border border-white/10 bg-[#111111] p-6">
+          <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+            Editing system
+          </p>
+
+          <p class="mt-4 max-w-3xl text-sm leading-7 text-[#a9a196]">
+            Skills are now Markdown files in
+            <span class="font-mono text-[#f3efe4]"> src/content/skills/</span>.
+            This makes them ready for a future
+            <span class="font-mono text-[#f3efe4]"> /admin</span> CMS page.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORY STRIP -->
+    <section class="border-y border-white/10 bg-[#111111] px-6 py-6">
+      <div class="mx-auto flex max-w-7xl flex-wrap gap-3">
+        {categories.map((category) => (
+          <span class="rounded-full border border-white/10 bg-black/30 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+            {category}
+          </span>
+        ))}
+      </div>
+    </section>
+
+    <!-- SKILLS GRID -->
+    <section class="mx-auto max-w-7xl px-6 py-28">
+      <div class="grid gap-8 lg:grid-cols-2">
+        {sortedSkills.map((skill, index) => (
+          <article class="neon-card rounded-3xl border border-white/10 bg-[#111111] p-8">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <p class="neon-lime font-mono text-xs font-bold uppercase tracking-[0.3em] text-[#c9ff5f]">
+                SKILL-0{index + 1}
+              </p>
+
+              <span class="rounded-full border border-white/10 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#a9a196]">
+                {skill.data.status}
+              </span>
+            </div>
+
+            <h2 class="display-text mt-8 text-5xl uppercase leading-none tracking-[-0.06em] text-[#f3efe4] md:text-6xl">
+              {skill.data.name}
+            </h2>
+
+            <div class="mt-5 flex flex-wrap gap-2">
+              <span class="rounded-full bg-[#c9ff5f] px-3 py-1 font-mono text-[0.65rem] font-black uppercase tracking-widest text-black">
+                {skill.data.category}
+              </span>
+
+              <span class="rounded-full border border-white/10 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#a9a196]">
+                {skill.data.level}
+              </span>
+            </div>
+
+            <p class="mt-6 text-base leading-8 text-[#a9a196]">
+              {skill.data.description}
+            </p>
+
+            <div class="mt-8">
+              <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+                Evidence
+              </p>
+
+              <div class="mt-4 grid gap-3">
+                {skill.data.evidence.map((item) => (
+                  <div class="rounded-2xl border border-white/10 bg-black/30 p-4 text-sm font-bold text-[#f3efe4]">
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+                Tools
+              </p>
+
+              <div class="mt-4 flex flex-wrap gap-2">
+                {skill.data.tools.map((tool) => (
+                  <span class="rounded-full border border-white/10 bg-black/30 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#c9c2b8]">
+                    {tool}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div class="mt-8 rounded-2xl border border-white/10 bg-black/30 p-5">
+              <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+                Current note
+              </p>
+
+              <p class="mt-4 text-sm leading-7 text-[#a9a196]">
+                {skill.data.notes}
+              </p>
+            </div>
+
+            <div class="mt-8 border-t border-white/10 pt-5">
+              <p class="break-all font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+                src/content/skills/{skill.id}
+              </p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>

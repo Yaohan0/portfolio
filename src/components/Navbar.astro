@@ -1,0 +1,61 @@
+---
+interface Props {
+  current?: string
+  theme?: 'dark' | 'light'
+}
+
+const { current = 'Home', theme = 'dark' } = Astro.props
+
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'Journal', href: '/journal' },
+  { label: 'Labs', href: '/labs' },
+  { label: 'Writeups', href: '/writeups' },
+  { label: 'Achievements', href: '/achievements' },
+  { label: 'Skills', href: '/skills' },
+  { label: 'Archive', href: '/archive' },
+]
+
+const isLight = theme === 'light'
+
+const headerClass = isLight
+  ? 'fixed left-0 top-0 z-50 w-full border-b border-black/10 bg-[#e8e1d3]/90 backdrop-blur-xl'
+  : 'fixed left-0 top-0 z-50 w-full border-b border-white/10 bg-[#090909]/85 backdrop-blur-xl'
+
+const brandClass = isLight
+  ? 'font-mono text-xs font-black uppercase tracking-[0.35em] text-black'
+  : 'neon-lime font-mono text-xs font-bold uppercase tracking-[0.35em] text-[#c9ff5f]'
+
+const navTextClass = isLight
+  ? 'hidden items-center gap-8 font-mono text-xs uppercase tracking-widest text-black/60 md:flex'
+  : 'hidden items-center gap-8 font-mono text-xs uppercase tracking-widest text-[#a9a196] md:flex'
+
+const linkClass = isLight
+  ? 'transition hover:text-black'
+  : 'transition hover:text-[#c9ff5f]'
+---
+
+<header class={headerClass}>
+  <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+    <a href="/" class={brandClass}>
+      Yaohan / {current}
+    </a>
+
+    <div class={navTextClass}>
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class={`${linkClass} ${
+            link.label === current
+              ? isLight
+                ? 'text-black'
+                : 'text-[#c9ff5f]'
+              : ''
+          }`}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </nav>
+</header>

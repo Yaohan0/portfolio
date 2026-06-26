@@ -7,11 +7,19 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "cms": "decap-server",
+    "dev:cms": "concurrently \"astro dev\" \"decap-server\"",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^7.0.2"
+    "@tailwindcss/vite": "^4.3.1",
+    "astro": "^7.0.2",
+    "tailwindcss": "^4.3.1"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3",
+    "decap-server": "^3.9.1"
   }
 }

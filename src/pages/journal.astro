@@ -1,0 +1,117 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Navbar from '../components/Navbar.astro'
+import { getCollection } from 'astro:content'
+
+const entries = await getCollection('journal')
+const sortedEntries = entries.sort((a, b) => a.data.order - b.data.order)
+
+const categories = [
+  ...new Set(sortedEntries.map((entry) => entry.data.category)),
+]
+---
+
+<Layout title="Journal — Yaohan">
+  <main class="min-h-screen bg-[#090909] text-[#f3efe4]">
+    <Navbar current="Journal" />
+
+    <!-- HERO -->
+    <section class="site-grid px-6 pt-36 pb-20">
+      <div class="mx-auto max-w-7xl">
+        <p class="neon-lime font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">
+          Personal Diary / Learning Log
+        </p>
+
+        <h1 class="display-text neon-cream mt-5 text-7xl uppercase leading-none tracking-[-0.06em] md:text-9xl">
+          Journal
+        </h1>
+
+        <p class="mt-8 max-w-3xl text-base leading-8 text-[#a9a196]">
+          This page is for the more personal side of the archive: reflections,
+          stuck moments, small wins, learning updates, and thoughts that do not
+          fit cleanly into a lab report or CTF writeup.
+        </p>
+
+        <div class="mt-10 rounded-3xl border border-white/10 bg-[#111111] p-6">
+          <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+            Editing system
+          </p>
+
+          <p class="mt-4 max-w-3xl text-sm leading-7 text-[#a9a196]">
+            Journal entries are now Markdown files in
+            <span class="font-mono text-[#f3efe4]"> src/content/journal/</span>.
+            This makes them ready for a future
+            <span class="font-mono text-[#f3efe4]"> /admin</span> CMS page.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORY STRIP -->
+    <section class="border-y border-white/10 bg-[#111111] px-6 py-6">
+      <div class="mx-auto flex max-w-7xl flex-wrap gap-3">
+        {categories.map((category) => (
+          <span class="rounded-full border border-white/10 bg-black/30 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+            {category}
+          </span>
+        ))}
+      </div>
+    </section>
+
+    <!-- JOURNAL CARDS -->
+    <section class="mx-auto max-w-7xl px-6 py-28">
+      <div class="grid gap-8 md:grid-cols-2">
+        {sortedEntries.map((entry, index) => (
+          <a
+            href={`/journal/${entry.data.slug}`}
+            class="neon-card group rounded-3xl border border-white/10 bg-[#111111] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#c9ff5f]/60 hover:bg-[#151515]"
+          >
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <p class="neon-lime font-mono text-xs font-bold uppercase tracking-[0.3em] text-[#c9ff5f]">
+                ENTRY-0{index + 1}
+              </p>
+
+              <span class="rounded-full border border-white/10 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#a9a196]">
+                {entry.data.date}
+              </span>
+            </div>
+
+            <h2 class="display-text mt-10 text-5xl uppercase leading-none tracking-[-0.06em] text-[#f3efe4]">
+              {entry.data.title}
+            </h2>
+
+            <div class="mt-5 flex flex-wrap gap-2">
+              <span class="rounded-full bg-[#c9ff5f] px-3 py-1 font-mono text-[0.65rem] font-black uppercase tracking-widest text-black">
+                {entry.data.category}
+              </span>
+
+              <span class="rounded-full border border-white/10 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#a9a196]">
+                {entry.data.mood}
+              </span>
+            </div>
+
+            <p class="mt-6 text-base leading-8 text-[#a9a196]">
+              {entry.data.summary}
+            </p>
+
+            <div class="mt-8 flex flex-wrap gap-2">
+              {entry.data.tags.map((tag) => (
+                <span class="rounded-full border border-white/10 bg-black/30 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#c9c2b8]">
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <div class="mt-8 flex items-center justify-between border-t border-white/10 pt-5">
+              <span class="font-mono text-xs uppercase tracking-widest text-[#c9ff5f]">
+                Read entry
+              </span>
+
+              <span class="text-2xl transition group-hover:translate-x-1">→</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>
