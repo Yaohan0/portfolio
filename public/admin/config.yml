@@ -1,7 +1,6 @@
-local_backend: true
-
 backend:
-  name: git-gateway
+  name: github
+  repo: Yaohan0/portfolio
   branch: main
 
 media_folder: "public/uploads"
