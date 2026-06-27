@@ -21,37 +21,43 @@ const {
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
 
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script
+      is:inline
+      src="https://identity.netlify.com/v1/netlify-identity-widget.js"
+    ></script>
   </head>
 
   <body>
     <slot />
 
     <script is:inline>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", (user) => {
-          const hash = window.location.hash;
+      document.addEventListener("DOMContentLoaded", () => {
+        const hash = window.location.hash || "";
 
-          if (
+        if (!window.netlifyIdentity) {
+          return;
+        }
+
+        window.netlifyIdentity.on("init", (user) => {
+          const isIdentityAction =
             hash.includes("invite_token") ||
             hash.includes("confirmation_token") ||
             hash.includes("recovery_token") ||
-            hash.includes("email_change_token")
-          ) {
+            hash.includes("email_change_token");
+
+          if (isIdentityAction) {
             window.netlifyIdentity.open();
           }
 
           if (!user) {
             window.netlifyIdentity.on("login", () => {
-              document.location.href = "/admin/";
+              window.location.href = "/admin/";
             });
           }
         });
-      }
+
+        window.netlifyIdentity.init();
+      });
     </script>
   </body>
-</html>git add src/layouts/Layout.astro
-git commit -m "add netlify identity redirect"
-git pushgit add src/layouts/Layout.astro
-git commit -m "add netlify identity redirect"
-git push
+</html>
