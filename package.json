@@ -8,7 +8,9 @@
   "scripts": {
     "dev": "astro dev",
     "cms": "decap-server",
+    "studio": "node scripts/studio-server.mjs",
     "dev:cms": "concurrently \"astro dev\" \"decap-server\"",
+    "dev:studio": "concurrently \"astro dev\" \"node scripts/studio-server.mjs\"",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -20,6 +22,9 @@
   },
   "devDependencies": {
     "concurrently": "^10.0.3",
-    "decap-server": "^3.9.1"
+    "decap-server": "^3.9.1",
+    "express": "^5.2.1",
+    "gray-matter": "^4.0.3",
+    "multer": "^2.0.2"
   }
 }

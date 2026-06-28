@@ -1,0 +1,618 @@
+---
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yaohan Studio</title>
+  </head>
+
+  <body class="min-h-screen bg-[#090909] text-[#f3efe4]">
+    <main class="grid min-h-screen lg:grid-cols-[320px_1fr]">
+      <!-- SIDEBAR -->
+      <aside class="border-r border-white/10 bg-[#0d0d0d] p-5">
+        <div class="mb-8">
+          <p class="font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">
+            Yaohan Studio
+          </p>
+
+          <h1 class="mt-3 text-2xl font-bold">
+            Local Editor
+          </h1>
+
+          <p class="mt-3 text-sm leading-6 text-[#a9a196]">
+            Notion-style local editor for Journal and Writeups.
+          </p>
+        </div>
+
+        <div class="mb-5 grid grid-cols-2 gap-2">
+          <button
+            id="collection-writeups"
+            class="rounded-xl border border-[#c9ff5f]/40 bg-[#c9ff5f] px-4 py-3 text-xs font-black uppercase tracking-widest text-black"
+          >
+            Writeups
+          </button>
+
+          <button
+            id="collection-journal"
+            class="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs font-bold uppercase tracking-widest text-[#a9a196]"
+          >
+            Journal
+          </button>
+        </div>
+
+        <button
+          id="new-doc"
+          class="mb-5 w-full rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-left font-mono text-xs uppercase tracking-widest text-[#c9ff5f] transition hover:border-[#c9ff5f]/60"
+        >
+          + New document
+        </button>
+
+        <div id="doc-list" class="space-y-2"></div>
+      </aside>
+
+      <!-- EDITOR -->
+      <section class="grid min-h-screen lg:grid-cols-[minmax(0,1fr)_420px]">
+        <div class="min-w-0 p-6 md:p-10">
+          <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p id="current-path" class="font-mono text-xs uppercase tracking-[0.25em] text-[#6f6a63]">
+                No document selected
+              </p>
+
+              <h2 class="mt-3 text-3xl font-bold">
+                Editor
+              </h2>
+            </div>
+
+            <button
+              id="save-doc"
+              class="rounded-full bg-[#c9ff5f] px-6 py-3 font-mono text-xs font-black uppercase tracking-widest text-black transition hover:scale-105"
+            >
+              Save
+            </button>
+          </div>
+
+          <div class="mb-8 grid gap-4 md:grid-cols-2">
+            <label class="block">
+              <span class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+                Title
+              </span>
+              <input
+                id="field-title"
+                class="mt-2 w-full rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-[#f3efe4] outline-none focus:border-[#c9ff5f]/60"
+              />
+            </label>
+
+            <label class="block">
+              <span class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+                Slug
+              </span>
+              <input
+                id="field-slug"
+                class="mt-2 w-full rounded-xl border border-white/10 bg-[#111111] px-4 py-3 font-mono text-[#f3efe4] outline-none focus:border-[#c9ff5f]/60"
+              />
+            </label>
+
+            <label class="block md:col-span-2">
+              <span class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+                Summary
+              </span>
+              <textarea
+                id="field-summary"
+                rows="3"
+                class="mt-2 w-full rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-[#f3efe4] outline-none focus:border-[#c9ff5f]/60"
+              ></textarea>
+            </label>
+
+            <label class="block">
+              <span class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+                Cover
+              </span>
+              <input
+                id="field-cover"
+                class="mt-2 w-full rounded-xl border border-white/10 bg-[#111111] px-4 py-3 font-mono text-sm text-[#f3efe4] outline-none focus:border-[#c9ff5f]/60"
+              />
+            </label>
+
+            <label class="block">
+              <span class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+                Upload cover
+              </span>
+              <input
+                id="cover-upload"
+                type="file"
+                class="mt-2 w-full rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm text-[#a9a196]"
+              />
+            </label>
+          </div>
+
+          <div id="writeup-fields" class="mb-8 grid gap-4 md:grid-cols-3">
+            <input id="field-platform" placeholder="Platform" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
+            <input id="field-series" placeholder="Series" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
+            <input id="field-category" placeholder="Category" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
+            <input id="field-difficulty" placeholder="Difficulty" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
+            <input id="field-status" placeholder="Status" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
+            <input id="field-date" placeholder="Date" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
+          </div>
+
+          <div id="journal-fields" class="mb-8 hidden grid gap-4 md:grid-cols-3">
+            <input id="field-journal-category" placeholder="Category" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
+            <input id="field-mood" placeholder="Mood" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
+            <input id="field-journal-date" placeholder="Date" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
+          </div>
+
+          <div class="mb-6 flex flex-wrap gap-2">
+            <button data-add="heading" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">Heading</button>
+            <button data-add="paragraph" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">Text</button>
+            <button data-add="image" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">Image</button>
+            <button data-add="file" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">File</button>
+            <button data-add="code" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">Code</button>
+            <button data-add="callout" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">Callout</button>
+            <button data-add="divider" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">Divider</button>
+          </div>
+
+          <div id="blocks" class="space-y-4"></div>
+        </div>
+
+        <!-- PREVIEW -->
+        <aside class="border-l border-white/10 bg-[#0d0d0d] p-6">
+          <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+            Preview
+          </p>
+
+          <article id="preview" class="mt-6 space-y-6"></article>
+        </aside>
+      </section>
+    </main>
+
+    <script is:inline>
+      const API = "http://localhost:8787/api";
+
+      let collection = "writeups";
+      let docs = [];
+      let currentSlug = "";
+      let currentData = {};
+      let blocks = [];
+
+      const $ = (id) => document.getElementById(id);
+
+      const slugify = (value) =>
+        String(value || "")
+          .toLowerCase()
+          .trim()
+          .replace(/['"]/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+
+      const request = async (url, options = {}) => {
+        const response = await fetch(url, options);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed");
+        }
+
+        return data;
+      };
+
+      const loadDocs = async () => {
+        const data = await request(`${API}/docs?collection=${collection}`);
+        docs = data.docs;
+        renderDocList();
+      };
+
+      const renderDocList = () => {
+        $("doc-list").innerHTML = docs
+          .map(
+            (doc) => `
+              <button
+                data-slug="${doc.slug}"
+                class="doc-button w-full rounded-xl border border-white/10 bg-black/20 p-4 text-left transition hover:border-[#c9ff5f]/60"
+              >
+                <p class="text-sm font-bold text-[#f3efe4]">${doc.data.title}</p>
+                <p class="mt-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#6f6a63]">${doc.slug}</p>
+              </button>
+            `
+          )
+          .join("");
+
+        document.querySelectorAll(".doc-button").forEach((button) => {
+          button.addEventListener("click", () => loadDoc(button.dataset.slug));
+        });
+      };
+
+      const loadDoc = async (slug) => {
+        const doc = await request(`${API}/docs/${collection}/${slug}`);
+
+        currentSlug = slug;
+        currentData = doc.data;
+        blocks = doc.blocks;
+
+        fillFields();
+        renderBlocks();
+        renderPreview();
+      };
+
+      const newDoc = () => {
+        const today = new Date().toISOString().slice(0, 10);
+
+        currentData =
+          collection === "writeups"
+            ? {
+                title: "Untitled Writeup",
+                slug: "untitled-writeup",
+                order: 999,
+                track: "Writeups",
+                platform: "General",
+                series: "General",
+                category: "General",
+                difficulty: "Beginner",
+                status: "Draft",
+                date: today,
+                summary: "",
+                tags: [],
+                tools: [],
+                concepts: [],
+                lesson: "",
+                files: [],
+                externalLink: "",
+                cover: "",
+                pinned: false,
+                featured: false,
+              }
+            : {
+                title: "Untitled Journal Entry",
+                slug: "untitled-journal-entry",
+                order: 999,
+                date: today,
+                mood: "Writing",
+                category: "Journal",
+                summary: "",
+                tags: [],
+                lesson: "",
+                cover: "",
+                pinned: false,
+                featured: false,
+              };
+
+        currentSlug = currentData.slug;
+        blocks = [{ type: "paragraph", text: "" }];
+
+        fillFields();
+        renderBlocks();
+        renderPreview();
+      };
+
+      const fillFields = () => {
+        $("current-path").textContent = `src/content/${collection}/${currentData.slug}.md`;
+
+        $("field-title").value = currentData.title || "";
+        $("field-slug").value = currentData.slug || "";
+        $("field-summary").value = currentData.summary || "";
+        $("field-cover").value = currentData.cover || "";
+
+        $("writeup-fields").classList.toggle("hidden", collection !== "writeups");
+        $("journal-fields").classList.toggle("hidden", collection !== "journal");
+
+        if (collection === "writeups") {
+          $("field-platform").value = currentData.platform || "General";
+          $("field-series").value = currentData.series || "General";
+          $("field-category").value = currentData.category || "General";
+          $("field-difficulty").value = currentData.difficulty || "Beginner";
+          $("field-status").value = currentData.status || "Draft";
+          $("field-date").value = currentData.date || "";
+        }
+
+        if (collection === "journal") {
+          $("field-journal-category").value = currentData.category || "Journal";
+          $("field-mood").value = currentData.mood || "Writing";
+          $("field-journal-date").value = currentData.date || "";
+        }
+      };
+
+      const collectFields = () => {
+        currentData.title = $("field-title").value;
+        currentData.slug = slugify($("field-slug").value || $("field-title").value);
+        currentData.summary = $("field-summary").value;
+        currentData.cover = $("field-cover").value;
+
+        if (collection === "writeups") {
+          currentData.platform = $("field-platform").value;
+          currentData.series = $("field-series").value;
+          currentData.category = $("field-category").value;
+          currentData.difficulty = $("field-difficulty").value;
+          currentData.status = $("field-status").value;
+          currentData.date = $("field-date").value;
+        }
+
+        if (collection === "journal") {
+          currentData.category = $("field-journal-category").value;
+          currentData.mood = $("field-mood").value;
+          currentData.date = $("field-journal-date").value;
+        }
+
+        return currentData;
+      };
+
+      const blockTemplate = (block, index) => {
+        const controls = `
+          <div class="flex gap-2">
+            <button data-up="${index}" class="move-up rounded-lg border border-white/10 px-2 py-1 text-xs text-[#a9a196]">↑</button>
+            <button data-down="${index}" class="move-down rounded-lg border border-white/10 px-2 py-1 text-xs text-[#a9a196]">↓</button>
+            <button data-delete="${index}" class="delete-block rounded-lg border border-red-500/30 px-2 py-1 text-xs text-red-300">Delete</button>
+          </div>
+        `;
+
+        if (block.type === "heading") {
+          return `
+            <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
+              <div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#c9ff5f]">Heading</p>${controls}</div>
+              <input data-index="${index}" data-field="text" value="${block.text || ""}" class="block-input w-full bg-transparent text-2xl font-bold outline-none" />
+            </div>
+          `;
+        }
+
+        if (block.type === "paragraph") {
+          return `
+            <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
+              <div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#c9ff5f]">Paragraph</p>${controls}</div>
+              <textarea data-index="${index}" data-field="text" rows="5" class="block-input w-full resize-y bg-transparent leading-7 outline-none">${block.text || ""}</textarea>
+            </div>
+          `;
+        }
+
+        if (block.type === "image") {
+          return `
+            <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
+              <div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#c9ff5f]">Image</p>${controls}</div>
+              ${block.src ? `<img src="${block.src}" class="mb-4 max-h-72 w-full rounded-xl object-cover" />` : ""}
+              <input data-index="${index}" data-field="src" value="${block.src || ""}" placeholder="/uploads/image.png" class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none" />
+              <input data-index="${index}" data-field="alt" value="${block.alt || ""}" placeholder="Alt text" class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none" />
+              <input data-upload-image="${index}" type="file" class="image-upload text-sm text-[#a9a196]" />
+            </div>
+          `;
+        }
+
+        if (block.type === "file") {
+          return `
+            <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
+              <div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#c9ff5f]">File</p>${controls}</div>
+              <input data-index="${index}" data-field="name" value="${block.name || ""}" placeholder="File name" class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none" />
+              <input data-index="${index}" data-field="url" value="${block.url || ""}" placeholder="/uploads/file.pdf" class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none" />
+              <input data-upload-file="${index}" type="file" class="file-upload text-sm text-[#a9a196]" />
+            </div>
+          `;
+        }
+
+        if (block.type === "code") {
+          return `
+            <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
+              <div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#c9ff5f]">Code</p>${controls}</div>
+              <input data-index="${index}" data-field="language" value="${block.language || ""}" placeholder="bash, js, py..." class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none" />
+              <textarea data-index="${index}" data-field="code" rows="7" class="block-input w-full resize-y rounded-xl border border-white/10 bg-black/30 px-3 py-2 font-mono text-sm outline-none">${block.code || ""}</textarea>
+            </div>
+          `;
+        }
+
+        if (block.type === "callout") {
+          return `
+            <div class="block-card rounded-2xl border border-[#ead27c]/20 bg-[#ead27c]/5 p-4">
+              <div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#ead27c]">Callout</p>${controls}</div>
+              <textarea data-index="${index}" data-field="text" rows="3" class="block-input w-full resize-y bg-transparent leading-7 outline-none">${block.text || ""}</textarea>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
+            <div class="flex justify-between"><p class="font-mono text-xs text-[#c9ff5f]">Divider</p>${controls}</div>
+            <div class="mt-4 h-px bg-white/10"></div>
+          </div>
+        `;
+      };
+
+      const renderBlocks = () => {
+        $("blocks").innerHTML = blocks.map(blockTemplate).join("");
+
+        document.querySelectorAll(".block-input").forEach((input) => {
+          input.addEventListener("input", () => {
+            const index = Number(input.dataset.index);
+            const field = input.dataset.field;
+            blocks[index][field] = input.value;
+            renderPreview();
+          });
+        });
+
+        document.querySelectorAll(".move-up").forEach((button) => {
+          button.addEventListener("click", () => {
+            const index = Number(button.dataset.up);
+            if (index === 0) return;
+            [blocks[index - 1], blocks[index]] = [blocks[index], blocks[index - 1]];
+            renderBlocks();
+            renderPreview();
+          });
+        });
+
+        document.querySelectorAll(".move-down").forEach((button) => {
+          button.addEventListener("click", () => {
+            const index = Number(button.dataset.down);
+            if (index === blocks.length - 1) return;
+            [blocks[index + 1], blocks[index]] = [blocks[index], blocks[index + 1]];
+            renderBlocks();
+            renderPreview();
+          });
+        });
+
+        document.querySelectorAll(".delete-block").forEach((button) => {
+          button.addEventListener("click", () => {
+            const index = Number(button.dataset.delete);
+            blocks.splice(index, 1);
+            renderBlocks();
+            renderPreview();
+          });
+        });
+
+        document.querySelectorAll(".image-upload").forEach((input) => {
+          input.addEventListener("change", async () => {
+            const index = Number(input.dataset.uploadImage);
+            const url = await uploadFile(input.files[0]);
+            blocks[index].src = url;
+            renderBlocks();
+            renderPreview();
+          });
+        });
+
+        document.querySelectorAll(".file-upload").forEach((input) => {
+          input.addEventListener("change", async () => {
+            const index = Number(input.dataset.uploadFile);
+            const url = await uploadFile(input.files[0]);
+            blocks[index].url = url;
+            blocks[index].name = input.files[0].name;
+            renderBlocks();
+            renderPreview();
+          });
+        });
+      };
+
+      const renderPreview = () => {
+        collectFields();
+
+        const cover = currentData.cover
+          ? `<img src="${currentData.cover}" class="mb-6 max-h-72 w-full rounded-2xl object-cover" />`
+          : "";
+
+        const body = blocks
+          .map((block) => {
+            if (block.type === "heading") return `<h2 class="text-3xl font-bold">${block.text || ""}</h2>`;
+            if (block.type === "paragraph") return `<p class="leading-8 text-[#a9a196]">${(block.text || "").replace(/\n/g, "<br>")}</p>`;
+            if (block.type === "image") return `<img src="${block.src || ""}" alt="${block.alt || ""}" class="max-h-72 w-full rounded-2xl object-cover" />`;
+            if (block.type === "file") return `<a href="${block.url || "#"}" class="block rounded-xl border border-white/10 p-4 text-[#c9ff5f]">${block.name || "Download file"}</a>`;
+            if (block.type === "code") return `<pre class="overflow-x-auto rounded-2xl bg-[#20252b] p-4 text-sm"><code>${block.code || ""}</code></pre>`;
+            if (block.type === "callout") return `<blockquote class="rounded-2xl border border-[#ead27c]/20 bg-[#ead27c]/5 p-4 text-[#ead27c]">${block.text || ""}</blockquote>`;
+            if (block.type === "divider") return `<hr class="border-white/10" />`;
+            return "";
+          })
+          .join("");
+
+        $("preview").innerHTML = `
+          ${cover}
+          <h1 class="text-4xl font-bold leading-tight">${currentData.title || "Untitled"}</h1>
+          <p class="text-[#a9a196]">${currentData.summary || ""}</p>
+          <div class="mt-8 space-y-6">${body}</div>
+        `;
+      };
+
+      const addBlock = (type) => {
+        const defaults = {
+          heading: { type: "heading", text: "New heading" },
+          paragraph: { type: "paragraph", text: "" },
+          image: { type: "image", src: "", alt: "" },
+          file: { type: "file", name: "", url: "" },
+          code: { type: "code", language: "bash", code: "" },
+          callout: { type: "callout", text: "" },
+          divider: { type: "divider" },
+        };
+
+        blocks.push(defaults[type]);
+        renderBlocks();
+        renderPreview();
+      };
+
+      const uploadFile = async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await fetch(`${API}/upload`, {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Upload failed");
+        }
+
+        return data.url;
+      };
+
+      const saveDoc = async () => {
+        collectFields();
+
+        const result = await request(`${API}/docs/${collection}/${currentSlug}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: currentData,
+            blocks,
+          }),
+        });
+
+        currentSlug = result.slug;
+        await loadDocs();
+        await loadDoc(currentSlug);
+
+        alert("Saved");
+      };
+
+      const setCollection = async (nextCollection) => {
+        collection = nextCollection;
+
+        $("collection-writeups").className =
+          collection === "writeups"
+            ? "rounded-xl border border-[#c9ff5f]/40 bg-[#c9ff5f] px-4 py-3 text-xs font-black uppercase tracking-widest text-black"
+            : "rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs font-bold uppercase tracking-widest text-[#a9a196]";
+
+        $("collection-journal").className =
+          collection === "journal"
+            ? "rounded-xl border border-[#c9ff5f]/40 bg-[#c9ff5f] px-4 py-3 text-xs font-black uppercase tracking-widest text-black"
+            : "rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs font-bold uppercase tracking-widest text-[#a9a196]";
+
+        await loadDocs();
+
+        if (docs.length > 0) {
+          await loadDoc(docs[0].slug);
+        } else {
+          newDoc();
+        }
+      };
+
+      $("collection-writeups").addEventListener("click", () => setCollection("writeups"));
+      $("collection-journal").addEventListener("click", () => setCollection("journal"));
+      $("new-doc").addEventListener("click", newDoc);
+      $("save-doc").addEventListener("click", saveDoc);
+
+      $("field-title").addEventListener("input", () => {
+        if (!$("field-slug").value || $("field-slug").value.startsWith("untitled")) {
+          $("field-slug").value = slugify($("field-title").value);
+        }
+
+        renderPreview();
+      });
+
+      ["field-slug", "field-summary", "field-cover"].forEach((id) => {
+        $(id).addEventListener("input", renderPreview);
+      });
+
+      $("cover-upload").addEventListener("change", async () => {
+        const file = $("cover-upload").files[0];
+        if (!file) return;
+
+        const url = await uploadFile(file);
+        $("field-cover").value = url;
+        renderPreview();
+      });
+
+      document.querySelectorAll(".add-block").forEach((button) => {
+        button.addEventListener("click", () => addBlock(button.dataset.add));
+      });
+
+      setCollection("writeups");
+    </script>
+  </body>
+</html>

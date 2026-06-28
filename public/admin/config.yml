@@ -46,17 +46,33 @@ collections:
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Slug", name: "slug", widget: "string" }
-      - { label: "Order", name: "order", widget: "number", value_type: "int" }
-      - { label: "Category", name: "category", widget: "string" }
-      - { label: "Difficulty", name: "difficulty", widget: "string" }
-      - { label: "Status", name: "status", widget: "string" }
-      - { label: "Date", name: "date", widget: "string" }
       - { label: "Summary", name: "summary", widget: "text" }
-      - { label: "Tools", name: "tools", widget: "list", default: [] }
-      - { label: "Concepts", name: "concepts", widget: "list", default: [] }
+      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false }
+
+      - label: "Organization"
+        name: "organization"
+        widget: "object"
+        collapsed: true
+        fields:
+          - { label: "Order", name: "order", widget: "number", value_type: "int" }
+          - { label: "Track", name: "track", widget: "string", default: "Writeups" }
+          - { label: "Platform", name: "platform", widget: "string", default: "General" }
+          - { label: "Series", name: "series", widget: "string", default: "General" }
+          - { label: "Category", name: "category", widget: "string" }
+          - { label: "Difficulty", name: "difficulty", widget: "string" }
+          - { label: "Level", name: "level", widget: "number", value_type: "int", required: false }
+          - { label: "Status", name: "status", widget: "string" }
+          - { label: "Date", name: "date", widget: "string" }
+          - { label: "Pinned", name: "pinned", widget: "boolean", default: false }
+          - { label: "Featured", name: "featured", widget: "boolean", default: false }
+
+      - { label: "Tags", name: "tags", widget: "list", default: [], required: false }
+      - { label: "Tools", name: "tools", widget: "list", default: [], required: false }
+      - { label: "Concepts", name: "concepts", widget: "list", default: [], required: false }
       - { label: "Lesson", name: "lesson", widget: "text" }
       - { label: "External Link", name: "externalLink", widget: "string", required: false }
-      - { label: "Cover Image", name: "cover", widget: "image", required: false }
+
       - label: "Files"
         name: "files"
         widget: "list"
@@ -65,7 +81,6 @@ collections:
           - { label: "Name", name: "name", widget: "string" }
           - { label: "Type", name: "type", widget: "string" }
           - { label: "URL", name: "url", widget: "file" }
-      - { label: "Body", name: "body", widget: "markdown" }
 
   - name: "journal"
     label: "Journal"
@@ -77,15 +92,24 @@ collections:
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Slug", name: "slug", widget: "string" }
-      - { label: "Order", name: "order", widget: "number", value_type: "int" }
-      - { label: "Date", name: "date", widget: "string" }
-      - { label: "Mood", name: "mood", widget: "string" }
-      - { label: "Category", name: "category", widget: "string" }
       - { label: "Summary", name: "summary", widget: "text" }
-      - { label: "Tags", name: "tags", widget: "list", default: [] }
-      - { label: "Lesson", name: "lesson", widget: "text" }
-      - { label: "Cover Image", name: "cover", widget: "image", required: false }
       - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false }
+
+      - label: "Organization"
+        name: "organization"
+        widget: "object"
+        collapsed: true
+        fields:
+          - { label: "Order", name: "order", widget: "number", value_type: "int" }
+          - { label: "Date", name: "date", widget: "string" }
+          - { label: "Mood", name: "mood", widget: "string" }
+          - { label: "Category", name: "category", widget: "string" }
+          - { label: "Pinned", name: "pinned", widget: "boolean", default: false }
+          - { label: "Featured", name: "featured", widget: "boolean", default: false }
+
+      - { label: "Tags", name: "tags", widget: "list", default: [], required: false }
+      - { label: "Lesson", name: "lesson", widget: "text" }
 
   - name: "archive"
     label: "Archive"

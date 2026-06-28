@@ -3,12 +3,63 @@ import Layout from '../layouts/Layout.astro'
 import Navbar from '../components/Navbar.astro'
 import { getCollection } from 'astro:content'
 
-const entries = await getCollection('journal')
-const sortedEntries = entries.sort((a, b) => a.data.order - b.data.order)
+const journalEntries = await getCollection('journal')
+const sortedEntries = journalEntries.sort((a, b) => a.data.order - b.data.order)
+
+const totalEntries = sortedEntries.length
 
 const categories = [
   ...new Set(sortedEntries.map((entry) => entry.data.category)),
 ]
+
+const pinnedEntries = sortedEntries.filter((entry) => entry.data.pinned)
+const featuredEntries = sortedEntries.filter((entry) => entry.data.featured)
+const normalEntries = sortedEntries.filter(
+  (entry) => !entry.data.pinned && !entry.data.featured
+)
+
+const categoryGroups = categories.map((category) => {
+  const entries = sortedEntries.filter((entry) => entry.data.category === category)
+
+  return {
+    category,
+    entries,
+  }
+})
+
+const categoryColor = (category: string) => {
+  const lower = category.toLowerCase()
+
+  if (lower.includes('reflection')) {
+    return {
+      text: 'text-[#8fbf9f]',
+      border: 'border-[#8fbf9f]/25',
+      bg: 'bg-[#8fbf9f]/5',
+    }
+  }
+
+  if (lower.includes('debug') || lower.includes('mistake')) {
+    return {
+      text: 'text-[#ff5f7e]',
+      border: 'border-[#ff5f7e]/25',
+      bg: 'bg-[#ff5f7e]/5',
+    }
+  }
+
+  if (lower.includes('progress') || lower.includes('learning')) {
+    return {
+      text: 'text-[#ead27c]',
+      border: 'border-[#ead27c]/25',
+      bg: 'bg-[#ead27c]/5',
+    }
+  }
+
+  return {
+    text: 'text-[#c9ff5f]',
+    border: 'border-[#c9ff5f]/25',
+    bg: 'bg-[#c9ff5f]/5',
+  }
+}
 ---
 
 <Layout title="Journal — Yaohan">
@@ -16,101 +67,195 @@ const categories = [
     <Navbar current="Journal" />
 
     <!-- HERO -->
-    <section class="site-grid px-6 pt-36 pb-20">
+    <section class="site-grid px-6 pt-36 pb-16">
       <div class="mx-auto max-w-7xl">
-        <p class="neon-lime font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">
-          Personal Diary / Learning Log
+        <p class="font-mono text-xs uppercase tracking-[0.35em] text-[#a9a196]">
+          Notes / Reflections / Learning Logs
         </p>
 
         <h1 class="display-text neon-cream mt-5 text-7xl uppercase leading-none tracking-[-0.06em] md:text-9xl">
           Journal
         </h1>
 
+        <div class="mt-6 h-px w-20 bg-[#ead27c]"></div>
+
         <p class="mt-8 max-w-3xl text-base leading-8 text-[#a9a196]">
-          This page is for the more personal side of the archive: reflections,
-          stuck moments, small wins, learning updates, and thoughts that do not
-          fit cleanly into a lab report or CTF writeup.
+          Personal notes, reflections, debugging stories, school progress, and
+          small lessons from building things and getting stuck.
         </p>
 
-        <div class="mt-10 rounded-3xl border border-white/10 bg-[#111111] p-6">
-          <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
-            Editing system
-          </p>
+        <p class="mt-6 font-mono text-sm uppercase tracking-[0.25em] text-[#6f6a63]">
+          {totalEntries} posts across {categories.length} categories
+        </p>
+      </div>
+    </section>
 
-          <p class="mt-4 max-w-3xl text-sm leading-7 text-[#a9a196]">
-            Journal entries are now Markdown files in
-            <span class="font-mono text-[#f3efe4]"> src/content/journal/</span>.
-            This makes them ready for a future
-            <span class="font-mono text-[#f3efe4]"> /admin</span> CMS page.
-          </p>
+    <!-- CATEGORY CARDS -->
+    <section class="mx-auto max-w-7xl px-6 pb-12">
+      <div class="grid gap-6 md:grid-cols-2">
+        {categoryGroups.map((group) => {
+          const color = categoryColor(group.category)
+
+          return (
+            <article class={`rounded-3xl border ${color.border} ${color.bg} p-7`}>
+              <div class="flex items-start justify-between gap-6">
+                <div>
+                  <h2 class={`font-mono text-lg font-bold ${color.text}`}>
+                    {group.category}
+                  </h2>
+
+                  <p class="mt-5 max-w-xl text-sm leading-7 text-[#6f6a63]">
+                    Journal entries, personal documentation, and notes filed
+                    under this category.
+                  </p>
+
+                  <a
+                    href="#journal-list"
+                    class={`mt-6 inline-flex font-mono text-sm lowercase tracking-widest ${color.text}`}
+                  >
+                    filter →
+                  </a>
+                </div>
+
+                <p class="font-mono text-sm text-[#6f6a63]">
+                  {group.entries.length} posts
+                </p>
+              </div>
+            </article>
+          )
+        })}
+      </div>
+    </section>
+
+    <!-- SEARCH BAR / STATIC -->
+    <section class="mx-auto max-w-7xl px-6 pb-10">
+      <div class="rounded-2xl border border-white/10 bg-[#111111]/80 px-6 py-5">
+        <p class="font-mono text-sm text-[#6f6a63]">
+          Search journal posts or #tags later...
+        </p>
+      </div>
+    </section>
+
+    <!-- PINNED / FEATURED -->
+    {(pinnedEntries.length > 0 || featuredEntries.length > 0) && (
+      <section class="mx-auto max-w-7xl px-6 pb-16">
+        <div class="grid gap-5">
+          {pinnedEntries.map((entry) => (
+            <a
+              href={`/journal/${entry.data.slug}`}
+              class="group rounded-3xl border border-[#ead27c]/30 bg-[#ead27c]/5 p-7 transition hover:border-[#ead27c]/60"
+            >
+              <div class="flex items-start justify-between gap-5">
+                <div>
+                  <p class="font-mono text-sm text-[#ead27c]">
+                    {entry.data.category}
+                  </p>
+
+                  <h2 class="serif-text mt-4 text-3xl font-bold text-[#f3efe4]">
+                    {entry.data.title}
+                  </h2>
+
+                  <p class="mt-3 text-sm leading-7 text-[#6f6a63]">
+                    {entry.data.summary}
+                  </p>
+                </div>
+
+                <div class="rounded-xl border border-[#ead27c]/30 bg-[#ead27c]/10 px-4 py-2 font-mono text-xs lowercase text-[#ead27c]">
+                  pinned
+                </div>
+              </div>
+            </a>
+          ))}
+
+          {featuredEntries.map((entry) => (
+            <a
+              href={`/journal/${entry.data.slug}`}
+              class="group rounded-3xl border border-[#c9ff5f]/25 bg-[#c9ff5f]/5 p-7 transition hover:border-[#c9ff5f]/60"
+            >
+              <div class="flex items-start justify-between gap-5">
+                <div>
+                  <p class="font-mono text-sm text-[#c9ff5f]">
+                    Featured
+                  </p>
+
+                  <h2 class="serif-text mt-4 text-3xl font-bold text-[#f3efe4]">
+                    {entry.data.title}
+                  </h2>
+
+                  <p class="mt-3 text-sm leading-7 text-[#6f6a63]">
+                    {entry.data.summary}
+                  </p>
+                </div>
+
+                <div class="rounded-xl border border-[#c9ff5f]/30 bg-[#c9ff5f]/10 px-4 py-2 font-mono text-xs lowercase text-[#c9ff5f]">
+                  featured
+                </div>
+              </div>
+            </a>
+          ))}
         </div>
-      </div>
-    </section>
+      </section>
+    )}
 
-    <!-- CATEGORY STRIP -->
-    <section class="border-y border-white/10 bg-[#111111] px-6 py-6">
-      <div class="mx-auto flex max-w-7xl flex-wrap gap-3">
-        {categories.map((category) => (
-          <span class="rounded-full border border-white/10 bg-black/30 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196]">
-            {category}
-          </span>
-        ))}
-      </div>
-    </section>
+    <!-- JOURNAL LIST -->
+    <section id="journal-list" class="mx-auto max-w-7xl px-6 py-20">
+      <div class="space-y-8">
+        {normalEntries.map((entry) => {
+          const color = categoryColor(entry.data.category)
 
-    <!-- JOURNAL CARDS -->
-    <section class="mx-auto max-w-7xl px-6 py-28">
-      <div class="grid gap-8 md:grid-cols-2">
-        {sortedEntries.map((entry, index) => (
-          <a
-            href={`/journal/${entry.data.slug}`}
-            class="neon-card group rounded-3xl border border-white/10 bg-[#111111] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#c9ff5f]/60 hover:bg-[#151515]"
-          >
-            <div class="flex flex-wrap items-center justify-between gap-3">
-              <p class="neon-lime font-mono text-xs font-bold uppercase tracking-[0.3em] text-[#c9ff5f]">
-                ENTRY-0{index + 1}
-              </p>
+          return (
+            <a
+              href={`/journal/${entry.data.slug}`}
+              class={`group block overflow-hidden rounded-3xl border ${color.border} bg-[#111111]/80 transition hover:-translate-y-1 hover:bg-[#151515]`}
+            >
+              {entry.data.cover && (
+                <img
+                  src={entry.data.cover}
+                  alt={entry.data.title}
+                  class="h-72 w-full border-b border-white/10 object-cover"
+                />
+              )}
 
-              <span class="rounded-full border border-white/10 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#a9a196]">
-                {entry.data.date}
-              </span>
-            </div>
+              <div class="p-8">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                  <p class={`font-mono text-sm font-bold ${color.text}`}>
+                    {entry.data.category}
+                  </p>
 
-            <h2 class="display-text mt-10 text-5xl uppercase leading-none tracking-[-0.06em] text-[#f3efe4]">
-              {entry.data.title}
-            </h2>
+                  <p class="font-mono text-xs uppercase tracking-widest text-[#6f6a63]">
+                    {entry.data.date}
+                  </p>
+                </div>
 
-            <div class="mt-5 flex flex-wrap gap-2">
-              <span class="rounded-full bg-[#c9ff5f] px-3 py-1 font-mono text-[0.65rem] font-black uppercase tracking-widest text-black">
-                {entry.data.category}
-              </span>
+                <h2 class="serif-text mt-5 text-4xl font-bold tracking-[-0.04em] text-[#f3efe4]">
+                  {entry.data.title}
+                </h2>
 
-              <span class="rounded-full border border-white/10 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#a9a196]">
-                {entry.data.mood}
-              </span>
-            </div>
+                <p class="mt-4 max-w-3xl text-base leading-8 text-[#a9a196]">
+                  {entry.data.summary}
+                </p>
 
-            <p class="mt-6 text-base leading-8 text-[#a9a196]">
-              {entry.data.summary}
-            </p>
+                <div class="mt-7 flex flex-wrap gap-2">
+                  {entry.data.tags.map((tag) => (
+                    <span class="rounded-full border border-white/10 bg-black/30 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#6f6a63]">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
 
-            <div class="mt-8 flex flex-wrap gap-2">
-              {entry.data.tags.map((tag) => (
-                <span class="rounded-full border border-white/10 bg-black/30 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#c9c2b8]">
-                  {tag}
-                </span>
-              ))}
-            </div>
+                <div class="mt-8 flex items-center justify-between border-t border-white/10 pt-5">
+                  <span class={`font-mono text-xs uppercase tracking-widest ${color.text}`}>
+                    Read entry
+                  </span>
 
-            <div class="mt-8 flex items-center justify-between border-t border-white/10 pt-5">
-              <span class="font-mono text-xs uppercase tracking-widest text-[#c9ff5f]">
-                Read entry
-              </span>
-
-              <span class="text-2xl transition group-hover:translate-x-1">→</span>
-            </div>
-          </a>
-        ))}
+                  <span class="text-[#6f6a63] transition group-hover:translate-x-1 group-hover:text-[#c9ff5f]">
+                    →
+                  </span>
+                </div>
+              </div>
+            </a>
+          )
+        })}
       </div>
     </section>
   </main>

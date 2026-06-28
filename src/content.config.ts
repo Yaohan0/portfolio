@@ -40,6 +40,17 @@ const writeups = defineCollection({
     title: z.string(),
     slug: z.string(),
     order: z.number(),
+
+    // New organization fields
+    track: z.string().default('Writeups'),
+    platform: z.string().default('General'),
+    series: z.string().default('General'),
+    level: z.number().optional(),
+    tags: z.array(z.string()).default([]),
+    pinned: z.boolean().default(false),
+    featured: z.boolean().default(false),
+
+    // Existing fields
     category: z.string(),
     difficulty: z.string(),
     status: z.string(),
@@ -70,6 +81,10 @@ const journal = defineCollection({
     tags: z.array(z.string()).default([]),
     lesson: z.string(),
     cover: z.string().optional(),
+
+    // New fields
+    pinned: z.boolean().default(false),
+    featured: z.boolean().default(false),
   }),
 })
 
