@@ -11,7 +11,7 @@ summary: |-
   U2xVeU5udHZUalV6TmpSZlJVSkhNVE5mYzFrMGRIMD0=
 tags: []
 lesson: ''
-cover: /uploads/1782651173391-screenshot-2026-06-28-205250.png
+cover: /portfolio/uploads/1782651173391-screenshot-2026-06-28-205250.png
 pinned: false
 featured: false
 ---

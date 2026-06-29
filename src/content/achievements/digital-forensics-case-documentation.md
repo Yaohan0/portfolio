@@ -17,7 +17,7 @@ evidence:
   - Case screenshots
   - Timeline notes
 link: /labs/digital-forensics
-cover: /uploads/screenshot-2026-06-26-191141.png
+cover: /portfolio/uploads/screenshot-2026-06-26-191141.png
 ---
 ## Context
 

@@ -8,13 +8,13 @@ category: Journal
 summary: '[Request Writeup] '
 tags: []
 lesson: ''
-cover: /uploads/1782651465812-screenshot-2026-06-28-205711.png
+cover: /portfolio/uploads/1782651465812-screenshot-2026-06-28-205711.png
 pinned: false
 featured: false
 ---
-[decrypt.py](/uploads/1782651482107-decrypt.py)
+[decrypt.py](/portfolio/uploads/1782651482107-decrypt.py)
 
-[colour_mixing.pcap](/uploads/1782651497957-colour_mixing.pcap)
+[colour_mixing.pcap](/portfolio/uploads/1782651497957-colour_mixing.pcap)
 
 The important clue is:
 

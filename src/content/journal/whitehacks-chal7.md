@@ -8,11 +8,11 @@ category: Journal
 summary: ''
 tags: []
 lesson: ''
-cover: /uploads/1782652094049-screenshot-2026-06-28-210748.png
+cover: /portfolio/uploads/1782652094049-screenshot-2026-06-28-210748.png
 pinned: false
 featured: false
 ---
-[Hello_good_morning_prof.pdf](/uploads/1782652113641-hello_good_morning_prof.pdf)
+[Hello_good_morning_prof.pdf](/portfolio/uploads/1782652113641-hello_good_morning_prof.pdf)
 
 The PDF has a hidden embedded image behind/inside the document. Extracting the images reveals the flag:
 

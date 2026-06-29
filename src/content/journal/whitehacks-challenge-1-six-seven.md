@@ -12,7 +12,7 @@ summary: six sixsevennnnnn; download the .txt file, find out how many 67s there
 tags:
   - CTF
 lesson: "Counting? "
-cover: /uploads/screenshot-2026-06-28-191845.png
+cover: /portfolio/uploads/screenshot-2026-06-28-191845.png
 ---
 Quite simple, basically count the number of 67s occurrences which is 109796
 

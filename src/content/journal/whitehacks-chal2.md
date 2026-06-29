@@ -10,7 +10,7 @@ summary: |-
   3e245d46574113313b373708072c1b0919131704010b1800491c
 tags: []
 lesson: ''
-cover: /uploads/1782650903829-screenshot-2026-06-28-203906.png
+cover: /portfolio/uploads/1782650903829-screenshot-2026-06-28-203906.png
 pinned: false
 featured: false
 ---

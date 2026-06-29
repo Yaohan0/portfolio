@@ -12,7 +12,7 @@ description: >-
   Awarded a place on the Director's List for Academic Year 2025 (Year 1) in recognition of outstanding academic performance, demonstrating consistent excellence, dedication, and commitment to achieving high standards throughout the academic year.
 evidence: []
 link: ""
-cover: /uploads/screenshot-2026-06-26-190339.png
+cover: /portfolio/uploads/screenshot-2026-06-26-190339.png
 ---
 ## Context
 

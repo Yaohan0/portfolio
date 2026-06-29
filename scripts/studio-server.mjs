@@ -567,9 +567,8 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
   }
 
   res.json({
-    url: `/uploads/${req.file.filename}`,
-    filename: req.file.filename,
-  })
+  url: `/portfolio/uploads/${req.file.filename}`,
+  filename: req.file.filename,
 })
 
 app.listen(port, () => {

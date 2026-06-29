@@ -8,11 +8,11 @@ category: Journal
 summary: Crypto
 tags: []
 lesson: ''
-cover: /uploads/1782651885503-screenshot-2026-06-28-210403.png
+cover: /portfolio/uploads/1782651885503-screenshot-2026-06-28-210403.png
 pinned: false
 featured: false
 ---
-[fishtalk.txt](/uploads/1782651897859-fishtalk.txt)
+[fishtalk.txt](/portfolio/uploads/1782651897859-fishtalk.txt)
 
 The file is Ook-style Brainfuck, but with Blub instead of Ook. The punctuation pairs decode into Brainfuck, then the Brainfuck prints the flag.
 

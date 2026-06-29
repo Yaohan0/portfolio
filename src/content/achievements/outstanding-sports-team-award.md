@@ -11,7 +11,7 @@ description: Received the Outstanding Sports Team Award in recognition of my
   performances across multiple events, reflecting our teamwork, discipline, and
   dedication throughout the season.
 evidence: []
-cover: /uploads/screenshot-2026-06-27-105041.png
+cover: /portfolio/uploads/screenshot-2026-06-27-105041.png
 ---
 **Outstanding Sports Team Award – Kayak Racing**
 

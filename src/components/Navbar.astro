@@ -1,4 +1,6 @@
 ---
+import { base, withBase } from '../utils/paths'
+
 interface Props {
   current?: string
   theme?: 'dark' | 'light'
@@ -7,13 +9,13 @@ interface Props {
 const { current = 'Home', theme = 'dark' } = Astro.props
 
 const links = [
-  { label: 'Home', href: '/' },
-  { label: 'Journal', href: '/journal' },
-  { label: 'Labs', href: '/labs' },
-  { label: 'Writeups', href: '/writeups' },
-  { label: 'Achievements', href: '/achievements' },
-  { label: 'Skills', href: '/skills' },
-  { label: 'Archive', href: '/archive' },
+  { label: 'Home', href: base },
+  { label: 'Journal', href: withBase('journal') },
+  { label: 'Labs', href: withBase('labs') },
+  { label: 'Writeups', href: withBase('writeups') },
+  { label: 'Achievements', href: withBase('achievements') },
+  { label: 'Skills', href: withBase('skills') },
+  { label: 'Archive', href: withBase('archive') },
 ]
 
 const isLight = theme === 'light'
@@ -37,7 +39,7 @@ const linkClass = isLight
 
 <header class={headerClass}>
   <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-    <a href="/" class={brandClass}>
+    <a href={base} class={brandClass}>
       Yaohan / {current}
     </a>
 
