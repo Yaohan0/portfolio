@@ -11,6 +11,7 @@
     "studio": "node scripts/studio-server.mjs",
     "dev:cms": "concurrently \"astro dev\" \"decap-server\"",
     "dev:studio": "concurrently \"astro dev\" \"node scripts/studio-server.mjs\"",
+    "dev:all": "concurrently \"astro dev\" \"decap-server\" \"node scripts/studio-server.mjs\"",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"

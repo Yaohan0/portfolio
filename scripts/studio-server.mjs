@@ -12,8 +12,11 @@ const rootDir = path.resolve(__dirname, '..')
 const app = express()
 const port = 8787
 
+const today = () => new Date().toISOString().slice(0, 10)
+
 const collections = {
   writeups: {
+    label: 'Writeups',
     folder: path.join(rootDir, 'src/content/writeups'),
     defaults: {
       title: 'Untitled Writeup',
@@ -25,7 +28,7 @@ const collections = {
       category: 'General',
       difficulty: 'Beginner',
       status: 'Draft',
-      date: new Date().toISOString().slice(0, 10),
+      date: today(),
       summary: '',
       tags: [],
       tools: [],
@@ -40,12 +43,13 @@ const collections = {
   },
 
   journal: {
+    label: 'Journal',
     folder: path.join(rootDir, 'src/content/journal'),
     defaults: {
       title: 'Untitled Journal Entry',
       slug: 'untitled-journal-entry',
       order: 999,
-      date: new Date().toISOString().slice(0, 10),
+      date: today(),
       mood: 'Writing',
       category: 'Journal',
       summary: '',
@@ -56,19 +60,94 @@ const collections = {
       featured: false,
     },
   },
+
+  labs: {
+    label: 'Labs',
+    folder: path.join(rootDir, 'src/content/labs'),
+    defaults: {
+      title: 'Untitled Lab',
+      slug: 'untitled-lab',
+      order: 999,
+      status: 'Draft',
+      type: 'Lab',
+      description: '',
+      tools: [],
+      topics: [],
+      files: [],
+      cover: '',
+    },
+  },
+
+  archive: {
+    label: 'Archive',
+    folder: path.join(rootDir, 'src/content/archive'),
+    defaults: {
+      title: 'Untitled Archive Note',
+      slug: 'untitled-archive-note',
+      order: 999,
+      type: 'Class Notes',
+      status: 'Active',
+      date: today(),
+      summary: '',
+      tags: [],
+      files: [],
+      links: [],
+      cover: '',
+    },
+  },
+
+  achievements: {
+    label: 'Achievements',
+    folder: path.join(rootDir, 'src/content/achievements'),
+    defaults: {
+      title: 'Untitled Achievement',
+      slug: 'untitled-achievement',
+      order: 999,
+      type: 'Award',
+      status: 'Completed',
+      date: today(),
+      description: '',
+      evidence: [],
+      link: '',
+      cover: '',
+    },
+  },
+
+  skills: {
+    label: 'Skills',
+    folder: path.join(rootDir, 'src/content/skills'),
+    defaults: {
+      name: 'Untitled Skill',
+      title: 'Untitled Skill',
+      slug: 'untitled-skill',
+      order: 999,
+      category: 'General',
+      level: 'Learning',
+      status: 'Active',
+      description: '',
+      evidence: [],
+      tools: [],
+      notes: '',
+      cover: '',
+    },
+  },
 }
 
 const uploadsDir = path.join(rootDir, 'public/uploads')
 
 await fs.mkdir(uploadsDir, { recursive: true })
 
-app.use(express.json({ limit: '10mb' }))
+app.use(express.json({ limit: '25mb' }))
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4321')
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  if (req.method === 'OPTIONS') return res.sendStatus(204)
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204)
+  }
+
   next()
 })
 
@@ -81,6 +160,7 @@ const storage = multer.diskStorage({
       .toLowerCase()
       .replace(/[^a-z0-9.\-_]+/g, '-')
       .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, '')
 
     cb(null, `${Date.now()}-${safeName}`)
   },
@@ -109,12 +189,22 @@ function slugify(input) {
 
 function splitList(value) {
   if (Array.isArray(value)) return value
+
   if (!value) return []
 
   return String(value)
     .split(',')
     .map((item) => item.trim())
     .filter(Boolean)
+}
+
+function normalizeBoolean(value) {
+  return value === true || value === 'true' || value === 'on'
+}
+
+function normalizeNumber(value, fallback = 999) {
+  const number = Number(value)
+  return Number.isFinite(number) ? number : fallback
 }
 
 function markdownToBlocks(markdown) {
@@ -140,7 +230,9 @@ function markdownToBlocks(markdown) {
         i += 1
       }
 
-      i += 1
+      if (i < lines.length) {
+        i += 1
+      }
 
       blocks.push({
         type: 'code',
@@ -148,6 +240,16 @@ function markdownToBlocks(markdown) {
         code: codeLines.join('\n'),
       })
 
+      continue
+    }
+
+    if (line.startsWith('### ')) {
+      blocks.push({
+        type: 'subheading',
+        text: line.replace(/^### /, ''),
+      })
+
+      i += 1
       continue
     }
 
@@ -211,10 +313,12 @@ function markdownToBlocks(markdown) {
       i < lines.length &&
       lines[i].trim() &&
       !lines[i].startsWith('## ') &&
+      !lines[i].startsWith('### ') &&
       !lines[i].startsWith('```') &&
       !lines[i].startsWith('> ') &&
       lines[i].trim() !== '---' &&
-      !lines[i].match(/^!\[(.*?)\]\((.*?)\)$/)
+      !lines[i].match(/^!\[(.*?)\]\((.*?)\)$/) &&
+      !lines[i].match(/^\[(.*?)\]\((.*?)\)$/)
     ) {
       paragraphLines.push(lines[i])
       i += 1
@@ -243,6 +347,10 @@ function blocksToMarkdown(blocks) {
         return `## ${block.text || ''}`
       }
 
+      if (block.type === 'subheading') {
+        return `### ${block.text || ''}`
+      }
+
       if (block.type === 'paragraph') {
         return block.text || ''
       }
@@ -264,13 +372,77 @@ function blocksToMarkdown(blocks) {
       }
 
       if (block.type === 'divider') {
-        return `---`
+        return '---'
       }
 
       return ''
     })
     .join('\n\n')
     .trim()
+}
+
+function normalizeData(collectionName, inputData, finalSlug) {
+  const collection = getCollection(collectionName)
+
+  const data = {
+    ...collection.defaults,
+    ...inputData,
+    slug: finalSlug,
+  }
+
+  data.order = normalizeNumber(data.order)
+
+  if (collectionName === 'writeups') {
+    data.tags = splitList(data.tags)
+    data.tools = splitList(data.tools)
+    data.concepts = splitList(data.concepts)
+    data.files = Array.isArray(data.files) ? data.files : []
+    data.pinned = normalizeBoolean(data.pinned)
+    data.featured = normalizeBoolean(data.featured)
+
+    if (data.level === '' || data.level === null || data.level === undefined) {
+      delete data.level
+    } else {
+      data.level = normalizeNumber(data.level, 0)
+    }
+  }
+
+  if (collectionName === 'journal') {
+    data.tags = splitList(data.tags)
+    data.pinned = normalizeBoolean(data.pinned)
+    data.featured = normalizeBoolean(data.featured)
+  }
+
+  if (collectionName === 'labs') {
+    data.tools = splitList(data.tools)
+    data.topics = splitList(data.topics)
+    data.files = Array.isArray(data.files) ? data.files : []
+  }
+
+  if (collectionName === 'archive') {
+    data.tags = splitList(data.tags)
+    data.files = Array.isArray(data.files) ? data.files : []
+    data.links = Array.isArray(data.links) ? data.links : []
+  }
+
+  if (collectionName === 'achievements') {
+    data.evidence = splitList(data.evidence)
+  }
+
+  if (collectionName === 'skills') {
+    data.evidence = splitList(data.evidence)
+    data.tools = splitList(data.tools)
+
+    if (!data.name && data.title) {
+      data.name = data.title
+    }
+
+    if (!data.title && data.name) {
+      data.title = data.name
+    }
+  }
+
+  return data
 }
 
 async function readMarkdownFile(collectionName, slug) {
@@ -291,6 +463,15 @@ async function readMarkdownFile(collectionName, slug) {
   }
 }
 
+app.get('/api/collections', (_req, res) => {
+  res.json({
+    collections: Object.entries(collections).map(([name, collection]) => ({
+      name,
+      label: collection.label,
+    })),
+  })
+})
+
 app.get('/api/docs', async (req, res) => {
   try {
     const collectionName = String(req.query.collection || 'writeups')
@@ -307,13 +488,14 @@ app.get('/api/docs', async (req, res) => {
       const filePath = path.join(collection.folder, file)
       const raw = await fs.readFile(filePath, 'utf8')
       const parsed = matter(raw)
+      const data = {
+        ...collection.defaults,
+        ...parsed.data,
+      }
 
       docs.push({
         slug: file.replace(/\.md$/, ''),
-        data: {
-          ...collection.defaults,
-          ...parsed.data,
-        },
+        data,
       })
     }
 
@@ -343,38 +525,16 @@ app.post('/api/docs/:collection/:slug', async (req, res) => {
     await fs.mkdir(collection.folder, { recursive: true })
 
     const inputData = req.body.data || {}
-    const blocks = req.body.blocks || []
+    const blocks = Array.isArray(req.body.blocks) ? req.body.blocks : []
 
-    const finalSlug = slugify(inputData.slug || inputData.title || oldSlug)
+    const titleValue = inputData.title || inputData.name || oldSlug
+    const finalSlug = slugify(inputData.slug || titleValue || oldSlug)
 
-    const data = {
-      ...collection.defaults,
-      ...inputData,
-      slug: finalSlug,
+    if (!finalSlug) {
+      throw new Error('Slug cannot be empty.')
     }
 
-    if (collectionName === 'writeups') {
-      data.tags = splitList(data.tags)
-      data.tools = splitList(data.tools)
-      data.concepts = splitList(data.concepts)
-      data.files = Array.isArray(data.files) ? data.files : []
-      data.order = Number(data.order || 999)
-      if (data.level === '' || data.level === null || data.level === undefined) {
-        delete data.level
-      } else {
-        data.level = Number(data.level)
-      }
-      data.pinned = Boolean(data.pinned)
-      data.featured = Boolean(data.featured)
-    }
-
-    if (collectionName === 'journal') {
-      data.tags = splitList(data.tags)
-      data.order = Number(data.order || 999)
-      data.pinned = Boolean(data.pinned)
-      data.featured = Boolean(data.featured)
-    }
-
+    const data = normalizeData(collectionName, inputData, finalSlug)
     const body = blocksToMarkdown(blocks)
     const output = matter.stringify(body, data)
 
@@ -387,7 +547,7 @@ app.post('/api/docs/:collection/:slug', async (req, res) => {
       try {
         await fs.unlink(oldFilePath)
       } catch {
-        // ignore if old file does not exist
+        // Ignore if old file does not exist.
       }
     }
 

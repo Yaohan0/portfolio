@@ -1,7 +1,7 @@
 ---
 title: Year 2 Cybersecurity Student
 slug: year-2-cybersecurity-student
-order: 4
+order: 5
 type: Education
 status: Ongoing
 date: "2026"

@@ -1,4 +1,5 @@
 ---
+import '../styles/global.css'
 ---
 
 <!doctype html>
@@ -10,8 +11,7 @@
   </head>
 
   <body class="min-h-screen bg-[#090909] text-[#f3efe4]">
-    <main class="grid min-h-screen lg:grid-cols-[320px_1fr]">
-      <!-- SIDEBAR -->
+    <main class="grid min-h-screen lg:grid-cols-[330px_1fr]">
       <aside class="border-r border-white/10 bg-[#0d0d0d] p-5">
         <div class="mb-8">
           <p class="font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">
@@ -23,25 +23,12 @@
           </h1>
 
           <p class="mt-3 text-sm leading-6 text-[#a9a196]">
-            Notion-style local editor for Journal and Writeups.
+            Block editor for writeups, journal, labs, archive, achievements,
+            and skills.
           </p>
         </div>
 
-        <div class="mb-5 grid grid-cols-2 gap-2">
-          <button
-            id="collection-writeups"
-            class="rounded-xl border border-[#c9ff5f]/40 bg-[#c9ff5f] px-4 py-3 text-xs font-black uppercase tracking-widest text-black"
-          >
-            Writeups
-          </button>
-
-          <button
-            id="collection-journal"
-            class="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs font-bold uppercase tracking-widest text-[#a9a196]"
-          >
-            Journal
-          </button>
-        </div>
+        <div id="collection-buttons" class="mb-5 grid grid-cols-2 gap-2"></div>
 
         <button
           id="new-doc"
@@ -53,8 +40,7 @@
         <div id="doc-list" class="space-y-2"></div>
       </aside>
 
-      <!-- EDITOR -->
-      <section class="grid min-h-screen lg:grid-cols-[minmax(0,1fr)_420px]">
+      <section class="grid min-h-screen lg:grid-cols-[minmax(0,1fr)_430px]">
         <div class="min-w-0 p-6 md:p-10">
           <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
             <div>
@@ -62,22 +48,33 @@
                 No document selected
               </p>
 
-              <h2 class="mt-3 text-3xl font-bold">
+              <h2 id="editor-title" class="mt-3 text-3xl font-bold">
                 Editor
               </h2>
             </div>
 
-            <button
-              id="save-doc"
-              class="rounded-full bg-[#c9ff5f] px-6 py-3 font-mono text-xs font-black uppercase tracking-widest text-black transition hover:scale-105"
-            >
-              Save
-            </button>
+            <div class="flex gap-3">
+              <a
+                id="open-page"
+                href="#"
+                target="_blank"
+                class="rounded-full border border-white/10 px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-[#a9a196] transition hover:border-[#c9ff5f]/60 hover:text-[#c9ff5f]"
+              >
+                Open page
+              </a>
+
+              <button
+                id="save-doc"
+                class="rounded-full bg-[#c9ff5f] px-6 py-3 font-mono text-xs font-black uppercase tracking-widest text-black transition hover:scale-105"
+              >
+                Save
+              </button>
+            </div>
           </div>
 
           <div class="mb-8 grid gap-4 md:grid-cols-2">
             <label class="block">
-              <span class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+              <span id="title-label" class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">
                 Title
               </span>
               <input
@@ -96,8 +93,8 @@
               />
             </label>
 
-            <label class="block md:col-span-2">
-              <span class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+            <label id="summary-wrapper" class="block md:col-span-2">
+              <span id="summary-label" class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">
                 Summary
               </span>
               <textarea
@@ -129,35 +126,51 @@
             </label>
           </div>
 
-          <div id="writeup-fields" class="mb-8 grid gap-4 md:grid-cols-3">
-            <input id="field-platform" placeholder="Platform" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
-            <input id="field-series" placeholder="Series" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
-            <input id="field-category" placeholder="Category" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
-            <input id="field-difficulty" placeholder="Difficulty" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
-            <input id="field-status" placeholder="Status" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
-            <input id="field-date" placeholder="Date" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
-          </div>
+          <details open class="mb-8 rounded-2xl border border-white/10 bg-[#111111]/70">
+            <summary class="cursor-pointer px-5 py-4 font-mono text-xs uppercase tracking-[0.25em] text-[#c9ff5f]">
+              Metadata
+            </summary>
 
-          <div id="journal-fields" class="mb-8 hidden grid gap-4 md:grid-cols-3">
-            <input id="field-journal-category" placeholder="Category" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
-            <input id="field-mood" placeholder="Mood" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
-            <input id="field-journal-date" placeholder="Date" class="rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#c9ff5f]/60" />
-          </div>
+            <div id="metadata-fields" class="grid gap-4 border-t border-white/10 p-5 md:grid-cols-3"></div>
+          </details>
 
           <div class="mb-6 flex flex-wrap gap-2">
-            <button data-add="heading" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">Heading</button>
-            <button data-add="paragraph" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">Text</button>
-            <button data-add="image" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">Image</button>
-            <button data-add="file" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">File</button>
-            <button data-add="code" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">Code</button>
-            <button data-add="callout" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">Callout</button>
-            <button data-add="divider" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">Divider</button>
+            <button data-add="heading" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">
+              Heading
+            </button>
+
+            <button data-add="subheading" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">
+              Subheading
+            </button>
+
+            <button data-add="paragraph" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">
+              Text
+            </button>
+
+            <button data-add="image" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">
+              Image
+            </button>
+
+            <button data-add="file" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">
+              File
+            </button>
+
+            <button data-add="code" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">
+              Code
+            </button>
+
+            <button data-add="callout" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">
+              Callout
+            </button>
+
+            <button data-add="divider" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">
+              Divider
+            </button>
           </div>
 
           <div id="blocks" class="space-y-4"></div>
         </div>
 
-        <!-- PREVIEW -->
         <aside class="border-l border-white/10 bg-[#0d0d0d] p-6">
           <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
             Preview
@@ -171,6 +184,196 @@
     <script is:inline>
       const API = "http://localhost:8787/api";
 
+      const collectionConfigs = {
+        writeups: {
+          label: "Writeups",
+          titleField: "title",
+          summaryField: "summary",
+          pageBase: "/writeups/",
+          defaults: {
+            title: "Untitled Writeup",
+            slug: "untitled-writeup",
+            order: 999,
+            track: "Writeups",
+            platform: "General",
+            series: "General",
+            category: "General",
+            difficulty: "Beginner",
+            status: "Draft",
+            date: new Date().toISOString().slice(0, 10),
+            summary: "",
+            tags: [],
+            tools: [],
+            concepts: [],
+            lesson: "",
+            files: [],
+            externalLink: "",
+            cover: "",
+            pinned: false,
+            featured: false,
+          },
+          fields: [
+            { name: "order", label: "Order", type: "number" },
+            { name: "track", label: "Track", type: "text" },
+            { name: "platform", label: "Platform", type: "text" },
+            { name: "series", label: "Series", type: "text" },
+            { name: "category", label: "Category", type: "text" },
+            { name: "difficulty", label: "Difficulty", type: "text" },
+            { name: "level", label: "Level", type: "number", optional: true },
+            { name: "status", label: "Status", type: "text" },
+            { name: "date", label: "Date", type: "text" },
+            { name: "tags", label: "Tags", type: "list" },
+            { name: "tools", label: "Tools", type: "list" },
+            { name: "concepts", label: "Concepts", type: "list" },
+            { name: "lesson", label: "Lesson", type: "textarea" },
+            { name: "externalLink", label: "External Link", type: "text" },
+            { name: "pinned", label: "Pinned", type: "checkbox" },
+            { name: "featured", label: "Featured", type: "checkbox" },
+          ],
+        },
+
+        journal: {
+          label: "Journal",
+          titleField: "title",
+          summaryField: "summary",
+          pageBase: "/journal/",
+          defaults: {
+            title: "Untitled Journal Entry",
+            slug: "untitled-journal-entry",
+            order: 999,
+            date: new Date().toISOString().slice(0, 10),
+            mood: "Writing",
+            category: "Journal",
+            summary: "",
+            tags: [],
+            lesson: "",
+            cover: "",
+            pinned: false,
+            featured: false,
+          },
+          fields: [
+            { name: "order", label: "Order", type: "number" },
+            { name: "date", label: "Date", type: "text" },
+            { name: "mood", label: "Mood", type: "text" },
+            { name: "category", label: "Category", type: "text" },
+            { name: "tags", label: "Tags", type: "list" },
+            { name: "lesson", label: "Takeaway", type: "textarea" },
+            { name: "pinned", label: "Pinned", type: "checkbox" },
+            { name: "featured", label: "Featured", type: "checkbox" },
+          ],
+        },
+
+        labs: {
+          label: "Labs",
+          titleField: "title",
+          summaryField: "description",
+          pageBase: "/labs/",
+          defaults: {
+            title: "Untitled Lab",
+            slug: "untitled-lab",
+            order: 999,
+            status: "Draft",
+            type: "Lab",
+            description: "",
+            tools: [],
+            topics: [],
+            files: [],
+            cover: "",
+          },
+          fields: [
+            { name: "order", label: "Order", type: "number" },
+            { name: "status", label: "Status", type: "text" },
+            { name: "type", label: "Type", type: "text" },
+            { name: "tools", label: "Tools", type: "list" },
+            { name: "topics", label: "Topics", type: "list" },
+          ],
+        },
+
+        archive: {
+          label: "Archive",
+          titleField: "title",
+          summaryField: "summary",
+          pageBase: "/archive/",
+          defaults: {
+            title: "Untitled Archive Note",
+            slug: "untitled-archive-note",
+            order: 999,
+            type: "Class Notes",
+            status: "Active",
+            date: new Date().toISOString().slice(0, 10),
+            summary: "",
+            tags: [],
+            files: [],
+            links: [],
+            cover: "",
+          },
+          fields: [
+            { name: "order", label: "Order", type: "number" },
+            { name: "type", label: "Type", type: "text" },
+            { name: "status", label: "Status", type: "text" },
+            { name: "date", label: "Date", type: "text" },
+            { name: "tags", label: "Tags", type: "list" },
+          ],
+        },
+
+        achievements: {
+          label: "Achievements",
+          titleField: "title",
+          summaryField: "description",
+          pageBase: "/achievements/",
+          defaults: {
+            title: "Untitled Achievement",
+            slug: "untitled-achievement",
+            order: 999,
+            type: "Award",
+            status: "Completed",
+            date: new Date().toISOString().slice(0, 10),
+            description: "",
+            evidence: [],
+            link: "",
+            cover: "",
+          },
+          fields: [
+            { name: "order", label: "Order", type: "number" },
+            { name: "type", label: "Type", type: "text" },
+            { name: "status", label: "Status", type: "text" },
+            { name: "date", label: "Date", type: "text" },
+            { name: "evidence", label: "Evidence", type: "list" },
+            { name: "link", label: "Related Link", type: "text" },
+          ],
+        },
+
+        skills: {
+          label: "Skills",
+          titleField: "name",
+          summaryField: "description",
+          pageBase: "/skills/",
+          defaults: {
+            name: "Untitled Skill",
+            title: "Untitled Skill",
+            slug: "untitled-skill",
+            order: 999,
+            category: "General",
+            level: "Learning",
+            status: "Active",
+            description: "",
+            evidence: [],
+            tools: [],
+            notes: "",
+            cover: "",
+          },
+          fields: [
+            { name: "order", label: "Order", type: "number" },
+            { name: "category", label: "Category", type: "text" },
+            { name: "level", label: "Level", type: "text" },
+            { name: "status", label: "Status", type: "text" },
+            { name: "evidence", label: "Evidence", type: "list" },
+            { name: "tools", label: "Tools", type: "list" },
+            { name: "notes", label: "Notes", type: "textarea" },
+          ],
+        },
+      };
+
       let collection = "writeups";
       let docs = [];
       let currentSlug = "";
@@ -179,6 +382,14 @@
 
       const $ = (id) => document.getElementById(id);
 
+      const escapeHtml = (value) =>
+        String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+
       const slugify = (value) =>
         String(value || "")
           .toLowerCase()
@@ -186,6 +397,23 @@
           .replace(/['"]/g, "")
           .replace(/[^a-z0-9]+/g, "-")
           .replace(/^-+|-+$/g, "");
+
+      const config = () => collectionConfigs[collection];
+
+      const displayTitle = (data) => {
+        const field = config().titleField;
+        return data[field] || data.title || data.name || "Untitled";
+      };
+
+      const displaySummary = (data) => {
+        const field = config().summaryField;
+        return data[field] || data.summary || data.description || "";
+      };
+
+      const normalizeListForInput = (value) => {
+        if (Array.isArray(value)) return value.join(", ");
+        return value || "";
+      };
 
       const request = async (url, options = {}) => {
         const response = await fetch(url, options);
@@ -198,6 +426,33 @@
         return data;
       };
 
+      const renderCollectionButtons = () => {
+        $("collection-buttons").innerHTML = Object.entries(collectionConfigs)
+          .map(([name, item]) => {
+            const active = name === collection;
+
+            return `
+              <button
+                data-collection="${name}"
+                class="collection-button rounded-xl border ${
+                  active
+                    ? "border-[#c9ff5f]/40 bg-[#c9ff5f] text-black"
+                    : "border-white/10 bg-black/30 text-[#a9a196]"
+                } px-4 py-3 text-xs font-black uppercase tracking-widest transition hover:border-[#c9ff5f]/60"
+              >
+                ${item.label}
+              </button>
+            `;
+          })
+          .join("");
+
+        document.querySelectorAll(".collection-button").forEach((button) => {
+          button.addEventListener("click", () => {
+            setCollection(button.dataset.collection);
+          });
+        });
+      };
+
       const loadDocs = async () => {
         const data = await request(`${API}/docs?collection=${collection}`);
         docs = data.docs;
@@ -206,17 +461,19 @@
 
       const renderDocList = () => {
         $("doc-list").innerHTML = docs
-          .map(
-            (doc) => `
+          .map((doc) => {
+            const title = displayTitle(doc.data);
+
+            return `
               <button
-                data-slug="${doc.slug}"
+                data-slug="${escapeHtml(doc.slug)}"
                 class="doc-button w-full rounded-xl border border-white/10 bg-black/20 p-4 text-left transition hover:border-[#c9ff5f]/60"
               >
-                <p class="text-sm font-bold text-[#f3efe4]">${doc.data.title}</p>
-                <p class="mt-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#6f6a63]">${doc.slug}</p>
+                <p class="text-sm font-bold text-[#f3efe4]">${escapeHtml(title)}</p>
+                <p class="mt-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#6f6a63]">${escapeHtml(doc.slug)}</p>
               </button>
-            `
-          )
+            `;
+          })
           .join("");
 
         document.querySelectorAll(".doc-button").forEach((button) => {
@@ -237,47 +494,7 @@
       };
 
       const newDoc = () => {
-        const today = new Date().toISOString().slice(0, 10);
-
-        currentData =
-          collection === "writeups"
-            ? {
-                title: "Untitled Writeup",
-                slug: "untitled-writeup",
-                order: 999,
-                track: "Writeups",
-                platform: "General",
-                series: "General",
-                category: "General",
-                difficulty: "Beginner",
-                status: "Draft",
-                date: today,
-                summary: "",
-                tags: [],
-                tools: [],
-                concepts: [],
-                lesson: "",
-                files: [],
-                externalLink: "",
-                cover: "",
-                pinned: false,
-                featured: false,
-              }
-            : {
-                title: "Untitled Journal Entry",
-                slug: "untitled-journal-entry",
-                order: 999,
-                date: today,
-                mood: "Writing",
-                category: "Journal",
-                summary: "",
-                tags: [],
-                lesson: "",
-                cover: "",
-                pinned: false,
-                featured: false,
-              };
-
+        currentData = structuredClone(config().defaults);
         currentSlug = currentData.slug;
         blocks = [{ type: "paragraph", text: "" }];
 
@@ -286,71 +503,144 @@
         renderPreview();
       };
 
-      const fillFields = () => {
-        $("current-path").textContent = `src/content/${collection}/${currentData.slug}.md`;
+      const renderMetadataFields = () => {
+        $("metadata-fields").innerHTML = config().fields
+          .map((field) => {
+            const value = currentData[field.name];
 
-        $("field-title").value = currentData.title || "";
+            if (field.type === "checkbox") {
+              return `
+                <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3">
+                  <input
+                    data-meta="${field.name}"
+                    type="checkbox"
+                    ${value ? "checked" : ""}
+                    class="meta-input h-4 w-4"
+                  />
+                  <span class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+                    ${field.label}
+                  </span>
+                </label>
+              `;
+            }
+
+            if (field.type === "textarea") {
+              return `
+                <label class="block md:col-span-3">
+                  <span class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+                    ${field.label}
+                  </span>
+                  <textarea
+                    data-meta="${field.name}"
+                    rows="3"
+                    class="meta-input mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[#f3efe4] outline-none focus:border-[#c9ff5f]/60"
+                  >${escapeHtml(value || "")}</textarea>
+                </label>
+              `;
+            }
+
+            return `
+              <label class="block">
+                <span class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">
+                  ${field.label}
+                </span>
+                <input
+                  data-meta="${field.name}"
+                  type="${field.type === "number" ? "number" : "text"}"
+                  value="${escapeHtml(field.type === "list" ? normalizeListForInput(value) : value || "")}"
+                  class="meta-input mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[#f3efe4] outline-none focus:border-[#c9ff5f]/60"
+                />
+              </label>
+            `;
+          })
+          .join("");
+
+        document.querySelectorAll(".meta-input").forEach((input) => {
+          input.addEventListener("input", renderPreview);
+          input.addEventListener("change", renderPreview);
+        });
+      };
+
+      const fillFields = () => {
+        const titleField = config().titleField;
+        const summaryField = config().summaryField;
+
+        $("current-path").textContent = `src/content/${collection}/${currentData.slug}.md`;
+        $("editor-title").textContent = `${config().label} Editor`;
+        $("title-label").textContent = titleField === "name" ? "Name" : "Title";
+        $("summary-label").textContent =
+          summaryField === "description" ? "Description" : "Summary";
+
+        $("field-title").value = currentData[titleField] || currentData.title || currentData.name || "";
         $("field-slug").value = currentData.slug || "";
-        $("field-summary").value = currentData.summary || "";
+        $("field-summary").value = currentData[summaryField] || "";
         $("field-cover").value = currentData.cover || "";
 
-        $("writeup-fields").classList.toggle("hidden", collection !== "writeups");
-        $("journal-fields").classList.toggle("hidden", collection !== "journal");
+        $("open-page").href = `${config().pageBase}${currentData.slug || ""}`;
 
-        if (collection === "writeups") {
-          $("field-platform").value = currentData.platform || "General";
-          $("field-series").value = currentData.series || "General";
-          $("field-category").value = currentData.category || "General";
-          $("field-difficulty").value = currentData.difficulty || "Beginner";
-          $("field-status").value = currentData.status || "Draft";
-          $("field-date").value = currentData.date || "";
-        }
-
-        if (collection === "journal") {
-          $("field-journal-category").value = currentData.category || "Journal";
-          $("field-mood").value = currentData.mood || "Writing";
-          $("field-journal-date").value = currentData.date || "";
-        }
+        renderMetadataFields();
       };
 
       const collectFields = () => {
-        currentData.title = $("field-title").value;
+        const titleField = config().titleField;
+        const summaryField = config().summaryField;
+
+        currentData[titleField] = $("field-title").value;
+
+        if (titleField === "name") {
+          currentData.title = $("field-title").value;
+        } else {
+          currentData.title = $("field-title").value;
+        }
+
         currentData.slug = slugify($("field-slug").value || $("field-title").value);
-        currentData.summary = $("field-summary").value;
+        currentData[summaryField] = $("field-summary").value;
+
+        if (summaryField !== "summary") {
+          currentData.summary = $("field-summary").value;
+        }
+
         currentData.cover = $("field-cover").value;
 
-        if (collection === "writeups") {
-          currentData.platform = $("field-platform").value;
-          currentData.series = $("field-series").value;
-          currentData.category = $("field-category").value;
-          currentData.difficulty = $("field-difficulty").value;
-          currentData.status = $("field-status").value;
-          currentData.date = $("field-date").value;
-        }
+        document.querySelectorAll(".meta-input").forEach((input) => {
+          const name = input.dataset.meta;
 
-        if (collection === "journal") {
-          currentData.category = $("field-journal-category").value;
-          currentData.mood = $("field-mood").value;
-          currentData.date = $("field-journal-date").value;
-        }
+          if (input.type === "checkbox") {
+            currentData[name] = input.checked;
+          } else {
+            currentData[name] = input.value;
+          }
+        });
+
+        $("open-page").href = `${config().pageBase}${currentData.slug || ""}`;
 
         return currentData;
       };
 
-      const blockTemplate = (block, index) => {
-        const controls = `
-          <div class="flex gap-2">
-            <button data-up="${index}" class="move-up rounded-lg border border-white/10 px-2 py-1 text-xs text-[#a9a196]">↑</button>
-            <button data-down="${index}" class="move-down rounded-lg border border-white/10 px-2 py-1 text-xs text-[#a9a196]">↓</button>
-            <button data-delete="${index}" class="delete-block rounded-lg border border-red-500/30 px-2 py-1 text-xs text-red-300">Delete</button>
-          </div>
-        `;
+      const blockControls = (index) => `
+        <div class="flex gap-2">
+          <button data-up="${index}" class="move-up rounded-lg border border-white/10 px-2 py-1 text-xs text-[#a9a196]">↑</button>
+          <button data-down="${index}" class="move-down rounded-lg border border-white/10 px-2 py-1 text-xs text-[#a9a196]">↓</button>
+          <button data-delete="${index}" class="delete-block rounded-lg border border-red-500/30 px-2 py-1 text-xs text-red-300">Delete</button>
+        </div>
+      `;
 
-        if (block.type === "heading") {
+      const blockTemplate = (block, index) => {
+        const controls = blockControls(index);
+
+        if (block.type === "heading" || block.type === "subheading") {
           return `
             <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
-              <div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#c9ff5f]">Heading</p>${controls}</div>
-              <input data-index="${index}" data-field="text" value="${block.text || ""}" class="block-input w-full bg-transparent text-2xl font-bold outline-none" />
+              <div class="mb-3 flex justify-between">
+                <p class="font-mono text-xs text-[#c9ff5f]">${block.type === "heading" ? "Heading" : "Subheading"}</p>
+                ${controls}
+              </div>
+              <input
+                data-index="${index}"
+                data-field="text"
+                value="${escapeHtml(block.text || "")}"
+                class="block-input w-full bg-transparent ${block.type === "heading" ? "text-2xl" : "text-xl"} font-bold outline-none"
+              />
             </div>
           `;
         }
@@ -358,8 +648,16 @@
         if (block.type === "paragraph") {
           return `
             <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
-              <div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#c9ff5f]">Paragraph</p>${controls}</div>
-              <textarea data-index="${index}" data-field="text" rows="5" class="block-input w-full resize-y bg-transparent leading-7 outline-none">${block.text || ""}</textarea>
+              <div class="mb-3 flex justify-between">
+                <p class="font-mono text-xs text-[#c9ff5f]">Paragraph</p>
+                ${controls}
+              </div>
+              <textarea
+                data-index="${index}"
+                data-field="text"
+                rows="5"
+                class="block-input w-full resize-y bg-transparent leading-7 outline-none"
+              >${escapeHtml(block.text || "")}</textarea>
             </div>
           `;
         }
@@ -367,10 +665,29 @@
         if (block.type === "image") {
           return `
             <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
-              <div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#c9ff5f]">Image</p>${controls}</div>
-              ${block.src ? `<img src="${block.src}" class="mb-4 max-h-72 w-full rounded-xl object-cover" />` : ""}
-              <input data-index="${index}" data-field="src" value="${block.src || ""}" placeholder="/uploads/image.png" class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none" />
-              <input data-index="${index}" data-field="alt" value="${block.alt || ""}" placeholder="Alt text" class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none" />
+              <div class="mb-3 flex justify-between">
+                <p class="font-mono text-xs text-[#c9ff5f]">Image</p>
+                ${controls}
+              </div>
+
+              ${block.src ? `<img src="${escapeHtml(block.src)}" class="mb-4 max-h-72 w-full rounded-xl object-cover" />` : ""}
+
+              <input
+                data-index="${index}"
+                data-field="src"
+                value="${escapeHtml(block.src || "")}"
+                placeholder="/uploads/image.png"
+                class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none"
+              />
+
+              <input
+                data-index="${index}"
+                data-field="alt"
+                value="${escapeHtml(block.alt || "")}"
+                placeholder="Alt text"
+                class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none"
+              />
+
               <input data-upload-image="${index}" type="file" class="image-upload text-sm text-[#a9a196]" />
             </div>
           `;
@@ -379,9 +696,27 @@
         if (block.type === "file") {
           return `
             <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
-              <div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#c9ff5f]">File</p>${controls}</div>
-              <input data-index="${index}" data-field="name" value="${block.name || ""}" placeholder="File name" class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none" />
-              <input data-index="${index}" data-field="url" value="${block.url || ""}" placeholder="/uploads/file.pdf" class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none" />
+              <div class="mb-3 flex justify-between">
+                <p class="font-mono text-xs text-[#c9ff5f]">File</p>
+                ${controls}
+              </div>
+
+              <input
+                data-index="${index}"
+                data-field="name"
+                value="${escapeHtml(block.name || "")}"
+                placeholder="File name"
+                class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none"
+              />
+
+              <input
+                data-index="${index}"
+                data-field="url"
+                value="${escapeHtml(block.url || "")}"
+                placeholder="/uploads/file.pdf"
+                class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none"
+              />
+
               <input data-upload-file="${index}" type="file" class="file-upload text-sm text-[#a9a196]" />
             </div>
           `;
@@ -390,9 +725,25 @@
         if (block.type === "code") {
           return `
             <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
-              <div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#c9ff5f]">Code</p>${controls}</div>
-              <input data-index="${index}" data-field="language" value="${block.language || ""}" placeholder="bash, js, py..." class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none" />
-              <textarea data-index="${index}" data-field="code" rows="7" class="block-input w-full resize-y rounded-xl border border-white/10 bg-black/30 px-3 py-2 font-mono text-sm outline-none">${block.code || ""}</textarea>
+              <div class="mb-3 flex justify-between">
+                <p class="font-mono text-xs text-[#c9ff5f]">Code</p>
+                ${controls}
+              </div>
+
+              <input
+                data-index="${index}"
+                data-field="language"
+                value="${escapeHtml(block.language || "")}"
+                placeholder="bash, js, py..."
+                class="block-input mb-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none"
+              />
+
+              <textarea
+                data-index="${index}"
+                data-field="code"
+                rows="7"
+                class="block-input w-full resize-y rounded-xl border border-white/10 bg-black/30 px-3 py-2 font-mono text-sm outline-none"
+              >${escapeHtml(block.code || "")}</textarea>
             </div>
           `;
         }
@@ -400,15 +751,27 @@
         if (block.type === "callout") {
           return `
             <div class="block-card rounded-2xl border border-[#ead27c]/20 bg-[#ead27c]/5 p-4">
-              <div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#ead27c]">Callout</p>${controls}</div>
-              <textarea data-index="${index}" data-field="text" rows="3" class="block-input w-full resize-y bg-transparent leading-7 outline-none">${block.text || ""}</textarea>
+              <div class="mb-3 flex justify-between">
+                <p class="font-mono text-xs text-[#ead27c]">Callout</p>
+                ${controls}
+              </div>
+
+              <textarea
+                data-index="${index}"
+                data-field="text"
+                rows="3"
+                class="block-input w-full resize-y bg-transparent leading-7 outline-none"
+              >${escapeHtml(block.text || "")}</textarea>
             </div>
           `;
         }
 
         return `
           <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
-            <div class="flex justify-between"><p class="font-mono text-xs text-[#c9ff5f]">Divider</p>${controls}</div>
+            <div class="flex justify-between">
+              <p class="font-mono text-xs text-[#c9ff5f]">Divider</p>
+              ${controls}
+            </div>
             <div class="mt-4 h-px bg-white/10"></div>
           </div>
         `;
@@ -430,7 +793,9 @@
           button.addEventListener("click", () => {
             const index = Number(button.dataset.up);
             if (index === 0) return;
+
             [blocks[index - 1], blocks[index]] = [blocks[index], blocks[index - 1]];
+
             renderBlocks();
             renderPreview();
           });
@@ -440,7 +805,9 @@
           button.addEventListener("click", () => {
             const index = Number(button.dataset.down);
             if (index === blocks.length - 1) return;
+
             [blocks[index + 1], blocks[index]] = [blocks[index], blocks[index + 1]];
+
             renderBlocks();
             renderPreview();
           });
@@ -450,6 +817,7 @@
           button.addEventListener("click", () => {
             const index = Number(button.dataset.delete);
             blocks.splice(index, 1);
+
             renderBlocks();
             renderPreview();
           });
@@ -458,8 +826,12 @@
         document.querySelectorAll(".image-upload").forEach((input) => {
           input.addEventListener("change", async () => {
             const index = Number(input.dataset.uploadImage);
-            const url = await uploadFile(input.files[0]);
+            const file = input.files[0];
+            if (!file) return;
+
+            const url = await uploadFile(file);
             blocks[index].src = url;
+
             renderBlocks();
             renderPreview();
           });
@@ -468,9 +840,13 @@
         document.querySelectorAll(".file-upload").forEach((input) => {
           input.addEventListener("change", async () => {
             const index = Number(input.dataset.uploadFile);
-            const url = await uploadFile(input.files[0]);
+            const file = input.files[0];
+            if (!file) return;
+
+            const url = await uploadFile(file);
             blocks[index].url = url;
-            blocks[index].name = input.files[0].name;
+            blocks[index].name = file.name;
+
             renderBlocks();
             renderPreview();
           });
@@ -480,27 +856,56 @@
       const renderPreview = () => {
         collectFields();
 
+        const title = displayTitle(currentData);
+        const summary = displaySummary(currentData);
+
         const cover = currentData.cover
-          ? `<img src="${currentData.cover}" class="mb-6 max-h-72 w-full rounded-2xl object-cover" />`
+          ? `<img src="${escapeHtml(currentData.cover)}" class="mb-6 max-h-72 w-full rounded-2xl object-cover" />`
           : "";
 
         const body = blocks
           .map((block) => {
-            if (block.type === "heading") return `<h2 class="text-3xl font-bold">${block.text || ""}</h2>`;
-            if (block.type === "paragraph") return `<p class="leading-8 text-[#a9a196]">${(block.text || "").replace(/\n/g, "<br>")}</p>`;
-            if (block.type === "image") return `<img src="${block.src || ""}" alt="${block.alt || ""}" class="max-h-72 w-full rounded-2xl object-cover" />`;
-            if (block.type === "file") return `<a href="${block.url || "#"}" class="block rounded-xl border border-white/10 p-4 text-[#c9ff5f]">${block.name || "Download file"}</a>`;
-            if (block.type === "code") return `<pre class="overflow-x-auto rounded-2xl bg-[#20252b] p-4 text-sm"><code>${block.code || ""}</code></pre>`;
-            if (block.type === "callout") return `<blockquote class="rounded-2xl border border-[#ead27c]/20 bg-[#ead27c]/5 p-4 text-[#ead27c]">${block.text || ""}</blockquote>`;
-            if (block.type === "divider") return `<hr class="border-white/10" />`;
+            if (block.type === "heading") {
+              return `<h2 class="text-3xl font-bold">${escapeHtml(block.text || "")}</h2>`;
+            }
+
+            if (block.type === "subheading") {
+              return `<h3 class="text-2xl font-bold">${escapeHtml(block.text || "")}</h3>`;
+            }
+
+            if (block.type === "paragraph") {
+              return `<p class="leading-8 text-[#a9a196]">${escapeHtml(block.text || "").replace(/\n/g, "<br>")}</p>`;
+            }
+
+            if (block.type === "image") {
+              return `<img src="${escapeHtml(block.src || "")}" alt="${escapeHtml(block.alt || "")}" class="max-h-72 w-full rounded-2xl object-cover" />`;
+            }
+
+            if (block.type === "file") {
+              return `<a href="${escapeHtml(block.url || "#")}" class="block rounded-xl border border-white/10 p-4 text-[#c9ff5f]">${escapeHtml(block.name || "Download file")}</a>`;
+            }
+
+            if (block.type === "code") {
+              return `<pre class="overflow-x-auto rounded-2xl bg-[#20252b] p-4 text-sm"><code>${escapeHtml(block.code || "")}</code></pre>`;
+            }
+
+            if (block.type === "callout") {
+              return `<blockquote class="rounded-2xl border border-[#ead27c]/20 bg-[#ead27c]/5 p-4 text-[#ead27c]">${escapeHtml(block.text || "")}</blockquote>`;
+            }
+
+            if (block.type === "divider") {
+              return `<hr class="border-white/10" />`;
+            }
+
             return "";
           })
           .join("");
 
         $("preview").innerHTML = `
           ${cover}
-          <h1 class="text-4xl font-bold leading-tight">${currentData.title || "Untitled"}</h1>
-          <p class="text-[#a9a196]">${currentData.summary || ""}</p>
+          <p class="font-mono text-xs uppercase tracking-[0.25em] text-[#6f6a63]">${escapeHtml(config().label)}</p>
+          <h1 class="mt-3 text-4xl font-bold leading-tight">${escapeHtml(title || "Untitled")}</h1>
+          <p class="mt-4 text-[#a9a196]">${escapeHtml(summary || "")}</p>
           <div class="mt-8 space-y-6">${body}</div>
         `;
       };
@@ -508,6 +913,7 @@
       const addBlock = (type) => {
         const defaults = {
           heading: { type: "heading", text: "New heading" },
+          subheading: { type: "subheading", text: "New subheading" },
           paragraph: { type: "paragraph", text: "" },
           image: { type: "image", src: "", alt: "" },
           file: { type: "file", name: "", url: "" },
@@ -540,39 +946,35 @@
       };
 
       const saveDoc = async () => {
-        collectFields();
+        try {
+          collectFields();
 
-        const result = await request(`${API}/docs/${collection}/${currentSlug}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            data: currentData,
-            blocks,
-          }),
-        });
+          const result = await request(`${API}/docs/${collection}/${currentSlug}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              data: currentData,
+              blocks,
+            }),
+          });
 
-        currentSlug = result.slug;
-        await loadDocs();
-        await loadDoc(currentSlug);
+          currentSlug = result.slug;
 
-        alert("Saved");
+          await loadDocs();
+          await loadDoc(currentSlug);
+
+          alert("Saved");
+        } catch (error) {
+          alert(error.message);
+        }
       };
 
       const setCollection = async (nextCollection) => {
         collection = nextCollection;
 
-        $("collection-writeups").className =
-          collection === "writeups"
-            ? "rounded-xl border border-[#c9ff5f]/40 bg-[#c9ff5f] px-4 py-3 text-xs font-black uppercase tracking-widest text-black"
-            : "rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs font-bold uppercase tracking-widest text-[#a9a196]";
-
-        $("collection-journal").className =
-          collection === "journal"
-            ? "rounded-xl border border-[#c9ff5f]/40 bg-[#c9ff5f] px-4 py-3 text-xs font-black uppercase tracking-widest text-black"
-            : "rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs font-bold uppercase tracking-widest text-[#a9a196]";
-
+        renderCollectionButtons();
         await loadDocs();
 
         if (docs.length > 0) {
@@ -582,8 +984,6 @@
         }
       };
 
-      $("collection-writeups").addEventListener("click", () => setCollection("writeups"));
-      $("collection-journal").addEventListener("click", () => setCollection("journal"));
       $("new-doc").addEventListener("click", newDoc);
       $("save-doc").addEventListener("click", saveDoc);
 
@@ -605,6 +1005,7 @@
 
         const url = await uploadFile(file);
         $("field-cover").value = url;
+
         renderPreview();
       });
 
@@ -612,6 +1013,7 @@
         button.addEventListener("click", () => addBlock(button.dataset.add));
       });
 
+      renderCollectionButtons();
       setCollection("writeups");
     </script>
   </body>
