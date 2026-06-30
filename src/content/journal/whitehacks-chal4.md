@@ -8,7 +8,7 @@ category: Journal
 summary: '[Request Writeup] '
 tags: []
 lesson: ''
-cover: /portfolio/uploads/1782651465812-screenshot-2026-06-28-205711.png
+cover: /uploads/1782825315420-screenshot-2026-06-28-205711.png
 pinned: false
 featured: false
 ---

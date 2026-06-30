@@ -140,7 +140,19 @@ await fs.mkdir(uploadsDir, { recursive: true })
 app.use(express.json({ limit: '25mb' }))
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4321')
+  const allowedOrigins = [
+    'http://localhost:4321',
+    'http://127.0.0.1:4321',
+  ]
+
+  const origin = req.headers.origin
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin)
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4321')
+  }
+
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
@@ -208,7 +220,7 @@ function normalizeNumber(value, fallback = 999) {
 }
 
 function markdownToBlocks(markdown) {
-  const lines = markdown.split('\n')
+  const lines = String(markdown || '').split('\n')
   const blocks = []
   let i = 0
 
@@ -283,6 +295,7 @@ function markdownToBlocks(markdown) {
     }
 
     const imageMatch = line.match(/^!\[(.*?)\]\((.*?)\)$/)
+
     if (imageMatch) {
       blocks.push({
         type: 'image',
@@ -295,6 +308,7 @@ function markdownToBlocks(markdown) {
     }
 
     const fileMatch = line.match(/^\[(.*?)\]\((.*?)\)$/)
+
     if (fileMatch) {
       blocks.push({
         type: 'file',
@@ -472,6 +486,14 @@ app.get('/api/collections', (_req, res) => {
   })
 })
 
+app.get('/api/health', (_req, res) => {
+  res.json({
+    ok: true,
+    message: 'Yaohan Studio server is running',
+    time: new Date().toISOString(),
+  })
+})
+
 app.get('/api/docs', async (req, res) => {
   try {
     const collectionName = String(req.query.collection || 'writeups')
@@ -488,14 +510,13 @@ app.get('/api/docs', async (req, res) => {
       const filePath = path.join(collection.folder, file)
       const raw = await fs.readFile(filePath, 'utf8')
       const parsed = matter(raw)
-      const data = {
-        ...collection.defaults,
-        ...parsed.data,
-      }
 
       docs.push({
         slug: file.replace(/\.md$/, ''),
-        data,
+        data: {
+          ...collection.defaults,
+          ...parsed.data,
+        },
       })
     }
 
@@ -547,7 +568,7 @@ app.post('/api/docs/:collection/:slug', async (req, res) => {
       try {
         await fs.unlink(oldFilePath)
       } catch {
-        // Ignore if old file does not exist.
+        // Ignore missing old file.
       }
     }
 
@@ -567,8 +588,9 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
   }
 
   res.json({
-  url: `/portfolio/uploads/${req.file.filename}`,
-  filename: req.file.filename,
+    url: `/uploads/${req.file.filename}`,
+    filename: req.file.filename,
+  })
 })
 
 app.listen(port, () => {
