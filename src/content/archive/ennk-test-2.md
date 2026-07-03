@@ -107,3 +107,5 @@ Collision domain - Where collisions can happen (Switch ports )
 ## How to count broadcast domains 
 
 ## New heading
+
+![Image](/uploads/1782979060379-screenshot-2026-07-02-155730.png)
