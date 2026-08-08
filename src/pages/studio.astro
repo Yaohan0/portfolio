@@ -8,19 +8,17 @@ import '../styles/global.css'
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Yaohan Studio</title>
+    <style>
+      :root{--studio-acid:#d8ff55;--studio-bg:#0a0a0f;--studio-panel:#111118;--studio-line:#2a2a34;--studio-muted:#858590}*{box-sizing:border-box}.studio-body{background:var(--studio-bg);color:#f4f2eb}.studio-shell{min-height:100vh;display:grid;grid-template-columns:290px minmax(0,1fr);background-image:radial-gradient(circle at 80% 0,rgba(216,255,85,.055),transparent 28%)}.studio-aside{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--studio-line);padding:22px;background:#0c0c12}.studio-brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}.studio-brand b{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:var(--studio-acid);color:#0a0a0f;font-weight:900}.studio-brand small{display:block;color:#656570;font:600 9px "JetBrains Mono",monospace;letter-spacing:.14em}.studio-brand strong{display:block;margin-top:4px}.studio-search{width:100%;margin-bottom:12px;border:1px solid var(--studio-line);border-radius:9px;background:#08080d;padding:11px 12px;color:#eee;font:500 11px "JetBrains Mono",monospace;outline:none}.studio-search:focus{border-color:#78952b}.studio-workspace{display:grid;grid-template-columns:minmax(0,1fr) 390px;min-width:0}.studio-editor{min-width:0;padding:34px 42px 100px}.studio-editor-header{position:sticky;z-index:15;top:0;margin:-34px -42px 32px;padding:24px 42px 20px;background:rgba(10,10,15,.9);border-bottom:1px solid var(--studio-line);backdrop-filter:blur(16px)}.studio-actions{display:flex;gap:8px;align-items:center}.studio-status{border:1px solid var(--studio-line);border-radius:999px;padding:9px 12px;color:#73737f;font:700 9px "JetBrains Mono",monospace;letter-spacing:.12em}.studio-status.dirty{color:#f1c75b;border-color:#7c642b}.studio-status.saved{color:var(--studio-acid);border-color:#60752e}.studio-action{border:1px solid var(--studio-line);border-radius:999px;background:transparent;color:#9999a4;padding:11px 14px;font:700 9px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase}.studio-action:hover{border-color:#6f8732;color:var(--studio-acid)}.studio-action.danger:hover{border-color:#8b3b48;color:#ff7182}.block-toolbar{position:sticky;z-index:10;top:104px;padding:12px;border:1px solid var(--studio-line);border-radius:12px;background:rgba(17,17,24,.94);backdrop-filter:blur(12px)}.block-card{border-radius:8px!important;background:#101017!important}.block-card:focus-within{border-color:#778c3a!important;box-shadow:0 0 0 3px rgba(216,255,85,.055)}.studio-preview{position:sticky;top:0;height:100vh;overflow:auto;border-left:1px solid var(--studio-line);background:#0c0c12;padding:28px}.studio-preview.is-hidden{display:none}.studio-workspace.preview-hidden{grid-template-columns:1fr}.studio-empty{padding:28px 12px;color:#555561;text-align:center;font:600 10px "JetBrains Mono",monospace}.doc-button.active{border-color:#6d8532!important;background:rgba(216,255,85,.07)!important}.collection-button{border-radius:8px!important}.studio-kbd{display:inline-block;border:1px solid #3a3a44;border-bottom-width:2px;border-radius:4px;padding:2px 5px;font-size:8px;color:#757580}@media(max-width:1100px){.studio-workspace{grid-template-columns:1fr}.studio-preview{position:relative;height:auto;border-left:0;border-top:1px solid var(--studio-line)}.studio-editor-header{position:relative;top:auto}.studio-shell{grid-template-columns:240px 1fr}}@media(max-width:760px){.studio-shell{display:block}.studio-aside{position:relative;width:auto;height:auto;border-right:0;border-bottom:1px solid var(--studio-line)}.studio-workspace{display:block}.studio-editor{padding:24px 18px}.studio-editor-header{margin:-24px -18px 24px;padding:20px 18px}.studio-actions{flex-wrap:wrap}}
+    </style>
   </head>
 
-  <body class="min-h-screen bg-[#090909] text-[#f3efe4]">
-    <main class="grid min-h-screen lg:grid-cols-[330px_1fr]">
-      <aside class="border-r border-white/10 bg-[#0d0d0d] p-5">
+  <body class="studio-body min-h-screen bg-[#090909] text-[#f3efe4]">
+    <main class="studio-shell">
+      <aside class="studio-aside">
+        <div class="studio-brand"><b>YH</b><div><small>CONTENT SYSTEM</small><strong>Yaohan Studio</strong></div></div>
         <div class="mb-8">
-          <p class="font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">
-            Yaohan Studio
-          </p>
-
-          <h1 class="mt-3 text-2xl font-bold">
-            Local Editor
-          </h1>
+          <p class="font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">Local Editor</p>
 
           <p class="mt-3 text-sm leading-6 text-[#a9a196]">
             Block editor for writeups, journal, labs, archive, achievements,
@@ -37,12 +35,13 @@ import '../styles/global.css'
           + New document
         </button>
 
+        <input id="doc-search" class="studio-search" type="search" placeholder="Search documents..." aria-label="Search documents" />
         <div id="doc-list" class="space-y-2"></div>
       </aside>
 
-      <section class="grid min-h-screen lg:grid-cols-[minmax(0,1fr)_430px]">
-        <div class="min-w-0 p-6 md:p-10">
-          <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+      <section id="studio-workspace" class="studio-workspace">
+        <div class="studio-editor">
+          <div class="studio-editor-header mb-8 flex flex-wrap items-center justify-between gap-4">
             <div>
               <p id="current-path" class="font-mono text-xs uppercase tracking-[0.25em] text-[#6f6a63]">
                 No document selected
@@ -53,7 +52,8 @@ import '../styles/global.css'
               </h2>
             </div>
 
-            <div class="flex gap-3">
+            <div class="studio-actions">
+              <span id="save-status" class="studio-status saved">SAVED</span>
               <a
                 id="open-page"
                 href="#"
@@ -69,6 +69,9 @@ import '../styles/global.css'
               >
                 Save
               </button>
+              <button id="duplicate-doc" class="studio-action" type="button">Duplicate</button>
+              <button id="delete-doc" class="studio-action danger" type="button">Delete</button>
+              <button id="toggle-preview" class="studio-action" type="button">Preview</button>
             </div>
           </div>
 
@@ -134,7 +137,7 @@ import '../styles/global.css'
             <div id="metadata-fields" class="grid gap-4 border-t border-white/10 p-5 md:grid-cols-3"></div>
           </details>
 
-          <div class="mb-6 flex flex-wrap gap-2">
+          <div class="block-toolbar mb-6 flex flex-wrap gap-2">
             <button data-add="heading" class="add-block rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196] hover:border-[#c9ff5f] hover:text-[#c9ff5f]">
               Heading
             </button>
@@ -171,12 +174,13 @@ import '../styles/global.css'
           <div id="blocks" class="space-y-4"></div>
         </div>
 
-        <aside class="border-l border-white/10 bg-[#0d0d0d] p-6">
+        <aside id="preview-pane" class="studio-preview">
           <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
             Preview
           </p>
 
           <article id="preview" class="mt-6 space-y-6"></article>
+          <p class="mt-10 font-mono text-[0.6rem] uppercase tracking-widest text-[#555561]">Save <span class="studio-kbd">Ctrl</span> + <span class="studio-kbd">S</span></p>
         </aside>
       </section>
     </main>
@@ -379,8 +383,16 @@ import '../styles/global.css'
       let currentSlug = "";
       let currentData = {};
       let blocks = [];
+      let isDirty = false;
 
       const $ = (id) => document.getElementById(id);
+      const setSaveState = (state, label) => {
+        isDirty = state === "dirty";
+        const node = $("save-status");
+        node.className = `studio-status ${state}`;
+        node.textContent = label;
+      };
+      const markDirty = () => setSaveState("dirty", "UNSAVED");
 
       const escapeHtml = (value) =>
         String(value ?? "")
@@ -460,21 +472,23 @@ import '../styles/global.css'
       };
 
       const renderDocList = () => {
-        $("doc-list").innerHTML = docs
+        const query = $("doc-search").value.trim().toLowerCase();
+        const visibleDocs = docs.filter((doc) => `${displayTitle(doc.data)} ${doc.slug}`.toLowerCase().includes(query));
+        $("doc-list").innerHTML = visibleDocs.length ? visibleDocs
           .map((doc) => {
             const title = displayTitle(doc.data);
 
             return `
               <button
                 data-slug="${escapeHtml(doc.slug)}"
-                class="doc-button w-full rounded-xl border border-white/10 bg-black/20 p-4 text-left transition hover:border-[#c9ff5f]/60"
+                class="doc-button ${doc.slug === currentSlug ? "active" : ""} w-full rounded-xl border border-white/10 bg-black/20 p-4 text-left transition hover:border-[#c9ff5f]/60"
               >
                 <p class="text-sm font-bold text-[#f3efe4]">${escapeHtml(title)}</p>
                 <p class="mt-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#6f6a63]">${escapeHtml(doc.slug)}</p>
               </button>
             `;
           })
-          .join("");
+          .join("") : `<p class="studio-empty">NO MATCHING DOCUMENTS</p>`;
 
         document.querySelectorAll(".doc-button").forEach((button) => {
           button.addEventListener("click", () => loadDoc(button.dataset.slug));
@@ -491,6 +505,8 @@ import '../styles/global.css'
         fillFields();
         renderBlocks();
         renderPreview();
+        renderDocList();
+        setSaveState("saved", "SAVED");
       };
 
       const newDoc = () => {
@@ -501,6 +517,7 @@ import '../styles/global.css'
         fillFields();
         renderBlocks();
         renderPreview();
+        markDirty();
       };
 
       const renderMetadataFields = () => {
@@ -947,6 +964,7 @@ import '../styles/global.css'
 
       const saveDoc = async () => {
         try {
+          setSaveState("dirty", "SAVING...");
           collectFields();
 
           const result = await request(`${API}/docs/${collection}/${currentSlug}`, {
@@ -965,10 +983,34 @@ import '../styles/global.css'
           await loadDocs();
           await loadDoc(currentSlug);
 
-          alert("Saved");
+          setSaveState("saved", "SAVED");
         } catch (error) {
+          setSaveState("dirty", "SAVE FAILED");
           alert(error.message);
         }
+      };
+
+      const duplicateDoc = () => {
+        collectFields();
+        const copy = structuredClone(currentData);
+        const titleField = config().titleField;
+        copy[titleField] = `${displayTitle(copy)} Copy`;
+        copy.title = copy[titleField];
+        copy.slug = `${currentData.slug || currentSlug}-copy`;
+        currentData = copy;
+        currentSlug = copy.slug;
+        blocks = structuredClone(blocks);
+        fillFields(); renderBlocks(); renderPreview(); markDirty();
+      };
+
+      const deleteDoc = async () => {
+        if (!currentSlug || currentSlug.startsWith("untitled")) return;
+        if (!confirm(`Delete ${displayTitle(currentData)}? This cannot be undone.`)) return;
+        try {
+          await request(`${API}/docs/${collection}/${currentSlug}`, { method: "DELETE" });
+          await loadDocs();
+          if (docs.length) await loadDoc(docs[0].slug); else newDoc();
+        } catch (error) { alert(error.message); }
       };
 
       const setCollection = async (nextCollection) => {
@@ -986,6 +1028,16 @@ import '../styles/global.css'
 
       $("new-doc").addEventListener("click", newDoc);
       $("save-doc").addEventListener("click", saveDoc);
+      $("duplicate-doc").addEventListener("click", duplicateDoc);
+      $("delete-doc").addEventListener("click", deleteDoc);
+      $("doc-search").addEventListener("input", renderDocList);
+      $("toggle-preview").addEventListener("click", () => $("studio-workspace").classList.toggle("preview-hidden"));
+      document.addEventListener("keydown", (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") { event.preventDefault(); saveDoc(); }
+      });
+      document.addEventListener("input", (event) => { if (event.target.id !== "doc-search") markDirty(); });
+      document.addEventListener("click", (event) => { if (event.target.closest('.add-block,.move-up,.move-down,.delete-block')) markDirty(); });
+      addEventListener("beforeunload", (event) => { if (isDirty) { event.preventDefault(); event.returnValue = ""; } });
 
       $("field-title").addEventListener("input", () => {
         if (!$("field-slug").value || $("field-slug").value.startsWith("untitled")) {

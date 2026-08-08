@@ -596,3 +596,16 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
 app.listen(port, () => {
   console.log(`Yaohan Studio server running at http://localhost:${port}`)
 })
+
+app.delete('/api/docs/:collection/:slug', async (req, res) => {
+  try {
+    const collection = getCollection(req.params.collection)
+    const safeSlug = slugify(req.params.slug)
+    if (!safeSlug) throw new Error('Invalid document slug.')
+    const filePath = path.join(collection.folder, `${safeSlug}.md`)
+    await fs.unlink(filePath)
+    res.json({ ok: true, slug: safeSlug })
+  } catch (error) {
+    res.status(404).json({ error: error.message })
+  }
+})

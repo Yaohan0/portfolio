@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro'
 import Navbar from '../../components/Navbar.astro'
 import { getCollection, render } from 'astro:content'
+import { withBase } from '../../utils/paths'
 
 export async function getStaticPaths() {
   const journalEntries = await getCollection('journal')
@@ -32,14 +33,14 @@ const relatedEntries = allEntries
 ---
 
 <Layout title={`${entry.data.title} — Journal`}>
-  <main class="min-h-screen bg-[#090909] text-[#f3efe4]">
+  <main class="detail-page detail-journal min-h-screen bg-[#090909] text-[#f3efe4]">
     <Navbar current="Journal" />
 
     <!-- HERO -->
     <section class="site-grid px-6 pt-36 pb-16">
       <div class="mx-auto max-w-5xl">
         <a
-          href="/journal"
+          href={withBase('journal')}
           class="font-mono text-xs uppercase tracking-widest text-[#6f6a63] transition hover:text-[#c9ff5f]"
         >
           ← Back to Journal
@@ -69,7 +70,7 @@ const relatedEntries = allEntries
 
         {hasCover && (
           <img
-            src={entry.data.cover}
+            src={withBase(entry.data.cover)}
             alt={entry.data.title}
             class="mt-10 max-h-[560px] w-full rounded-3xl border border-white/10 object-cover"
           />
@@ -105,7 +106,7 @@ const relatedEntries = allEntries
 
         <div class="mt-12 border-t border-white/10 pt-8">
           <a
-            href="/journal"
+            href={withBase('journal')}
             class="font-mono text-xs uppercase tracking-widest text-[#6f6a63] transition hover:text-[#c9ff5f]"
           >
             ← Back to Journal
@@ -174,7 +175,7 @@ const relatedEntries = allEntries
             <div class="mt-5 grid gap-3">
               {relatedEntries.map((item) => (
                 <a
-                  href={`/journal/${item.data.slug}`}
+                  href={withBase(`journal/${item.data.slug}`)}
                   class="rounded-2xl border border-white/10 bg-black/30 p-4 transition hover:border-[#c9ff5f]/60"
                 >
                   <p class="font-mono text-[0.65rem] uppercase tracking-widest text-[#6f6a63]">

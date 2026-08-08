@@ -1,63 +1,35 @@
 ---
 import { base, withBase } from '../utils/paths'
-
-interface Props {
-  current?: string
-  theme?: 'dark' | 'light'
-}
-
-const { current = 'Home', theme = 'dark' } = Astro.props
-
+interface Props { current?: string; theme?: 'dark' | 'light' }
+const { current = 'Home' } = Astro.props
 const links = [
-  { label: 'Home', href: base },
-  { label: 'Journal', href: withBase('journal') },
-  { label: 'Labs', href: withBase('labs') },
-  { label: 'Writeups', href: withBase('writeups') },
-  { label: 'Achievements', href: withBase('achievements') },
-  { label: 'Skills', href: withBase('skills') },
+  { label: 'Home', href: base }, { label: 'Journal', href: withBase('journal') },
+  { label: 'Labs', href: withBase('labs') }, { label: 'Writeups', href: withBase('writeups') },
+  { label: 'Achievements', href: withBase('achievements') }, { label: 'Skills', href: withBase('skills') },
   { label: 'Archive', href: withBase('archive') },
 ]
-
-const isLight = theme === 'light'
-
-const headerClass = isLight
-  ? 'fixed left-0 top-0 z-50 w-full border-b border-black/10 bg-[#e8e1d3]/90 backdrop-blur-xl'
-  : 'fixed left-0 top-0 z-50 w-full border-b border-white/10 bg-[#090909]/85 backdrop-blur-xl'
-
-const brandClass = isLight
-  ? 'font-mono text-xs font-black uppercase tracking-[0.35em] text-black'
-  : 'neon-lime font-mono text-xs font-bold uppercase tracking-[0.35em] text-[#c9ff5f]'
-
-const navTextClass = isLight
-  ? 'hidden items-center gap-8 font-mono text-xs uppercase tracking-widest text-black/60 md:flex'
-  : 'hidden items-center gap-8 font-mono text-xs uppercase tracking-widest text-[#a9a196] md:flex'
-
-const linkClass = isLight
-  ? 'transition hover:text-black'
-  : 'transition hover:text-[#c9ff5f]'
 ---
-
-<header class={headerClass}>
-  <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-    <a href={base} class={brandClass}>
-      Yaohan / {current}
-    </a>
-
-    <div class={navTextClass}>
-      {links.map((link) => (
-        <a
-          href={link.href}
-          class={`${linkClass} ${
-            link.label === current
-              ? isLight
-                ? 'text-black'
-                : 'text-[#c9ff5f]'
-              : ''
-          }`}
-        >
-          {link.label}
-        </a>
-      ))}
-    </div>
+<header class="site-nav">
+  <nav><a href={base} class="site-brand" aria-label="Yaohan home">YH.</a>
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
+    <div class="nav-links" id="primary-nav">{links.map((link) => <a href={link.href} class:list={[{ active: link.label === current }]}>{link.label}</a>)}</div>
+    <a class="nav-contact" href="mailto:2503587D@student.tp.edu.sg">CONTACT ↗</a>
   </nav>
 </header>
+<div class="page-progress" aria-hidden="true"><span></span></div>
+<script is:inline>
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.querySelector('.site-nav');
+  toggle?.addEventListener('click', () => {
+    const open = nav.classList.toggle('nav-open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+  });
+  document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => nav.classList.remove('nav-open')));
+  const progress = document.querySelector('.page-progress span');
+  const updateProgress = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progress.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+  };
+  addEventListener('scroll', updateProgress, { passive: true }); updateProgress();
+</script>

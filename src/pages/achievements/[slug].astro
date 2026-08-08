@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro'
 import Navbar from '../../components/Navbar.astro'
 import { getCollection, render } from 'astro:content'
+import { withBase } from '../../utils/paths'
 
 export async function getStaticPaths() {
   const achievements = await getCollection('achievements')
@@ -24,14 +25,14 @@ const hasRelatedLink = achievement.data.link.length > 0
 ---
 
 <Layout title={`${achievement.data.title} — Achievements`}>
-  <main class="min-h-screen bg-[#090909] text-[#f3efe4]">
+  <main class="detail-page detail-achievement min-h-screen bg-[#090909] text-[#f3efe4]">
     <Navbar current="Achievements" />
 
     <!-- HERO -->
     <section class="site-grid px-6 pt-36 pb-20">
       <div class="mx-auto max-w-7xl">
         <a
-          href="/achievements"
+          href={withBase('achievements')}
           class="font-mono text-xs uppercase tracking-widest text-[#a9a196] transition hover:text-[#c9ff5f]"
         >
           ← Back to achievements
@@ -61,7 +62,7 @@ const hasRelatedLink = achievement.data.link.length > 0
 
         {achievement.data.cover && (
           <img
-            src={achievement.data.cover}
+            src={withBase(achievement.data.cover)}
             alt={achievement.data.title}
             class="mt-10 max-h-[620px] w-full rounded-3xl border border-white/10 object-cover"
           />
@@ -141,7 +142,7 @@ const hasRelatedLink = achievement.data.link.length > 0
 
         {hasRelatedLink && (
           <a
-            href={achievement.data.link}
+            href={withBase(achievement.data.link)}
             class="block rounded-3xl border border-[#c9ff5f]/20 bg-[#c9ff5f] p-8 text-black transition hover:scale-[1.01]"
           >
             <p class="font-mono text-xs font-black uppercase tracking-[0.3em]">

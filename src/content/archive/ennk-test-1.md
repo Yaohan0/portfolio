@@ -1,175 +1,73 @@
 ---
-title: 'Cloud Service Models '
+title: 'IPv4 & Subnetting '
 slug: ennk-test-1
 order: 999
 type: Class Notes
 status: Active
 date: '2026-06-29'
-summary: |-
-  Go through all the service models 
-  IaaS PaaS SaaS 
+summary: 'Basic IP address stuff '
 tags: []
 files: []
 links: []
 cover: ''
 ---
-[0. Week 1 - Cloud Computing Basics.pdf](/uploads/1782957713550-0.-week-1-cloud-computing-basics.pdf)
+## IPv4 Address 
 
-## Infrastructure as a Service 
+32 bit address to identify a device on a netrwork.
+[made of network and host portion -> used to identify which part is network and host ] 
+Example: 192.168.10.15/24 
+Network portion: 192.168.10
+Host portion: .25 
 
-rent basic infra (virtual machines, firewalls, storage networks ) 
-Example Services : AWS EC 2 , Amazon virtual machine, Google compute cloud 
-"rent a computer / server " 
+Three types of IPv4 Address in every subnet: 
+1. Network Address -> host bits all 0 
+2. Host Address 
+3. Broadcast Address  -> host bits all 1 
 
-## Platform as a Service 
+### Subnet Mask
 
-you deploy an app, but the provider manages most backend infrastructure 
-"upload a code, provider runs it" 
-Example: Vercel, Supabase, Netlify, Heroku, Firebase 
+tells you which part of the IP Address is the network and which part is the host 
+example : 255.255.255.0 
 
-## Software as a Service 
+Prefix Length is another way to write subnet mask 
+example : 255.255.255.0  -> /24 
 
-use software directly through the internet 
-Example: Google Drive, Gmail, Canva, Discord, Zoom 
+shortcut for subnet qns: 
+1) conver prefix to subnet mask 
+2) find block size 
+3) find which range the ip falls into 
+4) network = start of range 
+5) broadcast = end of range 
+6) usable hosts = in btwn network and broadcast 
 
-### Summary 
+### ANDing 
 
-IaaS - Rent the kitchen 
-PaaS - Bring the ingredients 
-SaaS - order cooked food ! 
+FORMAL BINARY METHOD TO CALCULATE THE NETWORK ADDRESS 
+compares 2 bits (0/1) 
+1 AND 1 -> 1 
+other combinations ->  0
 
-### Why Companies use cloud 
+### Default Gateway
 
-- Cost Saving 
-- Faster Deployment 
-- Easier backup & recovery 
-- Global Access 
-- Scalability 
+Router IP address used to leave the local network for communication outside 
 
-### Cloud Security Model 
+### Private IPv4 Address 
 
-CLOUD IS NOT AUTOMATICALLY SECURE 
-[Shared Responsibility Model] 
-Provider secures the cloud 
-Customer secures what they put in the cloud
+Used inside local/ priate networks 
+10.0.0.0/8 -> Large Private Networks 
+172.16.0.0/12 -> Medium Private Networks 
+192.168.0.0/16 -> Home/Small Businesses 
+[Not directly router on the public internet ]  -> NAT Translates them into public ip when going online 
 
-### AWS Key Features 
+NOTE: 127.0.0.1 -> Loopback (Testing)  
+NOTE: 169.254.X.X -> APIPA (Fail to get IP From DHCP) 
 
-- Over 200+ fully featured services 
--> Computing power (EC2) 
--> Storage 
--> Databases 
--> Networking 
--> Security Tools 
--> Machine Learning & AI services 
--> Developer Tools 
--> Supports almost any type of application and workload 
+Choosing subnet based on hosts 
+2 ^ host bits -2 >= required hosts 
 
----GLOBAL INFRASTRUCTURE --- 
-AWS has global footprint with data centers across multiple continents 
-- Organized into -> Regions (geographical areas)
-- Availability Zones (AZ) 
-Ensures high availability , fault tolerance and low latency
+### Public IPv4 Address 
 
----PAY AS YOU GO ---
+Globally routed 
+Example: 8.8.8.8 , 1.1.1.1 
 
---- HIGH SCALABILITY & flexible ---
-
----SECURITY AND COMPLIANCE ---
-- Strong Security Features: Encryption 
-- Identify and access management 
-- Network Firewalls 
-- Meets global compliance standards - trusted in finance, healthcare and government sectors 
-
----OFFER ESSENTIAL SERVICES --- 
-compute, storage, networking and databases 
-
-### AWS Compute Services 
-
---- AMAZON EC2 (ELASTIC COMPUTE CLOUD) --- 
-- Provides resizable virtual servers for flexible compute capacity 
-- Supports scaling resources up or down based on workload needs 
-- Ideal for developers building web-scale applications 
-
---- AWS LAMBDA --- 
-- serverless compute service - run code without servers 
-- automatically handles scaling and infrastructure management 
-- simplifies application deployment and reduces operational overhead 
-
-AWS STORAGE :
---- AWS Storage --- 
-- Amazon S3 
-- highly reliable, scalable storage for files and large datasets 
-- secure, durable and accessible from anywhere 
-
-- Amazon EBS 
-- Persistent block storage for EC2 instances 
-- Ensures data durability and high availability for running applications 
-
-- AWS Networking 
-- Amazon VPC -> creates private isolated network within AWS  
-
-- Amazon Route 53 
-- Highly available DNS service 
-
-AWS DATABASE SERVICES 
-- AMAZON RDS (relational database services) 
-- Simplifies setup, operation, and scaling of regional databases 
-- Designed for structured data within minimal management 
-
-Amazon DynamoDB 
-- Fully managed noSQL database service 
-- Fast, flexible and support automatic scaling for high-traffic apps 
-
-### Understanding AWS Pricing and billing 
-
-AWS offers flexible pricing options to suit
-different workloads and budgets.
-
-Supports cost optimization through free
-tiers, pricing models, and cost
-management tools
-
-Provides access to many AWS services at
-no cost for the first 12 months.
-
-Includes usage allowances for compute,
-storage, databases, and more.
-
-Ideal for learning, testing, and
-experimenting with AWS services.
-
-Helps beginners explore AWS without
-upfront expenses.
-
-AWS PRICING MODELS 
-On Demand - pay per hour / second based on actual usage (no long term commitments ) 
-ideal for unpredictable or short term workloads 
-
-Reserved instances - Commit to 1 year or 3 year usage for significant discounts 
-best for stable and long term workloads 
-
-Spot instances 
-- use unused EC2 Capacity at reduced prices 
-Highly cost effective but workloads may be interrupted.
-Suitable for flexible, fault tolerant jobs (batch processing, data
-analysis).
-
-### AWS Cost Management Tools 
-
-AWS Budgets -> set custom spending limits -> receive alerts when reaching or exceeding limit -> maintain financial control 
-
-AWS Cost Explorer -> visualise cost and trends over time -> identify spending patterns and optimization opportunities -> forecast and cost planning 
-
-### 5 Pillars of AWS Structure 
-
-![Image](/uploads/1782959456882-screenshot-2026-07-02-103040.png)
-
-DESIGNING FOR SCALABILITY 
-
-TOOLS:
-- AUTO SCALING -> adjusts compute capacity based on demand, maintains optimal performance while controlling costs 
-
--ELASTIC LOAD BALANCING (ELB) -> distribute incoming traffic across multiple servers prevents -> prevents single server from overloaded -> ensure smooth performance and high availability
-
-![Image](/uploads/1782979087498-screenshot-2026-07-02-154021.png)
+### New subheading

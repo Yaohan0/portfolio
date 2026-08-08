@@ -14,10 +14,11 @@ export const withBase = (path?: string) => {
   }
 
   const cleanBase = base.endsWith('/') ? base : `${base}/`
-  const cleanPath = path.replace(/^\/+/, '')
+  const normalizedPath = path.replace(/^\/portfolio(?=\/|$)/, '')
+  const cleanPath = normalizedPath.replace(/^\/+/, '')
 
-  if (path.startsWith(cleanBase)) {
-    return path
+  if (normalizedPath.startsWith(cleanBase)) {
+    return normalizedPath
   }
 
   return `${cleanBase}${cleanPath}`

@@ -3,124 +3,17 @@ import Layout from '../layouts/Layout.astro'
 import Navbar from '../components/Navbar.astro'
 import { getCollection } from 'astro:content'
 import { withBase } from '../utils/paths'
-
-const archiveItems = await getCollection('archive')
-const sortedItems = archiveItems.sort((a, b) => a.data.order - b.data.order)
-
-const types = [...new Set(sortedItems.map((item) => item.data.type))]
+const items=(await getCollection('archive')).sort((a,b)=>a.data.order-b.data.order)
+const tags=[...new Set(items.flatMap(item=>item.data.tags))].slice(0,8)
 ---
-
-<Layout title="Archive — Yaohan">
-  <main class="min-h-screen bg-[#090909] text-[#f3efe4]">
-    <Navbar current="Archive" />
-
-    <section class="site-grid px-6 pt-36 pb-20">
-      <div class="mx-auto max-w-7xl">
-        <p class="neon-lime font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">
-          Misc Storage / Useful Scraps
-        </p>
-
-        <h1 class="display-text neon-cream mt-5 text-7xl uppercase leading-none tracking-[-0.06em] md:text-9xl">
-          Archive
-        </h1>
-
-        <p class="mt-8 max-w-3xl text-base leading-8 text-[#a9a196]">
-          This page is for anything useful that does not fit neatly elsewhere:
-          commands, old screenshots, bug fixes, useful links, draft ideas,
-          references, and random notes.
-        </p>
-
-        <div class="mt-10 rounded-3xl border border-white/10 bg-[#111111] p-6">
-          <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
-            Editing system
-          </p>
-
-          <p class="mt-4 max-w-3xl text-sm leading-7 text-[#a9a196]">
-            Archive items are Markdown files in
-            <span class="font-mono text-[#f3efe4]"> src/content/archive/</span>.
-            Use
-            <span class="font-mono text-[#f3efe4]"> /studio</span>
-            locally to edit them.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="border-y border-white/10 bg-[#111111] px-6 py-6">
-      <div class="mx-auto flex max-w-7xl flex-wrap gap-3">
-        {types.map((type) => (
-          <span class="rounded-full border border-white/10 bg-black/30 px-4 py-2 font-mono text-xs uppercase tracking-widest text-[#a9a196]">
-            {type}
-          </span>
-        ))}
-      </div>
-    </section>
-
-    <section class="mx-auto max-w-7xl px-6 py-28">
-      <div class="grid gap-8 md:grid-cols-2">
-        {sortedItems.map((item, index) => (
-          <a
-            href={withBase(`archive/${item.data.slug}`)}
-            class="neon-card group overflow-hidden rounded-3xl border border-white/10 bg-[#111111] transition duration-300 hover:-translate-y-1 hover:border-[#c9ff5f]/60 hover:bg-[#151515]"
-          >
-            {item.data.cover && (
-              <img
-                src={withBase(item.data.cover)}
-                alt={item.data.title}
-                class="h-64 w-full border-b border-white/10 object-cover"
-              />
-            )}
-
-            <div class="p-8">
-              <div class="flex flex-wrap items-center justify-between gap-3">
-                <p class="neon-lime font-mono text-xs font-bold uppercase tracking-[0.3em] text-[#c9ff5f]">
-                  ARCHIVE-0{index + 1}
-                </p>
-
-                <span class="rounded-full border border-white/10 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#a9a196]">
-                  {item.data.status}
-                </span>
-              </div>
-
-              <h2 class="display-text mt-10 text-5xl uppercase leading-none tracking-[-0.06em] text-[#f3efe4]">
-                {item.data.title}
-              </h2>
-
-              <div class="mt-5 flex flex-wrap gap-2">
-                <span class="rounded-full bg-[#c9ff5f] px-3 py-1 font-mono text-[0.65rem] font-black uppercase tracking-widest text-black">
-                  {item.data.type}
-                </span>
-
-                <span class="rounded-full border border-white/10 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#a9a196]">
-                  {item.data.date}
-                </span>
-              </div>
-
-              <p class="mt-6 text-base leading-8 text-[#a9a196]">
-                {item.data.summary}
-              </p>
-
-              <div class="mt-8 flex flex-wrap gap-2">
-                {item.data.tags.map((tag) => (
-                  <span class="rounded-full border border-white/10 bg-black/30 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-[#c9c2b8]">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <div class="mt-8 flex items-center justify-between border-t border-white/10 pt-5">
-                <span class="font-mono text-xs uppercase tracking-widest text-[#c9ff5f]">
-                  Open archive item
-                </span>
-
-                <span class="text-2xl transition group-hover:translate-x-1">
-                  →
-                </span>
-              </div>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
-  </main>
-</Layout>
+<Layout title="Archive — Yaohan"><main class="section-page archive-page"><Navbar current="Archive" />
+  <header class="archive-hero"><pre>████████████████████████████████\n█ ARCHIVAL SYSTEM v2.6 ONLINE █\n████████████████████████████████</pre><h1>Archive</h1><p>&gt; DOCUMENTS &amp; FILES — {items.length} ENTRIES INDEXED<span>█</span></p></header>
+  <section class="archive-console"><label class="console-bar"><span>SEARCH://</span><input id="archive-search" type="search" placeholder="query..." aria-label="Search archive" /></label>{tags.length>0&&<div class="archive-tags">{tags.map(tag=><button type="button" data-archive-tag={tag}>[{tag}]</button>)}</div>}
+    <div class="archive-table"><div class="archive-row archive-head"><span>FILENAME</span><span>TYPE</span><span>DATE</span><span>STATUS</span><span></span></div>
+    {items.map(item=><a class="archive-row" data-search={`${item.data.title} ${item.data.summary} ${item.data.type} ${item.data.tags.join(' ')}`.toLowerCase()} href={withBase(`archive/${item.data.slug}`)}><span>{item.data.title}<small>{item.data.summary}</small></span><span>{item.data.type}</span><span>{item.data.date}</span><span>{item.data.status}</span><b>↗</b></a>)}</div><p class="console-end">&gt; <span id="archive-count">{items.length}</span>/{items.length} ENTRIES DISPLAYED</p></section>
+  <script is:inline>
+    const search = document.getElementById('archive-search'); const rows = [...document.querySelectorAll('.archive-row[data-search]')]; const count = document.getElementById('archive-count');
+    const filter = value => { const query = value.trim().toLowerCase(); let shown=0; rows.forEach(row=>{const visible=row.dataset.search.includes(query);row.hidden=!visible;if(visible)shown++});count.textContent=shown; };
+    search?.addEventListener('input',()=>filter(search.value)); document.querySelectorAll('[data-archive-tag]').forEach(button=>button.addEventListener('click',()=>{search.value=button.dataset.archiveTag;filter(search.value)}));
+  </script>
+</main></Layout>

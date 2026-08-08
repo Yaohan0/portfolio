@@ -1,6 +1,6 @@
 ---
 title: Year 1 Cybersecurity Student
-slug: year-2-cybersecurity-student
+slug: year-1-cybersecurity-student
 order: 3
 type: Education
 status: Completed

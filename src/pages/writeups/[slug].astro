@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro'
 import Navbar from '../../components/Navbar.astro'
 import { getCollection, render } from 'astro:content'
+import { withBase } from '../../utils/paths'
 
 export async function getStaticPaths() {
   const writeups = await getCollection('writeups')
@@ -44,14 +45,14 @@ const relatedWriteups = allWriteups
 ---
 
 <Layout title={`${writeup.data.title} — Writeups`}>
-  <main class="min-h-screen bg-[#090909] text-[#f3efe4]">
+  <main class="detail-page detail-writeup min-h-screen bg-[#090909] text-[#f3efe4]">
     <Navbar current="Writeups" />
 
     <!-- HERO -->
     <section class="site-grid px-6 pt-36 pb-16">
       <div class="mx-auto max-w-5xl">
         <a
-          href="/writeups"
+          href={withBase('writeups')}
           class="font-mono text-xs uppercase tracking-widest text-[#6f6a63] transition hover:text-[#c9ff5f]"
         >
           ← Back to Writeups
@@ -89,7 +90,7 @@ const relatedWriteups = allWriteups
 
         {hasCover && (
           <img
-            src={writeup.data.cover}
+            src={withBase(writeup.data.cover)}
             alt={writeup.data.title}
             class="mt-10 max-h-[560px] w-full rounded-3xl border border-white/10 object-cover"
           />
@@ -171,7 +172,7 @@ const relatedWriteups = allWriteups
 
         <div class="mt-12 border-t border-white/10 pt-8">
           <a
-            href="/writeups"
+            href={withBase('writeups')}
             class="font-mono text-xs uppercase tracking-widest text-[#6f6a63] transition hover:text-[#c9ff5f]"
           >
             ← Back to Writeups
@@ -268,7 +269,7 @@ const relatedWriteups = allWriteups
 
         {hasExternalLink && (
           <a
-            href={writeup.data.externalLink}
+            href={withBase(writeup.data.externalLink)}
             target="_blank"
             class="block rounded-3xl border border-[#c9ff5f]/20 bg-[#c9ff5f] p-6 text-black transition hover:scale-[1.01]"
           >
@@ -291,7 +292,7 @@ const relatedWriteups = allWriteups
             <div class="mt-5 grid gap-3">
               {files.map((file) => (
                 <a
-                  href={file.url}
+                  href={withBase(file.url)}
                   target="_blank"
                   class="rounded-2xl border border-white/10 bg-black/30 p-4 transition hover:border-[#c9ff5f]/60"
                 >
@@ -323,7 +324,7 @@ const relatedWriteups = allWriteups
             <div class="mt-5 grid gap-3">
               {relatedWriteups.map((item) => (
                 <a
-                  href={`/writeups/${item.data.slug}`}
+                  href={withBase(`writeups/${item.data.slug}`)}
                   class="rounded-2xl border border-white/10 bg-black/30 p-4 transition hover:border-[#c9ff5f]/60"
                 >
                   <p class="font-mono text-[0.65rem] uppercase tracking-widest text-[#6f6a63]">
