@@ -61,6 +61,23 @@ const collections = {
     },
   },
 
+  notes: {
+    label: 'Notes',
+    folder: path.join(rootDir, 'src/content/notes'),
+    defaults: {
+      title: 'Untitled Note',
+      slug: 'untitled-note',
+      order: 999,
+      subject: 'ECOMM',
+      date: today(),
+      summary: '',
+      status: 'Active',
+      tags: [],
+      files: [],
+      cover: '',
+    },
+  },
+
   labs: {
     label: 'Labs',
     folder: path.join(rootDir, 'src/content/labs'),
@@ -607,5 +624,10 @@ app.delete('/api/docs/:collection/:slug', async (req, res) => {
     res.json({ ok: true, slug: safeSlug })
   } catch (error) {
     res.status(404).json({ error: error.message })
+  }
+
+  if (collectionName === 'notes') {
+    data.tags = splitList(data.tags)
+    data.files = Array.isArray(data.files) ? data.files : []
   }
 })

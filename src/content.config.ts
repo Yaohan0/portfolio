@@ -147,6 +147,25 @@ const skills = defineCollection({
   }),
 })
 
+const notes = defineCollection({
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/notes',
+  }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    order: z.number(),
+    subject: z.enum(['ECOMM', 'ENNK', 'EHIP', 'FDS', 'SADS']),
+    date: z.string(),
+    summary: z.string(),
+    status: z.string().default('Active'),
+    tags: z.array(z.string()).default([]),
+    files: z.array(fileSchema).default([]),
+    cover: z.string().optional(),
+  }),
+})
+
 export const collections = {
   labs,
   writeups,
@@ -154,4 +173,5 @@ export const collections = {
   archive,
   achievements,
   skills,
+  notes,
 }

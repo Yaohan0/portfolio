@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Navbar from '../components/Navbar.astro'
+import { getCollection } from 'astro:content'
+import { withBase } from '../utils/paths'
+
+const notes = (await getCollection('notes')).sort((a,b) => a.data.order-b.data.order)
+const subjects = [
+  { code:'ECOMM', name:'Effective Communication', color:'#ffbd59' },
+  { code:'ENNK', name:'Enterprise Networking', color:'#73d7ff' },
+  { code:'EHIP', name:'Ethical Hacking & Intrusion Prevention', color:'#d8ff55' },
+  { code:'FDS', name:'Forensics in Digital Security', color:'#ff7590' },
+  { code:'SADS', name:'Servers Administration & Security', color:'#b99cff' },
+]
+---
+<Layout title="Notes — Yaohan" description="Yaohan's structured cybersecurity and course notes.">
+  <main class="notes-page"><Navbar current="Notes" />
+    <header class="notes-hero"><p>SUBJECT LIBRARY / 05 ACTIVE FOLDERS</p><h1>Notes<br/><span>in orbit.</span></h1><div><p>A proper home for course material, explanations, revision notes, screenshots, and files. Scroll over the sphere to move between subjects.</p><span>{String(notes.length).padStart(2,'0')} FILES INDEXED</span></div></header>
+
+    <section class="notes-orbit-section">
+      <div class="orbit-copy"><p class="orbit-label">SUBJECT NAVIGATOR</p><h2 id="active-subject-name">{subjects[0].name}</h2><p id="active-subject-code">FOLDER / {subjects[0].code}</p><div class="orbit-instruction"><span>SCROLL</span><i></i><span>SELECT</span></div><div class="subject-rail">{subjects.map((subject,index)=><button type="button" class:list={[{active:index===0}]} data-subject-index={index}><span style={`--subject:${subject.color}`}></span>{subject.code}</button>)}</div></div>
+      <div id="subject-sphere" class="subject-sphere" tabindex="0" aria-label="Scroll or use arrow keys to rotate through note subjects">
+        <div class="sphere-core"><span>YH</span></div><div class="sphere-ring ring-one"></div><div class="sphere-ring ring-two"></div><div class="sphere-ring ring-three"></div>
+        {subjects.map((subject,index)=><button type="button" class:list={['orbit-folder',{active:index===0}]} data-orbit-index={index} data-code={subject.code} data-name={subject.name} style={`--subject:${subject.color}`}><span class="folder-icon"><i></i></span><small>{subject.code}</small><strong>{subject.name}</strong><em>{notes.filter(note=>note.data.subject===subject.code).length} notes</em></button>)}
+      </div>
+    </section>
+
+    <section class="notes-files" aria-live="polite"><div class="notes-files-head"><div><p>SELECTED FOLDER</p><h2 id="file-subject-title">{subjects[0].name}</h2></div><span id="file-count">{notes.filter(note=>note.data.subject===subjects[0].code).length} FILES</span></div>
+      <div id="notes-file-list" class="notes-file-list">{notes.map((note,index)=><a href={withBase(`notes/${note.data.slug}`)} class="note-file-row" data-note-subject={note.data.subject} hidden={note.data.subject!==subjects[0].code}><span>{String(index+1).padStart(2,'0')}</span><div><small>{note.data.subject} / {note.data.status}</small><h3>{note.data.title}</h3><p>{note.data.summary}</p></div><time>{note.data.date}</time><b>OPEN ↗</b></a>)}</div>
+      <div id="empty-notes" class="notes-empty" hidden>No notes in this subject yet. Add the first one from Studio.</div>
+    </section>
+  </main>
+  <script is:inline>
+    const sphere=document.getElementById('subject-sphere');const folders=[...document.querySelectorAll('.orbit-folder')];const rail=[...document.querySelectorAll('[data-subject-index]')];const rows=[...document.querySelectorAll('[data-note-subject]')];const activeName=document.getElementById('active-subject-name');const activeCode=document.getElementById('active-subject-code');const fileTitle=document.getElementById('file-subject-title');const fileCount=document.getElementById('file-count');const empty=document.getElementById('empty-notes');let active=0,wheelLock=false,touchY=0;
+    const wrap=value=>(value+folders.length)%folders.length;const position=()=>{folders.forEach((folder,index)=>{let delta=index-active;if(delta>folders.length/2)delta-=folders.length;if(delta<-folders.length/2)delta+=folders.length;const angle=delta*(Math.PI*2/folders.length);const x=Math.sin(angle)*285;const y=Math.sin(angle*1.45)*86;const z=Math.cos(angle)*285;const scale=.64+(z+285)/570*.36;folder.style.transform=`translate3d(calc(-50% + ${x}px),calc(-50% + ${y}px),${z}px) scale(${scale}) rotateY(${-angle*.32}rad)`;folder.style.opacity=String(.3+(z+285)/570*.7);folder.style.zIndex=String(Math.round(z+300));folder.classList.toggle('active',index===active)});const current=folders[active];activeName.textContent=current.dataset.name;activeCode.textContent=`FOLDER / ${current.dataset.code}`;fileTitle.textContent=current.dataset.name;rail.forEach((button,index)=>button.classList.toggle('active',index===active));let shown=0;rows.forEach(row=>{const visible=row.dataset.noteSubject===current.dataset.code;row.hidden=!visible;if(visible)shown++});fileCount.textContent=`${shown} FILE${shown===1?'':'S'}`;empty.hidden=shown!==0};
+    const select=index=>{active=wrap(index);position()};folders.forEach((folder,index)=>folder.addEventListener('click',()=>select(index)));rail.forEach((button,index)=>button.addEventListener('click',()=>select(index)));sphere?.addEventListener('wheel',event=>{event.preventDefault();if(wheelLock)return;wheelLock=true;select(active+(event.deltaY>0?1:-1));setTimeout(()=>wheelLock=false,260)},{passive:false});sphere?.addEventListener('keydown',event=>{if(['ArrowRight','ArrowDown'].includes(event.key)){event.preventDefault();select(active+1)}if(['ArrowLeft','ArrowUp'].includes(event.key)){event.preventDefault();select(active-1)}});sphere?.addEventListener('touchstart',event=>touchY=event.touches[0].clientY,{passive:true});sphere?.addEventListener('touchend',event=>{const dy=touchY-event.changedTouches[0].clientY;if(Math.abs(dy)>30)select(active+(dy>0?1:-1))},{passive:true});position();
+  </script>
+</Layout>

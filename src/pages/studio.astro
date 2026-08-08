@@ -267,6 +267,32 @@ import '../styles/global.css'
           ],
         },
 
+        notes: {
+          label: "Notes",
+          titleField: "title",
+          summaryField: "summary",
+          pageBase: "/notes/",
+          defaults: {
+            title: "Untitled Note",
+            slug: "untitled-note",
+            order: 999,
+            subject: "ECOMM",
+            date: new Date().toISOString().slice(0, 10),
+            summary: "",
+            status: "Active",
+            tags: [],
+            files: [],
+            cover: "",
+          },
+          fields: [
+            { name: "order", label: "Order", type: "number" },
+            { name: "subject", label: "Subject", type: "select", options: ["ECOMM", "ENNK", "EHIP", "FDS", "SADS"] },
+            { name: "date", label: "Date", type: "text" },
+            { name: "status", label: "Status", type: "text" },
+            { name: "tags", label: "Tags", type: "list" },
+          ],
+        },
+
         labs: {
           label: "Labs",
           titleField: "title",
@@ -552,6 +578,17 @@ import '../styles/global.css'
                     rows="3"
                     class="meta-input mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[#f3efe4] outline-none focus:border-[#c9ff5f]/60"
                   >${escapeHtml(value || "")}</textarea>
+                </label>
+              `;
+            }
+
+            if (field.type === "select") {
+              return `
+                <label class="block">
+                  <span class="font-mono text-xs uppercase tracking-widest text-[#a9a196]">${field.label}</span>
+                  <select data-meta="${field.name}" class="meta-input mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[#f3efe4] outline-none focus:border-[#c9ff5f]/60">
+                    ${field.options.map((option) => `<option value="${escapeHtml(option)}" ${value === option ? "selected" : ""}>${escapeHtml(option)}</option>`).join("")}
+                  </select>
                 </label>
               `;
             }
