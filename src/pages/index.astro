@@ -12,62 +12,61 @@ const records = [
   { no: '06', title: 'Skills', href: '/skills', type: 'TOOLKIT', desc: 'A living tracker of tools, techniques, topics, and what I am currently learning.' },
   { no: '07', title: 'Archive', href: '/archive', type: 'DOCUMENTS', desc: 'Older notes, screenshots, experiments, references, drafts, and documentation.' },
 ]
-const featuredRecords = records.filter((record) => ['Labs', 'Writeups', 'Notes'].includes(record.title))
-const moreRecords = records.filter((record) => !['Labs', 'Writeups', 'Notes'].includes(record.title))
+const projectRecords = records.filter((record) => record.title !== 'Archive')
+const archiveRecord = records.find((record) => record.title === 'Archive')
+const focusAreas = [
+  { title: 'Ethical hacking', items: ['Web exploitation', 'Enumeration', 'CTF problem-solving'] },
+  { title: 'Digital forensics', items: ['Evidence handling', 'File analysis', 'Steganography'] },
+  { title: 'Networking', items: ['VLANs', 'EtherChannel', 'Server administration'] },
+  { title: 'Working habits', items: ['Documentation', 'Reflection', 'Communication'] },
+]
 ---
 
 <Layout title="Yaohan — Cybersecurity Portfolio">
   <main class="portfolio-shell home-clean">
     <Navbar current="Home" />
 
-    <section class="clean-hero" aria-labelledby="hero-title">
-      <div class="clean-hero-copy">
-        <p class="clean-status"><span></span> Singapore · Open to learning and building</p>
-        <h1 id="hero-title">Hey, I’m<br/><em>Yaohan.</em></h1>
-        <p class="clean-role">Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic.</p>
-        <p class="clean-intro">I learn by doing: breaking down systems, documenting what happened, and keeping the evidence useful for the next attempt.</p>
-        <div class="clean-actions">
-          <a href="#records">See what I’m working on <span>↓</span></a>
-          <a href="mailto:2503587D@student.tp.edu.sg">Get in touch <span>↗</span></a>
-        </div>
+    <section class="reference-hero" aria-labelledby="hero-title">
+      <div class="reference-intro">
+        <p>Hey! I’m Yaohan <span aria-hidden="true">👋</span></p>
+        <h1 id="hero-title">Cybersecurity &amp;<br/><em>Digital Forensics</em><br/>student.</h1>
+        <small>Learning through labs, CTFs and evidence.</small>
+        <a href="#records">TAKE A LOOK <span>↓</span></a>
       </div>
-      <div class="portrait-placeholder" role="img" aria-label="Portrait space reserved for a future photo">
-        <span>PORTRAIT / PENDING</span>
+      <div class="reference-portrait" role="img" aria-label="Space reserved for Yaohan's future portrait">
+        <span>PHOTO COMING SOON</span>
         <div aria-hidden="true"><i></i></div>
-        <p>Your photo will live here.</p>
-      </div>
-      <div class="clean-hero-foot">
-        <span>Year 02</span><span>Cybersecurity</span><span>Digital Forensics</span><span>Portfolio 2026</span>
+        <small>Temasek Polytechnic · Singapore</small>
       </div>
     </section>
 
-    <section id="records" class="clean-work">
-      <div class="clean-section-heading">
-        <div><p>SELECTED WORK</p><h2>Some things<br/>I’m learning.</h2></div>
-        <p>Practical work, clearly documented. Each section is an honest record of what I tried, what worked, and what I still need to understand.</p>
-      </div>
-      <div class="featured-work-grid">
-        {featuredRecords.map((record, index) => (
-          <a class={`featured-work-card feature-${index + 1}`} href={withBase(record.href)}>
-            <div class="featured-card-top"><span>0{index + 1}</span><span>{record.type}</span></div>
-            <div class="featured-card-art" aria-hidden="true"><i></i><i></i><b>{record.title.slice(0, 1)}</b></div>
-            <div class="featured-card-copy"><h3>{record.title}</h3><p>{record.desc}</p><span>Explore {record.title.toLowerCase()} ↗</span></div>
+    <section id="records" class="reference-projects">
+      <h2>Some projects<span>.</span></h2>
+      <div class="reference-project-grid">
+        {projectRecords.map((record, index) => (
+          <a class={`reference-project-card project-${index + 1}`} href={withBase(record.href)}>
+            <div class="project-preview" aria-hidden="true">
+              <span>{record.no}</span><strong>{record.title.slice(0, 1)}</strong><i></i><i></i>
+            </div>
+            <div class="project-card-copy"><h3>{record.title}</h3><p>{record.desc}</p><div><span>{record.type}</span><span>2026</span></div></div>
           </a>
         ))}
+        {archiveRecord && <a class="reference-project-wide" href={withBase(archiveRecord.href)}><div><strong>{archiveRecord.title}</strong><p>{archiveRecord.desc}</p></div><span>OPEN ARCHIVE ↗</span></a>}
       </div>
     </section>
 
-    <section class="clean-index" aria-label="More portfolio sections">
-      <div class="clean-index-heading"><p>MORE OF THE PORTFOLIO</p><span>{String(moreRecords.length).padStart(2, '0')} collections</span></div>
-      {moreRecords.map((record) => (
-        <a href={withBase(record.href)}><span>{record.no}</span><strong>{record.title}</strong><p>{record.desc}</p><b>↗</b></a>
-      ))}
+    <section class="reference-story">
+      <h2>My story<span>.</span></h2>
+      <div>
+        <p>I’m a Year 2 Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic. I started this portfolio to keep a clear record of the work behind the grades—setups, mistakes, evidence, findings and improvements.</p>
+        <p>Most of my learning happens through practical labs, CTF challenges and documenting what I find. The goal is simple: understand systems properly, explain them clearly, and get better with every attempt.</p>
+        <p>I’m currently exploring ethical hacking, digital forensics, networking, Linux and server security.</p>
+      </div>
     </section>
 
-    <section class="clean-about">
-      <p>ABOUT THIS PLACE</p>
-      <h2>A working record,<br/>not a finished story.</h2>
-      <div><p>This portfolio keeps the useful material together so I can trace how my thinking, methods, and technical ability change over time.</p><p>Right now I’m focused on ethical hacking, digital forensics, networking, Linux, cloud foundations, and CTF problem-solving.</p></div>
+    <section class="reference-focus">
+      <h2>Current focus<span>.</span></h2>
+      <div>{focusAreas.map((area) => <section><h3>{area.title}</h3>{area.items.map((item) => <p>{item}</p>)}</section>)}</div>
     </section>
 
     <section class="game-section" aria-labelledby="game-title">
