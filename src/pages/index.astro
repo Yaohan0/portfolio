@@ -61,9 +61,15 @@ const focusAreas = [
         <strong>{profile.name}</strong>
         <small>{profile.status}</small>
       </div>
+      <div class="profile-orbit" aria-hidden="true">
+        <span class="profile-orbit-pointer"><i>↗</i><b>YH / IN MOTION</b></span>
+      </div>
       {profile.cover && <img class="profile-portrait" src={withBase(profile.cover)} alt={`${profile.name} portrait`} />}
       <div class="profile-shade" aria-hidden="true"></div>
-      <h1 id="hero-title">Hi there<br/>I am {profile.name}<em>.</em></h1>
+      <h1 id="hero-title" aria-label={`Hi there. I am ${profile.name}.`}>
+        <span class="typing-line" data-copy="Hi there"><span>Hi there</span></span><br/>
+        <span class="typing-line" data-copy={`I am ${profile.name}`}><span>I am {profile.name}</span></span><em aria-hidden="true">.</em>
+      </h1>
       <div class="profile-bottom">
         <p>{profile.role}</p>
         <a href="#records">Explore my work <span aria-hidden="true">↘</span></a>
@@ -105,6 +111,30 @@ const focusAreas = [
             tempNode.textContent = Number.isFinite(value) ? `${Math.round(value)}${unitSymbol}` : 'Weather unavailable';
           })
           .catch(() => { tempNode.textContent = 'Weather unavailable'; });
+
+        const typingLines = [...hero.querySelectorAll('.typing-line')];
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches && typingLines.length) {
+          typingLines.forEach((line) => { line.querySelector('span').textContent = ''; });
+          let lineIndex = 0;
+          let characterIndex = 0;
+          const typeNext = () => {
+            const line = typingLines[lineIndex];
+            const output = line.querySelector('span');
+            const copy = line.dataset.copy || '';
+            line.classList.add('is-typing');
+            output.textContent = copy.slice(0, characterIndex + 1);
+            characterIndex += 1;
+            if (characterIndex < copy.length) {
+              setTimeout(typeNext, 52 + Math.random() * 34);
+              return;
+            }
+            line.classList.remove('is-typing');
+            lineIndex += 1;
+            characterIndex = 0;
+            if (lineIndex < typingLines.length) setTimeout(typeNext, 260);
+          };
+          setTimeout(typeNext, 420);
+        }
       })();
     </script>
 

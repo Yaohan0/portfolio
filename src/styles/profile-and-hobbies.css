@@ -1,4 +1,6 @@
 /* Homepage portrait composition */
+.home-clean { --home-pink: #8870ff; --home-acid: #c9ff5f; }
+
 .profile-hero {
   position: relative;
   width: 100%;
@@ -18,6 +20,8 @@
   object-fit: cover;
   object-position: center top;
   filter: grayscale(1) contrast(1.08);
+  transform: scale(.84);
+  transform-origin: center 44%;
   user-select: none;
 }
 
@@ -98,13 +102,7 @@
 }
 
 .profile-nameplate::after {
-  content: '';
-  position: absolute;
-  left: -13px;
-  bottom: -15px;
-  border: 10px solid transparent;
-  border-top-color: var(--home-pink);
-  rotate: -28deg;
+  content: none;
 }
 
 .profile-nameplate small {
@@ -157,6 +155,39 @@
   background: #17130d;
 }
 
+.profile-orbit {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 45%;
+  width: clamp(370px, 47vw, 650px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.profile-orbit::before,
+.profile-orbit::after {
+  content: none;
+}
+
+.profile-orbit-pointer {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid rgba(201,255,95,.4);
+  background: rgba(4,4,4,.72);
+  color: var(--home-acid);
+  box-shadow: 0 9px 28px rgba(0,0,0,.38);
+  backdrop-filter: blur(10px);
+  animation: profile-arc-sweep 6.8s cubic-bezier(.45,0,.55,1) infinite alternate;
+}
+
+.profile-orbit-pointer i { font: 700 16px/1 "Space Grotesk", sans-serif; }
+.profile-orbit-pointer b { font: 700 7px/1 "JetBrains Mono", monospace; letter-spacing: .12em; white-space: nowrap; }
+
 .profile-hero h1 {
   position: absolute;
   z-index: 3;
@@ -167,11 +198,36 @@
   margin: 0;
   font: 700 clamp(6rem, 12.2vw, 12.7rem)/.77 "Space Grotesk", sans-serif;
   letter-spacing: -.085em;
-  color: #efefed;
-  text-shadow: 0 14px 45px rgba(0,0,0,.32);
+  color: #f4f3ef;
+  text-shadow:
+    0 2px 0 #c8c8c7,
+    0 7px 0 #34343d,
+    0 12px 24px rgba(0,0,0,.75),
+    5px 8px 0 rgba(136,112,255,.16);
 }
 
-.profile-hero h1 em { color: var(--home-pink); font-style: normal; }
+.typing-line { display: inline-grid; position: relative; }
+.typing-line::before,
+.typing-line > span { grid-area: 1 / 1; }
+.typing-line::before { content: attr(data-copy); visibility: hidden; }
+.typing-line.is-typing::after {
+  content: '';
+  width: .035em;
+  height: .72em;
+  margin-left: .055em;
+  align-self: center;
+  background: var(--home-acid);
+  animation: typing-caret .7s steps(1) infinite;
+}
+
+.profile-hero h1 em {
+  display: inline-block;
+  color: var(--home-acid);
+  font-style: normal;
+  text-shadow: 0 5px 0 #43531f, 0 10px 20px rgba(0,0,0,.65);
+  transform: translateY(-.02em) scale(.78);
+  transform-origin: left bottom;
+}
 
 .profile-bottom {
   position: absolute;
@@ -201,6 +257,16 @@
 
 .profile-bottom a span { color: var(--home-pink); }
 .profile-status-message { display: none; }
+
+@keyframes profile-arc-sweep {
+  0% { left: 4%; top: 68%; transform: translate(-50%,-50%) rotate(13deg); }
+  25% { left: 20%; top: 25%; transform: translate(-50%,-50%) rotate(8deg); }
+  50% { left: 50%; top: 4%; transform: translate(-50%,-50%) rotate(0); }
+  75% { left: 80%; top: 25%; transform: translate(-50%,-50%) rotate(-8deg); }
+  100% { left: 96%; top: 68%; transform: translate(-50%,-50%) rotate(-13deg); }
+}
+
+@keyframes typing-caret { 50% { opacity: 0; } }
 
 /* Real hobby photography */
 .hobby-card > img {
@@ -239,7 +305,7 @@
 
 @media (max-width: 600px) {
   .profile-hero { min-height: 780px; }
-  .profile-portrait { object-position: 54% top; }
+  .profile-portrait { object-position: 54% top; transform: scale(.88); transform-origin: center 43%; }
   .profile-shade {
     background:
       linear-gradient(180deg, rgba(0,0,0,.05), transparent 34%, #020202 88%),
@@ -251,10 +317,17 @@
   .profile-location strong { font-size: 10px; }
   .profile-location span { font-size: 9px; }
   .profile-nameplate { top: 155px; right: 18px; }
+  .profile-orbit { top: 44%; width: 105vw; }
+  .profile-orbit-pointer b { display: none; }
   .profile-hero h1 { top: 56%; width: calc(100% - 30px); font-size: 20vw; line-height: .81; }
   .profile-bottom { bottom: 28px; width: calc(100% - 36px); display: block; }
   .profile-bottom p { max-width: 260px; }
   .profile-bottom a { display: inline-block; margin-top: 18px; }
   .hobby-card > img { width: calc(100% + 36px); height: 250px; margin-inline: -18px; }
   .hobby-detail-cover { width: calc(100% - 32px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-orbit-pointer { animation: none; }
+  .profile-orbit-pointer { left: 50%; top: 4%; transform: translate(-50%,-50%); }
 }
