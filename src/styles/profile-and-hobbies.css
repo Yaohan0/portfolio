@@ -155,39 +155,6 @@
   background: #17130d;
 }
 
-.profile-orbit {
-  position: absolute;
-  z-index: 4;
-  left: 50%;
-  top: 45%;
-  width: clamp(370px, 47vw, 650px);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-.profile-orbit::before,
-.profile-orbit::after {
-  content: none;
-}
-
-.profile-orbit-pointer {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 10px;
-  border: 1px solid rgba(201,255,95,.4);
-  background: rgba(4,4,4,.72);
-  color: var(--home-acid);
-  box-shadow: 0 9px 28px rgba(0,0,0,.38);
-  backdrop-filter: blur(10px);
-  animation: profile-arc-sweep 6.8s cubic-bezier(.45,0,.55,1) infinite alternate;
-}
-
-.profile-orbit-pointer i { font: 700 16px/1 "Space Grotesk", sans-serif; }
-.profile-orbit-pointer b { font: 700 7px/1 "JetBrains Mono", monospace; letter-spacing: .12em; white-space: nowrap; }
-
 .profile-hero h1 {
   position: absolute;
   z-index: 3;
@@ -258,14 +225,6 @@
 .profile-bottom a span { color: var(--home-pink); }
 .profile-status-message { display: none; }
 
-@keyframes profile-arc-sweep {
-  0% { left: 4%; top: 68%; transform: translate(-50%,-50%) rotate(13deg); }
-  25% { left: 20%; top: 25%; transform: translate(-50%,-50%) rotate(8deg); }
-  50% { left: 50%; top: 4%; transform: translate(-50%,-50%) rotate(0); }
-  75% { left: 80%; top: 25%; transform: translate(-50%,-50%) rotate(-8deg); }
-  100% { left: 96%; top: 68%; transform: translate(-50%,-50%) rotate(-13deg); }
-}
-
 @keyframes typing-caret { 50% { opacity: 0; } }
 
 /* Real hobby photography */
@@ -317,17 +276,10 @@
   .profile-location strong { font-size: 10px; }
   .profile-location span { font-size: 9px; }
   .profile-nameplate { top: 155px; right: 18px; }
-  .profile-orbit { top: 44%; width: 105vw; }
-  .profile-orbit-pointer b { display: none; }
   .profile-hero h1 { top: 56%; width: calc(100% - 30px); font-size: 20vw; line-height: .81; }
   .profile-bottom { bottom: 28px; width: calc(100% - 36px); display: block; }
   .profile-bottom p { max-width: 260px; }
   .profile-bottom a { display: inline-block; margin-top: 18px; }
   .hobby-card > img { width: calc(100% + 36px); height: 250px; margin-inline: -18px; }
   .hobby-detail-cover { width: calc(100% - 32px); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .profile-orbit-pointer { animation: none; }
-  .profile-orbit-pointer { left: 50%; top: 4%; transform: translate(-50%,-50%); }
 }

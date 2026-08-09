@@ -61,9 +61,6 @@ const focusAreas = [
         <strong>{profile.name}</strong>
         <small>{profile.status}</small>
       </div>
-      <div class="profile-orbit" aria-hidden="true">
-        <span class="profile-orbit-pointer"><i>↗</i><b>YH / IN MOTION</b></span>
-      </div>
       {profile.cover && <img class="profile-portrait" src={withBase(profile.cover)} alt={`${profile.name} portrait`} />}
       <div class="profile-shade" aria-hidden="true"></div>
       <h1 id="hero-title" aria-label={`Hi there. I am ${profile.name}.`}>
