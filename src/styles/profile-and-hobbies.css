@@ -34,35 +34,6 @@
     linear-gradient(90deg, #020202, transparent 18% 82%, #020202);
 }
 
-.profile-squares {
-  position: absolute;
-  z-index: 5;
-  left: 28px;
-  top: 100px;
-  width: 36px;
-  height: 36px;
-  background: var(--home-pink);
-}
-
-.profile-squares i:first-child {
-  position: absolute;
-  z-index: -1;
-  left: 14px;
-  top: 14px;
-  width: 22px;
-  height: 22px;
-  background: #f1f1ef;
-}
-
-.profile-squares i:last-child {
-  position: absolute;
-  left: 70px;
-  top: 76px;
-  width: 3px;
-  height: 3px;
-  background: #555;
-}
-
 .profile-location {
   position: absolute;
   z-index: 5;
@@ -270,8 +241,6 @@
       linear-gradient(180deg, rgba(0,0,0,.05), transparent 34%, #020202 88%),
       linear-gradient(90deg, #020202, transparent 6% 94%, #020202);
   }
-  .profile-squares { left: 18px; top: 92px; width: 25px; height: 25px; }
-  .profile-squares i:first-child { left: 10px; top: 10px; width: 15px; height: 15px; }
   .profile-location { right: 18px; top: 91px; }
   .profile-location strong { font-size: 10px; }
   .profile-location span { font-size: 9px; }
