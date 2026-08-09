@@ -12,56 +12,62 @@ const records = [
   { no: '06', title: 'Skills', href: '/skills', type: 'TOOLKIT', desc: 'A living tracker of tools, techniques, topics, and what I am currently learning.' },
   { no: '07', title: 'Archive', href: '/archive', type: 'DOCUMENTS', desc: 'Older notes, screenshots, experiments, references, drafts, and documentation.' },
 ]
+const featuredRecords = records.filter((record) => ['Labs', 'Writeups', 'Notes'].includes(record.title))
+const moreRecords = records.filter((record) => !['Labs', 'Writeups', 'Notes'].includes(record.title))
 ---
 
 <Layout title="Yaohan — Cybersecurity Portfolio">
-  <main class="portfolio-shell">
+  <main class="portfolio-shell home-clean">
     <Navbar current="Home" />
 
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="star-field" aria-hidden="true"></div>
-      <div class="hero-inner">
-        <p class="eyebrow">— Portfolio · 2026 · Cybersecurity</p>
-        <h1 id="hero-title"><span>Yaohan</span></h1>
-        <p class="role-line">I’m a cybersecurity student<span class="cursor">_</span></p>
-        <p class="hero-copy">Year 2 Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic, Singapore. I document labs, CTF attempts, forensics notes, school projects, and the technical lessons worth keeping.</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#records">Explore my work <span>↘</span></a>
-          <a class="button button-ghost" href={withBase('achievements')}>View achievements</a>
-        </div>
-        <div class="hero-meta">
-          <a href="mailto:2503587D@student.tp.edu.sg">2503587D@student.tp.edu.sg</a>
-          <span>GitHub / Yaohan0</span><span>Discord / yaooohann</span>
+    <section class="clean-hero" aria-labelledby="hero-title">
+      <div class="clean-hero-copy">
+        <p class="clean-status"><span></span> Singapore · Open to learning and building</p>
+        <h1 id="hero-title">Hey, I’m<br/><em>Yaohan.</em></h1>
+        <p class="clean-role">Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic.</p>
+        <p class="clean-intro">I learn by doing: breaking down systems, documenting what happened, and keeping the evidence useful for the next attempt.</p>
+        <div class="clean-actions">
+          <a href="#records">See what I’m working on <span>↓</span></a>
+          <a href="mailto:2503587D@student.tp.edu.sg">Get in touch <span>↗</span></a>
         </div>
       </div>
-      <div class="scroll-note">SCROLL <span>↓</span></div>
-    </section>
-
-    <section class="index-strip" aria-label="Portfolio overview">
-      <div><strong>07</strong><span>Sections</span></div><div><strong>02</strong><span>Study year</span></div><div><strong>SG</strong><span>Based in</span></div><div><strong>∞</strong><span>Still learning</span></div>
-    </section>
-
-    <section id="records" class="records-section">
-      <div class="section-heading">
-        <div><p>SHEET 02 — INDEX OF WORK</p><h2>Things I’ve<br/><em>documented</em></h2></div>
-        <p class="section-intro">A growing field archive of practical work, technical notes, milestones, and experiments.</p>
+      <div class="portrait-placeholder" role="img" aria-label="Portrait space reserved for a future photo">
+        <span>PORTRAIT / PENDING</span>
+        <div aria-hidden="true"><i></i></div>
+        <p>Your photo will live here.</p>
       </div>
-      <div class="records-grid">
-        {records.map((record) => (
-          <a class="record-card" href={withBase(record.href)}>
-            <div class="record-top"><span>{record.type}</span><span>REF-2026-{record.no}</span></div>
-            <div class="record-number">{record.no}</div>
-            <h3>{record.title}</h3><p>{record.desc}</p>
-            <div class="record-open">OPEN RECORD <span>↗</span></div>
+      <div class="clean-hero-foot">
+        <span>Year 02</span><span>Cybersecurity</span><span>Digital Forensics</span><span>Portfolio 2026</span>
+      </div>
+    </section>
+
+    <section id="records" class="clean-work">
+      <div class="clean-section-heading">
+        <div><p>SELECTED WORK</p><h2>Some things<br/>I’m learning.</h2></div>
+        <p>Practical work, clearly documented. Each section is an honest record of what I tried, what worked, and what I still need to understand.</p>
+      </div>
+      <div class="featured-work-grid">
+        {featuredRecords.map((record, index) => (
+          <a class={`featured-work-card feature-${index + 1}`} href={withBase(record.href)}>
+            <div class="featured-card-top"><span>0{index + 1}</span><span>{record.type}</span></div>
+            <div class="featured-card-art" aria-hidden="true"><i></i><i></i><b>{record.title.slice(0, 1)}</b></div>
+            <div class="featured-card-copy"><h3>{record.title}</h3><p>{record.desc}</p><span>Explore {record.title.toLowerCase()} ↗</span></div>
           </a>
         ))}
       </div>
     </section>
 
-    <section class="about-section">
-      <p class="stamp">IN PROGRESS</p>
-      <div><p class="eyebrow">— Current field position</p><h2>Learning in public.<br/>Keeping the evidence.</h2></div>
-      <div class="about-copy"><p>This site is my working record—not a finished story. It keeps the useful material together so I can trace how my thinking, methods, and technical ability change over time.</p><p>Current focus: ethical hacking, digital forensics, networking, cloud foundations, Linux, and CTF problem-solving.</p></div>
+    <section class="clean-index" aria-label="More portfolio sections">
+      <div class="clean-index-heading"><p>MORE OF THE PORTFOLIO</p><span>{String(moreRecords.length).padStart(2, '0')} collections</span></div>
+      {moreRecords.map((record) => (
+        <a href={withBase(record.href)}><span>{record.no}</span><strong>{record.title}</strong><p>{record.desc}</p><b>↗</b></a>
+      ))}
+    </section>
+
+    <section class="clean-about">
+      <p>ABOUT THIS PLACE</p>
+      <h2>A working record,<br/>not a finished story.</h2>
+      <div><p>This portfolio keeps the useful material together so I can trace how my thinking, methods, and technical ability change over time.</p><p>Right now I’m focused on ethical hacking, digital forensics, networking, Linux, cloud foundations, and CTF problem-solving.</p></div>
     </section>
 
     <section class="game-section" aria-labelledby="game-title">

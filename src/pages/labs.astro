@@ -7,9 +7,9 @@ const labs = (await getCollection('labs')).sort((a,b) => a.data.order-b.data.ord
 ---
 <Layout title="Labs — Yaohan"><main class="section-page labs-page"><Navbar current="Labs" />
   <header class="collection-hero labs-hero"><div class="blueprint-grid"></div><div class="collection-kicker">LABORATORY LOG / ACTIVE RECORDS</div><h1>Labs<span>.</span></h1><p>Practical cybersecurity, networking, cloud, Linux, and forensics work—documented from setup through evidence and findings.</p><div class="hero-counter"><strong>{String(labs.length).padStart(2,'0')}</strong><span>documented<br/>lab records</span></div></header>
-  <section class="lab-index"><div class="index-label">INDEX / SUBJECT FILES</div>{labs.map((lab,index)=><a class="lab-sheet" href={withBase(`labs/${lab.data.slug}`)}>
+  <section class="lab-index"><div class="index-label">INDEX / SUBJECT FILES</div>{labs.map((lab,index)=><a class="lab-sheet lab-sheet-compact" href={withBase(`labs/${lab.data.slug}`)}>
     <div class="lab-ref">LAB-{String(index+1).padStart(3,'0')}<span>{lab.data.status}</span></div>
     {lab.data.cover ? <img src={withBase(lab.data.cover)} alt={lab.data.title} loading="lazy" /> : <div class="lab-visual"><span>{String(index+1).padStart(2,'0')}</span><i></i><i></i></div>}
-    <div class="lab-copy"><p>{lab.data.type}</p><h2>{lab.data.title}</h2><p>{lab.data.description}</p><div class="tag-line">{lab.data.tools.slice(0,5).map(tool=><span>{tool}</span>)}</div></div>
-    <div class="sheet-arrow">↗</div></a>)}</section>
+    <div class="lab-copy"><p>{lab.data.type}</p><h2>{lab.data.title}</h2><div class="tag-line">{lab.data.tools.slice(0,2).map(tool=><span>{tool}</span>)}</div></div>
+    <div class="sheet-arrow"><span>VIEW LAB</span> ↗</div></a>)}</section>
 </main></Layout>
