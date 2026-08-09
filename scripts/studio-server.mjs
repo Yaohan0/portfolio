@@ -3,7 +3,9 @@ import multer from 'multer'
 import matter from 'gray-matter'
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { execFile } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import { promisify } from 'node:util'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -11,6 +13,9 @@ const rootDir = path.resolve(__dirname, '..')
 
 const app = express()
 const port = 8787
+const execFileAsync = promisify(execFile)
+const pendingPublishFiles = new Set()
+let publishQueue = Promise.resolve()
 
 const today = () => new Date().toISOString().slice(0, 10)
 
@@ -232,6 +237,66 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({ storage })
+
+function queueForPublish(filePath) {
+  const relativePath = path.relative(rootDir, filePath)
+
+  if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
+    throw new Error('Cannot publish a file outside the portfolio project.')
+  }
+
+  pendingPublishFiles.add(relativePath.split(path.sep).join('/'))
+}
+
+async function runGit(args) {
+  const result = await execFileAsync('git', args, {
+    cwd: rootDir,
+    windowsHide: true,
+    maxBuffer: 2 * 1024 * 1024,
+  })
+
+  return String(result.stdout || '').trim()
+}
+
+async function publishPendingChanges(message) {
+  const files = [...pendingPublishFiles]
+  let committed = false
+
+  if (files.length) {
+    await runGit(['add', '-A', '--', ...files])
+
+    let hasChanges = true
+
+    try {
+      await runGit(['diff', '--cached', '--quiet', '--', ...files])
+      hasChanges = false
+    } catch (error) {
+      if (error.code !== 1) throw error
+    }
+
+    if (hasChanges) {
+      await runGit(['commit', '-m', message, '--', ...files])
+      committed = true
+    }
+  }
+
+  await runGit(['push', 'origin', 'main'])
+
+  files.forEach((file) => pendingPublishFiles.delete(file))
+
+  return {
+    ok: true,
+    status: committed ? 'published' : 'up-to-date',
+    commit: await runGit(['rev-parse', '--short', 'HEAD']),
+    files,
+  }
+}
+
+function enqueuePublish(message) {
+  const job = publishQueue.then(() => publishPendingChanges(message))
+  publishQueue = job.catch(() => {})
+  return job
+}
 
 function getCollection(name) {
   const collection = collections[name]
@@ -630,10 +695,12 @@ app.post('/api/docs/:collection/:slug', async (req, res) => {
     const oldFilePath = path.join(collection.folder, `${oldSlug}.md`)
 
     await fs.writeFile(newFilePath, output, 'utf8')
+    queueForPublish(newFilePath)
 
     if (oldSlug !== finalSlug) {
       try {
         await fs.unlink(oldFilePath)
+        queueForPublish(oldFilePath)
       } catch {
         // Ignore missing old file.
       }
@@ -654,13 +721,31 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     return res.status(400).json({ error: 'No file uploaded' })
   }
 
+  queueForPublish(req.file.path)
+
   res.json({
     url: `/uploads/${req.file.filename}`,
     filename: req.file.filename,
   })
 })
 
-app.listen(port, () => {
+app.post('/api/publish', async (req, res) => {
+  try {
+    const requestedMessage = String(req.body?.message || 'Update portfolio from Studio')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 120)
+    const message = requestedMessage || 'Update portfolio from Studio'
+    const result = await enqueuePublish(message)
+    res.json(result)
+  } catch (error) {
+    res.status(500).json({
+      error: `Saved locally, but publishing failed: ${error.stderr || error.message}`.trim(),
+    })
+  }
+})
+
+app.listen(port, '127.0.0.1', () => {
   console.log(`Yaohan Studio server running at http://localhost:${port}`)
 })
 
@@ -671,6 +756,7 @@ app.delete('/api/docs/:collection/:slug', async (req, res) => {
     if (!safeSlug) throw new Error('Invalid document slug.')
     const filePath = path.join(collection.folder, `${safeSlug}.md`)
     await fs.unlink(filePath)
+    queueForPublish(filePath)
     res.json({ ok: true, slug: safeSlug })
   } catch (error) {
     res.status(404).json({ error: error.message })

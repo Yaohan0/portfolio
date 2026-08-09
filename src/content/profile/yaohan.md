@@ -8,9 +8,8 @@ timezone: Asia/Singapore
 latitude: 1.3521
 longitude: 103.8198
 temperatureUnit: celsius
-status: Online
-statusMessage: Learning, training and building.
+status: DND
+statusMessage: 'Learning, training and building.'
 cover: /profile/yaohan-portrait-dark.png
 ---
-
 Homepage identity, location and presence settings. Edit these fields from Studio.

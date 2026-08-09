@@ -9,7 +9,7 @@ import '../styles/global.css'
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Yaohan Studio</title>
     <style>
-      :root{--studio-acid:#d8ff55;--studio-bg:#0a0a0f;--studio-panel:#111118;--studio-line:#2a2a34;--studio-muted:#858590}*{box-sizing:border-box}.studio-body{background:var(--studio-bg);color:#f4f2eb}.studio-shell{min-height:100vh;display:grid;grid-template-columns:290px minmax(0,1fr);background-image:radial-gradient(circle at 80% 0,rgba(216,255,85,.055),transparent 28%)}.studio-aside{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--studio-line);padding:22px;background:#0c0c12}.studio-brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}.studio-brand b{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:var(--studio-acid);color:#0a0a0f;font-weight:900}.studio-brand small{display:block;color:#656570;font:600 9px "JetBrains Mono",monospace;letter-spacing:.14em}.studio-brand strong{display:block;margin-top:4px}.studio-search{width:100%;margin-bottom:12px;border:1px solid var(--studio-line);border-radius:9px;background:#08080d;padding:11px 12px;color:#eee;font:500 11px "JetBrains Mono",monospace;outline:none}.studio-search:focus{border-color:#78952b}.studio-workspace{display:grid;grid-template-columns:minmax(0,1fr) 390px;min-width:0}.studio-editor{min-width:0;padding:34px 42px 100px}.studio-editor-header{position:sticky;z-index:15;top:0;margin:-34px -42px 32px;padding:24px 42px 20px;background:rgba(10,10,15,.9);border-bottom:1px solid var(--studio-line);backdrop-filter:blur(16px)}.studio-actions{display:flex;gap:8px;align-items:center}.studio-status{border:1px solid var(--studio-line);border-radius:999px;padding:9px 12px;color:#73737f;font:700 9px "JetBrains Mono",monospace;letter-spacing:.12em}.studio-status.dirty{color:#f1c75b;border-color:#7c642b}.studio-status.saved{color:var(--studio-acid);border-color:#60752e}.studio-action{border:1px solid var(--studio-line);border-radius:999px;background:transparent;color:#9999a4;padding:11px 14px;font:700 9px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase}.studio-action:hover{border-color:#6f8732;color:var(--studio-acid)}.studio-action.danger:hover{border-color:#8b3b48;color:#ff7182}.block-toolbar{position:sticky;z-index:10;top:104px;padding:12px;border:1px solid var(--studio-line);border-radius:12px;background:rgba(17,17,24,.94);backdrop-filter:blur(12px)}.block-card{border-radius:8px!important;background:#101017!important}.block-card:focus-within{border-color:#778c3a!important;box-shadow:0 0 0 3px rgba(216,255,85,.055)}.studio-preview{position:sticky;top:0;height:100vh;overflow:auto;border-left:1px solid var(--studio-line);background:#0c0c12;padding:28px}.studio-preview.is-hidden{display:none}.studio-workspace.preview-hidden{grid-template-columns:1fr}.studio-empty{padding:28px 12px;color:#555561;text-align:center;font:600 10px "JetBrains Mono",monospace}.doc-button.active{border-color:#6d8532!important;background:rgba(216,255,85,.07)!important}.collection-button{border-radius:8px!important}.studio-kbd{display:inline-block;border:1px solid #3a3a44;border-bottom-width:2px;border-radius:4px;padding:2px 5px;font-size:8px;color:#757580}@media(max-width:1100px){.studio-workspace{grid-template-columns:1fr}.studio-preview{position:relative;height:auto;border-left:0;border-top:1px solid var(--studio-line)}.studio-editor-header{position:relative;top:auto}.studio-shell{grid-template-columns:240px 1fr}}@media(max-width:760px){.studio-shell{display:block}.studio-aside{position:relative;width:auto;height:auto;border-right:0;border-bottom:1px solid var(--studio-line)}.studio-workspace{display:block}.studio-editor{padding:24px 18px}.studio-editor-header{margin:-24px -18px 24px;padding:20px 18px}.studio-actions{flex-wrap:wrap}}
+      :root{--studio-acid:#d8ff55;--studio-bg:#0a0a0f;--studio-panel:#111118;--studio-line:#2a2a34;--studio-muted:#858590}*{box-sizing:border-box}.studio-body{background:var(--studio-bg);color:#f4f2eb}.studio-shell{min-height:100vh;display:grid;grid-template-columns:290px minmax(0,1fr);background-image:radial-gradient(circle at 80% 0,rgba(216,255,85,.055),transparent 28%)}.studio-aside{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--studio-line);padding:22px;background:#0c0c12}.studio-brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}.studio-brand b{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:var(--studio-acid);color:#0a0a0f;font-weight:900}.studio-brand small{display:block;color:#656570;font:600 9px "JetBrains Mono",monospace;letter-spacing:.14em}.studio-brand strong{display:block;margin-top:4px}.studio-search{width:100%;margin-bottom:12px;border:1px solid var(--studio-line);border-radius:9px;background:#08080d;padding:11px 12px;color:#eee;font:500 11px "JetBrains Mono",monospace;outline:none}.studio-search:focus{border-color:#78952b}.studio-workspace{display:grid;grid-template-columns:minmax(0,1fr) 390px;min-width:0}.studio-editor{min-width:0;padding:34px 42px 100px}.studio-editor-header{position:sticky;z-index:15;top:0;margin:-34px -42px 32px;padding:24px 42px 20px;background:rgba(10,10,15,.9);border-bottom:1px solid var(--studio-line);backdrop-filter:blur(16px)}.studio-actions{display:flex;gap:8px;align-items:center}.studio-status{border:1px solid var(--studio-line);border-radius:999px;padding:9px 12px;color:#73737f;font:700 9px "JetBrains Mono",monospace;letter-spacing:.12em}.studio-status.dirty{color:#f1c75b;border-color:#7c642b}.studio-status.publishing{color:#8ddcff;border-color:#366475;animation:studio-pulse 1s ease-in-out infinite alternate}.studio-status.local{color:#ff9e72;border-color:#784a36}.studio-status.saved{color:var(--studio-acid);border-color:#60752e}.studio-action{border:1px solid var(--studio-line);border-radius:999px;background:transparent;color:#9999a4;padding:11px 14px;font:700 9px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase}.studio-action:hover{border-color:#6f8732;color:var(--studio-acid)}.studio-action.danger:hover{border-color:#8b3b48;color:#ff7182}.block-toolbar{position:sticky;z-index:10;top:104px;padding:12px;border:1px solid var(--studio-line);border-radius:12px;background:rgba(17,17,24,.94);backdrop-filter:blur(12px)}.block-card{border-radius:8px!important;background:#101017!important}.block-card:focus-within{border-color:#778c3a!important;box-shadow:0 0 0 3px rgba(216,255,85,.055)}.studio-preview{position:sticky;top:0;height:100vh;overflow:auto;border-left:1px solid var(--studio-line);background:#0c0c12;padding:28px}.studio-preview.is-hidden{display:none}.studio-workspace.preview-hidden{grid-template-columns:1fr}.studio-empty{padding:28px 12px;color:#555561;text-align:center;font:600 10px "JetBrains Mono",monospace}.doc-button.active{border-color:#6d8532!important;background:rgba(216,255,85,.07)!important}.collection-button{border-radius:8px!important}.studio-kbd{display:inline-block;border:1px solid #3a3a44;border-bottom-width:2px;border-radius:4px;padding:2px 5px;font-size:8px;color:#757580}@keyframes studio-pulse{to{opacity:.55}}@media(max-width:1100px){.studio-workspace{grid-template-columns:1fr}.studio-preview{position:relative;height:auto;border-left:0;border-top:1px solid var(--studio-line)}.studio-editor-header{position:relative;top:auto}.studio-shell{grid-template-columns:240px 1fr}}@media(max-width:760px){.studio-shell{display:block}.studio-aside{position:relative;width:auto;height:auto;border-right:0;border-bottom:1px solid var(--studio-line)}.studio-workspace{display:block}.studio-editor{padding:24px 18px}.studio-editor-header{margin:-24px -18px 24px;padding:20px 18px}.studio-actions{flex-wrap:wrap}}
     </style>
   </head>
 
@@ -725,6 +725,11 @@ import '../styles/global.css'
           }
         });
 
+        if (collection === "profile") {
+          delete currentData.title;
+          delete currentData.summary;
+        }
+
         $("open-page").href = config().singlePage ? "/" : `${config().pageBase}${currentData.slug || ""}`;
 
         return currentData;
@@ -1059,6 +1064,8 @@ import '../styles/global.css'
       };
 
       const saveDoc = async () => {
+        let savedLocally = false;
+
         try {
           setSaveState("dirty", "SAVING...");
           collectFields();
@@ -1075,13 +1082,24 @@ import '../styles/global.css'
           });
 
           currentSlug = result.slug;
+          savedLocally = true;
 
           await loadDocs();
           await loadDoc(currentSlug);
 
-          setSaveState("saved", "SAVED");
+          setSaveState("publishing", "PUBLISHING...");
+
+          const publishResult = await request(`${API}/publish`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: `Update ${config().label}: ${displayTitle(currentData)}`,
+            }),
+          });
+
+          setSaveState("saved", publishResult.status === "up-to-date" ? "LIVE · CURRENT" : "LIVE · PUBLISHED");
         } catch (error) {
-          setSaveState("dirty", "SAVE FAILED");
+          setSaveState(savedLocally ? "local" : "dirty", savedLocally ? "SAVED · LOCAL ONLY" : "SAVE FAILED");
           alert(error.message);
         }
       };
@@ -1102,11 +1120,23 @@ import '../styles/global.css'
       const deleteDoc = async () => {
         if (!currentSlug || currentSlug.startsWith("untitled")) return;
         if (!confirm(`Delete ${displayTitle(currentData)}? This cannot be undone.`)) return;
+        let deletedLocally = false;
         try {
           await request(`${API}/docs/${collection}/${currentSlug}`, { method: "DELETE" });
+          deletedLocally = true;
+          setSaveState("publishing", "PUBLISHING...");
+          await request(`${API}/publish`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: `Delete ${config().label}: ${displayTitle(currentData)}` }),
+          });
           await loadDocs();
           if (docs.length) await loadDoc(docs[0].slug); else newDoc();
-        } catch (error) { alert(error.message); }
+          setSaveState("saved", "LIVE · DELETED");
+        } catch (error) {
+          setSaveState(deletedLocally ? "local" : "dirty", deletedLocally ? "DELETED · LOCAL ONLY" : "DELETE FAILED");
+          alert(error.message);
+        }
       };
 
       const setCollection = async (nextCollection) => {
