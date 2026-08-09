@@ -21,8 +21,7 @@ import '../styles/global.css'
           <p class="font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">Local Editor</p>
 
           <p class="mt-3 text-sm leading-6 text-[#a9a196]">
-            Block editor for writeups, journal, labs, archive, achievements,
-            and skills.
+            Edit your profile, hobbies, notes, projects and every portfolio collection.
           </p>
         </div>
 
@@ -290,6 +289,39 @@ import '../styles/global.css'
             { name: "date", label: "Date", type: "text" },
             { name: "status", label: "Status", type: "text" },
             { name: "tags", label: "Tags", type: "list" },
+          ],
+        },
+
+        profile: {
+          label: "Profile",
+          titleField: "name",
+          summaryField: "statusMessage",
+          summaryLabel: "Status message",
+          pageBase: "/",
+          singlePage: true,
+          defaults: {
+            name: "Yaohan",
+            slug: "yaohan",
+            order: 1,
+            role: "Cybersecurity & Digital Forensics student",
+            location: "Singapore",
+            timezone: "Asia/Singapore",
+            latitude: 1.3521,
+            longitude: 103.8198,
+            temperatureUnit: "celsius",
+            status: "Online",
+            statusMessage: "Learning, training and building.",
+            cover: "/profile/yaohan-portrait-dark.png",
+          },
+          fields: [
+            { name: "order", label: "Order", type: "number" },
+            { name: "role", label: "Role / intro line", type: "text" },
+            { name: "location", label: "Location", type: "text" },
+            { name: "timezone", label: "Timezone", type: "text" },
+            { name: "latitude", label: "Weather latitude", type: "number" },
+            { name: "longitude", label: "Weather longitude", type: "number" },
+            { name: "temperatureUnit", label: "Temperature unit", type: "select", options: ["celsius", "fahrenheit"] },
+            { name: "status", label: "Presence", type: "select", options: ["Online", "Offline", "DND"] },
           ],
         },
 
@@ -650,14 +682,14 @@ import '../styles/global.css'
         $("editor-title").textContent = `${config().label} Editor`;
         $("title-label").textContent = titleField === "name" ? "Name" : "Title";
         $("summary-label").textContent =
-          summaryField === "description" ? "Description" : "Summary";
+          config().summaryLabel || (summaryField === "description" ? "Description" : "Summary");
 
         $("field-title").value = currentData[titleField] || currentData.title || currentData.name || "";
         $("field-slug").value = currentData.slug || "";
         $("field-summary").value = currentData[summaryField] || "";
         $("field-cover").value = currentData.cover || "";
 
-        $("open-page").href = `${config().pageBase}${currentData.slug || ""}`;
+        $("open-page").href = config().singlePage ? "/" : `${config().pageBase}${currentData.slug || ""}`;
 
         renderMetadataFields();
       };
@@ -693,7 +725,7 @@ import '../styles/global.css'
           }
         });
 
-        $("open-page").href = `${config().pageBase}${currentData.slug || ""}`;
+        $("open-page").href = config().singlePage ? "/" : `${config().pageBase}${currentData.slug || ""}`;
 
         return currentData;
       };

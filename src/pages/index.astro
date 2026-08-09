@@ -1,7 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import Navbar from '../components/Navbar.astro'
+import { getCollection } from 'astro:content'
 import { withBase } from '../utils/paths'
+
+const profileEntries = (await getCollection('profile')).sort((a, b) => a.data.order - b.data.order)
+const profile = profileEntries[0]?.data ?? {
+  name: 'Yaohan',
+  role: 'Cybersecurity & Digital Forensics student',
+  location: 'Singapore',
+  timezone: 'Asia/Singapore',
+  latitude: 1.3521,
+  longitude: 103.8198,
+  temperatureUnit: 'celsius',
+  status: 'Online',
+  statusMessage: 'Learning, training and building.',
+  cover: '/profile/yaohan-portrait-dark.png',
+}
+const presence = profile.status.toLowerCase()
 
 const records = [
   { no: '01', title: 'Journal', href: '/journal', type: 'FIELD NOTES', desc: 'Reflections, mistakes, progress logs, and the stories behind what I am learning.' },
@@ -27,19 +43,70 @@ const focusAreas = [
   <main class="portfolio-shell home-clean">
     <Navbar current="Home" />
 
-    <section class="reference-hero" aria-labelledby="hero-title">
-      <div class="reference-intro">
-        <p>Hey! I’m Yaohan <span aria-hidden="true">👋</span></p>
-        <h1 id="hero-title">Cybersecurity &amp;<br/><em>Digital Forensics</em><br/>student.</h1>
-        <small>Learning through labs, CTFs and evidence.</small>
-        <a href="#records">TAKE A LOOK <span>↓</span></a>
+    <section
+      class="profile-hero"
+      aria-labelledby="hero-title"
+      data-latitude={profile.latitude}
+      data-longitude={profile.longitude}
+      data-timezone={profile.timezone}
+      data-temperature-unit={profile.temperatureUnit}
+    >
+      <div class="profile-squares" aria-hidden="true"><i></i><i></i></div>
+      <div class="profile-location">
+        <strong>Based in {profile.location}</strong>
+        <span><time id="sg-time">Singapore time</time> · <b id="sg-temp">Loading weather</b></span>
       </div>
-      <div class="reference-portrait" role="img" aria-label="Space reserved for Yaohan's future portrait">
-        <span>PHOTO COMING SOON</span>
-        <div aria-hidden="true"><i></i></div>
-        <small>Temasek Polytechnic · Singapore</small>
+      <div class="profile-nameplate">
+        <span class:list={['profile-presence', presence]} aria-hidden="true"><i></i></span>
+        <strong>{profile.name}</strong>
+        <small>{profile.status}</small>
       </div>
+      {profile.cover && <img class="profile-portrait" src={withBase(profile.cover)} alt={`${profile.name} portrait`} />}
+      <div class="profile-shade" aria-hidden="true"></div>
+      <h1 id="hero-title">Hi there<br/>I am {profile.name}<em>.</em></h1>
+      <div class="profile-bottom">
+        <p>{profile.role}</p>
+        <a href="#records">Explore my work <span aria-hidden="true">↘</span></a>
+      </div>
+      <p class="profile-status-message"><span class:list={['profile-presence', presence]} aria-hidden="true"><i></i></span>{profile.statusMessage}</p>
     </section>
+
+    <script is:inline>
+      (() => {
+        const hero = document.querySelector('.profile-hero');
+        const timeNode = document.getElementById('sg-time');
+        const tempNode = document.getElementById('sg-temp');
+        if (!hero || !timeNode || !tempNode) return;
+
+        const timezone = hero.dataset.timezone || 'Asia/Singapore';
+        const latitude = hero.dataset.latitude || '1.3521';
+        const longitude = hero.dataset.longitude || '103.8198';
+        const temperatureUnit = hero.dataset.temperatureUnit === 'fahrenheit' ? 'fahrenheit' : 'celsius';
+        const unitSymbol = temperatureUnit === 'fahrenheit' ? '°F' : '°C';
+        const clock = new Intl.DateTimeFormat('en-SG', {
+          timeZone: timezone,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+        });
+        const updateClock = () => { timeNode.textContent = `${clock.format(new Date())} SGT`; };
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        const endpoint = `https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(longitude)}&current=temperature_2m&temperature_unit=${temperatureUnit}`;
+        fetch(endpoint)
+          .then((response) => {
+            if (!response.ok) throw new Error('Weather request failed');
+            return response.json();
+          })
+          .then((weather) => {
+            const value = weather?.current?.temperature_2m;
+            tempNode.textContent = Number.isFinite(value) ? `${Math.round(value)}${unitSymbol}` : 'Weather unavailable';
+          })
+          .catch(() => { tempNode.textContent = 'Weather unavailable'; });
+      })();
+    </script>
 
     <section id="records" class="reference-projects">
       <h2>Some projects<span>.</span></h2>

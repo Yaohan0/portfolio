@@ -185,6 +185,27 @@ const hobbies = defineCollection({
   }),
 })
 
+const profile = defineCollection({
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/profile',
+  }),
+  schema: z.object({
+    name: z.string(),
+    slug: z.string(),
+    order: z.number(),
+    role: z.string(),
+    location: z.string(),
+    timezone: z.string(),
+    latitude: z.number(),
+    longitude: z.number(),
+    temperatureUnit: z.enum(['celsius', 'fahrenheit']).default('celsius'),
+    status: z.enum(['Online', 'Offline', 'DND']).default('Online'),
+    statusMessage: z.string().default(''),
+    cover: z.string().optional(),
+  }),
+})
+
 export const collections = {
   labs,
   writeups,
@@ -194,4 +215,5 @@ export const collections = {
   skills,
   notes,
   hobbies,
+  profile,
 }

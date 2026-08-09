@@ -78,6 +78,25 @@ const collections = {
     },
   },
 
+  profile: {
+    label: 'Profile',
+    folder: path.join(rootDir, 'src/content/profile'),
+    defaults: {
+      name: 'Yaohan',
+      slug: 'yaohan',
+      order: 1,
+      role: 'Cybersecurity & Digital Forensics student',
+      location: 'Singapore',
+      timezone: 'Asia/Singapore',
+      latitude: 1.3521,
+      longitude: 103.8198,
+      temperatureUnit: 'celsius',
+      status: 'Online',
+      statusMessage: 'Learning, training and building.',
+      cover: '/profile/yaohan-portrait-dark.png',
+    },
+  },
+
   hobbies: {
     label: 'Hobbies',
     folder: path.join(rootDir, 'src/content/hobbies'),
@@ -490,6 +509,20 @@ function normalizeData(collectionName, inputData, finalSlug) {
     }
   }
 
+  if (collectionName === 'notes') {
+    data.tags = splitList(data.tags)
+    data.files = Array.isArray(data.files) ? data.files : []
+  }
+
+  if (collectionName === 'hobbies') {
+    data.highlights = splitList(data.highlights)
+  }
+
+  if (collectionName === 'profile') {
+    data.latitude = Number(data.latitude)
+    data.longitude = Number(data.longitude)
+  }
+
   return data
 }
 
@@ -642,14 +675,4 @@ app.delete('/api/docs/:collection/:slug', async (req, res) => {
   } catch (error) {
     res.status(404).json({ error: error.message })
   }
-
-  if (collectionName === 'notes') {
-    data.tags = splitList(data.tags)
-    data.files = Array.isArray(data.files) ? data.files : []
-  }
-
-  if (collectionName === 'hobbies') {
-    data.highlights = splitList(data.highlights)
-  }
-
 })

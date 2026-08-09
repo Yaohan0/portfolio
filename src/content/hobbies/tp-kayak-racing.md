@@ -11,7 +11,7 @@ highlights:
   - Team training
   - Endurance
 accent: "#5bd6e8"
-cover: ""
+cover: "/hobbies/tp-kayak-racing.png"
 ---
 
 ## Why it matters

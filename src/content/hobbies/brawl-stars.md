@@ -11,7 +11,7 @@ highlights:
   - Strategy
   - Team play
 accent: "#ffc94a"
-cover: ""
+cover: "/hobbies/brawl-stars.png"
 ---
 
 ## Why I play
