@@ -293,6 +293,33 @@ import '../styles/global.css'
           ],
         },
 
+        hobbies: {
+          label: "Hobbies",
+          titleField: "title",
+          summaryField: "summary",
+          pageBase: "/hobbies/",
+          defaults: {
+            title: "Untitled Hobby",
+            slug: "untitled-hobby",
+            order: 999,
+            category: "Other",
+            status: "Active",
+            summary: "",
+            context: "Personal",
+            highlights: [],
+            accent: "#ed4b91",
+            cover: "",
+          },
+          fields: [
+            { name: "order", label: "Order", type: "number" },
+            { name: "category", label: "Category", type: "select", options: ["CCA", "Gaming", "Other"] },
+            { name: "status", label: "Status", type: "text" },
+            { name: "context", label: "Context", type: "text" },
+            { name: "highlights", label: "Highlights", type: "list" },
+            { name: "accent", label: "Accent colour", type: "text" },
+          ],
+        },
+
         labs: {
           label: "Labs",
           titleField: "title",

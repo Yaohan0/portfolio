@@ -78,6 +78,23 @@ const collections = {
     },
   },
 
+  hobbies: {
+    label: 'Hobbies',
+    folder: path.join(rootDir, 'src/content/hobbies'),
+    defaults: {
+      title: 'Untitled Hobby',
+      slug: 'untitled-hobby',
+      order: 999,
+      category: 'Other',
+      status: 'Active',
+      summary: '',
+      context: 'Personal',
+      highlights: [],
+      accent: '#ed4b91',
+      cover: '',
+    },
+  },
+
   labs: {
     label: 'Labs',
     folder: path.join(rootDir, 'src/content/labs'),
@@ -630,4 +647,9 @@ app.delete('/api/docs/:collection/:slug', async (req, res) => {
     data.tags = splitList(data.tags)
     data.files = Array.isArray(data.files) ? data.files : []
   }
+
+  if (collectionName === 'hobbies') {
+    data.highlights = splitList(data.highlights)
+  }
+
 })

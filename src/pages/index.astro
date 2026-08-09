@@ -10,10 +10,11 @@ const records = [
   { no: '04', title: 'Writeups', href: '/writeups', type: 'CTF RECORDS', desc: 'Challenge solutions across web, forensics, crypto, reverse engineering, pwn, and misc.' },
   { no: '05', title: 'Achievements', href: '/achievements', type: 'MILESTONES', desc: 'Certifications, awards, competitions, school milestones, and completed goals.' },
   { no: '06', title: 'Skills', href: '/skills', type: 'TOOLKIT', desc: 'A living tracker of tools, techniques, topics, and what I am currently learning.' },
-  { no: '07', title: 'Archive', href: '/archive', type: 'DOCUMENTS', desc: 'Older notes, screenshots, experiments, references, drafts, and documentation.' },
+  { no: '07', title: 'Hobbies', href: '/hobbies', type: 'OFF DUTY', desc: 'Kayak racing, gaming, and the interests that keep life moving outside cybersecurity.' },
+  { no: '08', title: 'Archive', href: '/archive', type: 'DOCUMENTS', desc: 'Older notes, screenshots, experiments, references, drafts, and documentation.' },
 ]
-const projectRecords = records.filter((record) => record.title !== 'Archive')
-const archiveRecord = records.find((record) => record.title === 'Archive')
+const projectRecords = records.filter((record) => !['Hobbies', 'Archive'].includes(record.title))
+const secondaryRecords = records.filter((record) => ['Hobbies', 'Archive'].includes(record.title))
 const focusAreas = [
   { title: 'Ethical hacking', items: ['Web exploitation', 'Enumeration', 'CTF problem-solving'] },
   { title: 'Digital forensics', items: ['Evidence handling', 'File analysis', 'Steganography'] },
@@ -51,7 +52,7 @@ const focusAreas = [
             <div class="project-card-copy"><h3>{record.title}</h3><p>{record.desc}</p><div><span>{record.type}</span><span>2026</span></div></div>
           </a>
         ))}
-        {archiveRecord && <a class="reference-project-wide" href={withBase(archiveRecord.href)}><div><strong>{archiveRecord.title}</strong><p>{archiveRecord.desc}</p></div><span>OPEN ARCHIVE ↗</span></a>}
+        {secondaryRecords.map((record) => <a class="reference-project-wide" href={withBase(record.href)}><div><strong>{record.title}</strong><p>{record.desc}</p></div><span>OPEN {record.title.toUpperCase()} ↗</span></a>)}
       </div>
     </section>
 

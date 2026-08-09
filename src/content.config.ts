@@ -166,6 +166,25 @@ const notes = defineCollection({
   }),
 })
 
+const hobbies = defineCollection({
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/hobbies',
+  }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    order: z.number(),
+    category: z.string(),
+    status: z.string(),
+    summary: z.string(),
+    context: z.string(),
+    highlights: z.array(z.string()).default([]),
+    accent: z.string().default('#ed4b91'),
+    cover: z.string().optional(),
+  }),
+})
+
 export const collections = {
   labs,
   writeups,
@@ -174,4 +193,5 @@ export const collections = {
   achievements,
   skills,
   notes,
+  hobbies,
 }

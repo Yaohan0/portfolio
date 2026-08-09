@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Navbar from '../components/Navbar.astro'
+import { getCollection } from 'astro:content'
+import { withBase } from '../utils/paths'
+
+const hobbies = (await getCollection('hobbies')).sort((a, b) => a.data.order - b.data.order)
+---
+
+<Layout title="Hobbies — Yaohan" description="Yaohan's hobbies outside cybersecurity: TP Kayak Racing, gaming and more.">
+  <main class="hobbies-page">
+    <Navbar current="Hobbies" />
+    <header class="hobbies-hero">
+      <div><p>OFF DUTY / {String(hobbies.length).padStart(2, '0')} INTERESTS</p><h1>Life outside<br/><span>the terminal.</span></h1></div>
+      <p>Cybersecurity is a big part of what I do, but not all of it. This is where racing, games and whatever I get into next can live.</p>
+    </header>
+
+    <section class="hobby-grid">
+      {hobbies.map((hobby, index) => (
+        <a class:list={['hobby-card', { 'hobby-kayak': hobby.data.category === 'CCA', 'hobby-gaming': hobby.data.category === 'Gaming' }]} href={withBase(`hobbies/${hobby.data.slug}`)} style={`--hobby-accent:${hobby.data.accent}`}>
+          <div class="hobby-card-top"><span>0{index + 1} / {hobby.data.category}</span><span>{hobby.data.status}</span></div>
+          {hobby.data.cover ? <img src={withBase(hobby.data.cover)} alt={hobby.data.title} /> : <div class="hobby-art" aria-hidden="true"><div class="hobby-symbol"><i></i><i></i><b>{hobby.data.category === 'CCA' ? '↗' : '★'}</b></div></div>}
+          <div class="hobby-copy"><small>{hobby.data.context}</small><h2>{hobby.data.title}</h2><p>{hobby.data.summary}</p><div>{hobby.data.highlights.map((highlight) => <span>{highlight}</span>)}</div></div>
+          <span class="hobby-open">OPEN STORY ↗</span>
+        </a>
+      ))}
+      <article class="hobby-placeholder"><span>03 / NEXT</span><div>+</div><h2>More later.</h2><p>A space for the next hobby, side quest or obsession.</p><small>Add it from Studio whenever it happens.</small></article>
+    </section>
+  </main>
+</Layout>
