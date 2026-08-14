@@ -8,8 +8,23 @@ import '../styles/global.css'
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Yaohan Studio</title>
-    <style>
+    <style is:global>
       :root{--studio-acid:#d8ff55;--studio-bg:#0a0a0f;--studio-panel:#111118;--studio-line:#2a2a34;--studio-muted:#858590}*{box-sizing:border-box}.studio-body{background:var(--studio-bg);color:#f4f2eb}.studio-shell{min-height:100vh;display:grid;grid-template-columns:290px minmax(0,1fr);background-image:radial-gradient(circle at 80% 0,rgba(216,255,85,.055),transparent 28%)}.studio-aside{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--studio-line);padding:22px;background:#0c0c12}.studio-brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}.studio-brand b{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:var(--studio-acid);color:#0a0a0f;font-weight:900}.studio-brand small{display:block;color:#656570;font:600 9px "JetBrains Mono",monospace;letter-spacing:.14em}.studio-brand strong{display:block;margin-top:4px}.studio-search{width:100%;margin-bottom:12px;border:1px solid var(--studio-line);border-radius:9px;background:#08080d;padding:11px 12px;color:#eee;font:500 11px "JetBrains Mono",monospace;outline:none}.studio-search:focus{border-color:#78952b}.studio-workspace{display:grid;grid-template-columns:minmax(0,1fr) 390px;min-width:0}.studio-editor{min-width:0;padding:34px 42px 100px}.studio-editor-header{position:sticky;z-index:15;top:0;margin:-34px -42px 32px;padding:24px 42px 20px;background:rgba(10,10,15,.9);border-bottom:1px solid var(--studio-line);backdrop-filter:blur(16px)}.studio-actions{display:flex;gap:8px;align-items:center}.studio-status{border:1px solid var(--studio-line);border-radius:999px;padding:9px 12px;color:#73737f;font:700 9px "JetBrains Mono",monospace;letter-spacing:.12em}.studio-status.dirty{color:#f1c75b;border-color:#7c642b}.studio-status.publishing{color:#8ddcff;border-color:#366475;animation:studio-pulse 1s ease-in-out infinite alternate}.studio-status.local{color:#ff9e72;border-color:#784a36}.studio-status.saved{color:var(--studio-acid);border-color:#60752e}.studio-action{border:1px solid var(--studio-line);border-radius:999px;background:transparent;color:#9999a4;padding:11px 14px;font:700 9px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase}.studio-action:hover{border-color:#6f8732;color:var(--studio-acid)}.studio-action.danger:hover{border-color:#8b3b48;color:#ff7182}.block-toolbar{position:sticky;z-index:10;top:104px;padding:12px;border:1px solid var(--studio-line);border-radius:12px;background:rgba(17,17,24,.94);backdrop-filter:blur(12px)}.block-card{border-radius:8px!important;background:#101017!important}.block-card:focus-within{border-color:#778c3a!important;box-shadow:0 0 0 3px rgba(216,255,85,.055)}.studio-preview{position:sticky;top:0;height:100vh;overflow:auto;border-left:1px solid var(--studio-line);background:#0c0c12;padding:28px}.studio-preview.is-hidden{display:none}.studio-workspace.preview-hidden{grid-template-columns:1fr}.studio-empty{padding:28px 12px;color:#555561;text-align:center;font:600 10px "JetBrains Mono",monospace}.doc-button.active{border-color:#6d8532!important;background:rgba(216,255,85,.07)!important}.collection-button{border-radius:8px!important}.studio-kbd{display:inline-block;border:1px solid #3a3a44;border-bottom-width:2px;border-radius:4px;padding:2px 5px;font-size:8px;color:#757580}@keyframes studio-pulse{to{opacity:.55}}@media(max-width:1100px){.studio-workspace{grid-template-columns:1fr}.studio-preview{position:relative;height:auto;border-left:0;border-top:1px solid var(--studio-line)}.studio-editor-header{position:relative;top:auto}.studio-shell{grid-template-columns:240px 1fr}}@media(max-width:760px){.studio-shell{display:block}.studio-aside{position:relative;width:auto;height:auto;border-right:0;border-bottom:1px solid var(--studio-line)}.studio-workspace{display:block}.studio-editor{padding:24px 18px}.studio-editor-header{margin:-24px -18px 24px;padding:20px 18px}.studio-actions{flex-wrap:wrap}}
+      /* Surface editor */
+      .studio-aside{overflow-x:hidden}.collection-button{min-width:0;padding-inline:8px!important;overflow:hidden;text-overflow:ellipsis;font-size:9px!important;letter-spacing:.075em!important}
+      .studio-workspace{grid-template-rows:58px minmax(0,1fr);grid-template-areas:"topbar topbar" "editor preview"}
+      .studio-topbar{grid-area:topbar;position:sticky;z-index:30;top:0;min-width:0;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 14px;border-bottom:1px solid var(--studio-line);background:rgba(12,12,18,.94);backdrop-filter:blur(18px)}
+      .studio-mode-switch,.studio-surface-tools,.studio-device-tools{display:flex;align-items:center;gap:5px}.studio-tool,.studio-mode{min-height:36px;padding:0 11px;border:1px solid transparent;border-radius:8px;background:transparent;color:#858590;font:700 9px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;transition:.18s}.studio-tool:hover,.studio-mode:hover{border-color:#34343f;color:#e9e6de}.studio-mode.active{border-color:#596d2a;background:rgba(216,255,85,.08);color:var(--studio-acid)}.studio-tool.is-active{background:#e8e4da;color:#111}.studio-tool-separator{width:1px;height:24px;margin:0 3px;background:#2b2b35}.studio-selection{min-width:120px;color:#5f5f6c;font:600 8px "JetBrains Mono",monospace;text-align:right;text-transform:uppercase;letter-spacing:.1em}
+      .studio-editor{grid-area:editor}.studio-preview{grid-area:preview}.studio-file-browser{grid-area:files;display:none;min-width:0;padding:32px 38px 80px;background:#0d0d12}
+      .studio-workspace.mode-surface{grid-template-columns:minmax(0,1fr) 360px;grid-template-areas:"topbar topbar" "preview editor"}.studio-workspace.mode-surface .studio-editor{height:calc(100vh - 58px);overflow:auto;padding:24px 22px 80px;border-left:1px solid var(--studio-line);background:#0c0c12}.studio-workspace.mode-surface .studio-editor-header{position:relative;top:auto;margin:-24px -22px 22px;padding:18px 22px}.studio-workspace.mode-surface .studio-editor-header h2{font-size:1.25rem}.studio-workspace.mode-surface .studio-actions{margin-top:12px;align-items:flex-start;flex-wrap:wrap}.studio-workspace.mode-surface #open-page,.studio-workspace.mode-surface #duplicate-doc,.studio-workspace.mode-surface #delete-doc,.studio-workspace.mode-surface #toggle-preview{padding:9px 11px;font-size:8px}.studio-workspace.mode-surface #save-doc{padding:10px 16px}.studio-workspace.mode-surface .block-toolbar{position:relative;top:auto}.studio-workspace.mode-surface .studio-preview{position:relative;top:auto;height:calc(100vh - 58px);overflow:auto;padding:58px;background-color:#18181e;background-image:linear-gradient(45deg,#1c1c23 25%,transparent 25%),linear-gradient(-45deg,#1c1c23 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#1c1c23 75%),linear-gradient(-45deg,transparent 75%,#1c1c23 75%);background-size:24px 24px;background-position:0 0,0 12px,12px -12px,-12px 0}.studio-workspace.mode-surface .studio-preview>p:first-child{display:none}.studio-workspace.mode-surface #preview{--surface-zoom:1;width:min(100%,1180px);min-height:720px;margin:0 auto;padding:64px 70px;border:1px solid #34343c;border-radius:3px;background:#0d0d0c;color:#eae6dc;box-shadow:0 32px 90px rgba(0,0,0,.42);transform:scale(var(--surface-zoom));transform-origin:top center;transition:width .25s,transform .2s}.studio-workspace.mode-surface #preview.surface-tablet{width:768px}.studio-workspace.mode-surface #preview.surface-mobile{width:390px;padding:42px 28px}.studio-workspace.mode-surface .studio-kbd{display:none}
+      #preview [contenteditable="true"]{outline:0;border-radius:5px;transition:box-shadow .15s,background .15s}#preview [contenteditable="true"]:hover{background:rgba(216,255,85,.035);box-shadow:0 0 0 7px rgba(216,255,85,.035)}#preview [contenteditable="true"]:focus,#preview .surface-selected{background:rgba(216,255,85,.055);box-shadow:0 0 0 2px var(--studio-acid),0 0 0 8px rgba(216,255,85,.055)}#preview .surface-label{margin-bottom:22px;color:#77736c;font:700 9px "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase}#preview .surface-title{margin:0;font:400 clamp(4rem,8vw,8rem)/.82 Georgia,serif;letter-spacing:-.065em}#preview .surface-summary{max-width:760px;margin:24px 0 42px;color:#a39f96;font-size:1.02rem;line-height:1.75}#preview .surface-cover{width:100%;max-height:520px;margin:0 0 42px;object-fit:cover;border:1px solid #34342f}#preview .surface-block{position:relative;margin:24px 0;padding:3px}#preview .surface-block::before{content:attr(data-block-label);position:absolute;right:calc(100% + 18px);top:8px;color:#55524d;font:700 7px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:.15s}#preview .surface-block:hover::before,#preview .surface-selected::before{opacity:1}#preview .surface-block h2{font:500 2.5rem/1.05 Georgia,serif}#preview .surface-block h3{font-size:1.45rem}#preview .surface-block p{color:#aaa69d;font-size:1rem;line-height:1.8}#preview .surface-file{display:flex;align-items:center;justify-content:space-between;padding:18px;border:1px solid #34343b;color:var(--studio-acid)}
+      .studio-workspace.mode-form{grid-template-columns:minmax(0,1fr) 390px;grid-template-areas:"topbar topbar" "editor preview"}.studio-workspace.mode-form .studio-file-browser{display:none}
+      .studio-workspace.mode-files{grid-template-columns:1fr;grid-template-areas:"topbar" "files"}.studio-workspace.mode-files .studio-editor,.studio-workspace.mode-files .studio-preview{display:none}.studio-workspace.mode-files .studio-file-browser{display:block}
+      .drive-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:30px}.drive-head small{color:#747480;font:700 9px "JetBrains Mono",monospace;letter-spacing:.15em}.drive-head h2{margin-top:8px;font-size:2.2rem}.drive-actions{display:flex;gap:8px}.drive-action{padding:11px 14px;border:1px solid #34343f;border-radius:9px;background:#13131a;color:#cac7bf;font:700 9px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase}.drive-action.primary{border-color:#758f35;background:var(--studio-acid);color:#111}.drive-layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:28px}.drive-subjects{display:grid;align-content:start;gap:7px}.drive-subject{padding:12px 13px;border:1px solid transparent;border-radius:9px;background:transparent;color:#7d7d88;text-align:left;font:700 10px "JetBrains Mono",monospace}.drive-subject.active,.drive-subject:hover{border-color:#34343f;background:#15151c;color:#efede6}.drive-drop{min-height:520px;padding:24px;border:1px solid #292933;border-radius:14px;background:#101017;transition:.2s}.drive-drop.is-dragging{border-color:var(--studio-acid);background:rgba(216,255,85,.035)}.drive-path{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;color:#77737d;font:700 9px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase}.drive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}.drive-card{position:relative;min-height:150px;padding:17px;border:1px solid #2c2c36;border-radius:12px;background:#15151c;color:#e8e5dd;text-align:left;transition:.18s}.drive-card:hover{border-color:#5a5a66;transform:translateY(-2px)}.drive-card-icon{width:42px;height:34px;margin-bottom:27px;border:1px solid #474751;border-radius:4px 8px 5px 5px;background:#1d1d25;display:grid;place-items:center;color:var(--studio-acid);font:700 9px "JetBrains Mono",monospace}.drive-card h3{font-size:.94rem;line-height:1.35}.drive-card p{margin-top:7px;color:#6f6f7b;font:600 8px "JetBrains Mono",monospace;text-transform:uppercase}.drive-card-actions{position:absolute;right:10px;top:10px;display:flex;gap:4px}.drive-card-actions button{width:26px;height:26px;border:1px solid #33333d;border-radius:7px;background:#111117;color:#777781}.drive-attachments{grid-column:1/-1;margin-top:14px;padding-top:18px;border-top:1px solid #292933}.drive-attachments h3{margin-bottom:12px;color:#8d8993;font:700 9px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase}.drive-file-row{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 12px;border-bottom:1px solid #24242d;color:#bdb9b1}.drive-file-row b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.84rem}.drive-file-row span{color:#63636e;font:600 8px "JetBrains Mono",monospace}.drive-file-row button{border:0;background:transparent;color:#d2767c;font-size:.75rem}
+      @media(max-width:1450px){.studio-selection,.studio-surface-tools [data-surface-format],.studio-tool-separator{display:none}.studio-surface-tools{min-width:0}}
+      @media(max-width:1200px){.studio-surface-tools{display:none}.studio-workspace.mode-surface{grid-template-columns:minmax(0,1fr) 320px}.studio-workspace.mode-surface .studio-preview{padding:40px 28px}.studio-workspace.mode-surface #preview{padding:52px 44px}}
+      @media(max-width:900px){.studio-topbar{position:relative;flex-wrap:wrap;height:auto}.studio-device-tools{display:none}.studio-workspace,.studio-workspace.mode-surface,.studio-workspace.mode-form{display:block}.studio-workspace .studio-topbar{display:flex}.studio-workspace.mode-surface .studio-preview{height:auto;min-height:700px}.studio-workspace.mode-surface .studio-editor{height:auto;border-left:0;border-top:1px solid var(--studio-line)}.drive-layout{grid-template-columns:1fr}.drive-subjects{grid-template-columns:repeat(5,1fr)}.studio-file-browser{padding:24px 18px}}
+      @media(max-width:600px){.studio-mode{padding-inline:8px;font-size:8px}.studio-selection{display:none}.studio-workspace.mode-surface .studio-preview{padding:28px 12px}.studio-workspace.mode-surface #preview{width:100%!important;min-height:620px;padding:34px 22px}.drive-head{align-items:flex-start;flex-direction:column}.drive-subjects{grid-template-columns:repeat(2,1fr)}.drive-grid{grid-template-columns:1fr 1fr}}
     </style>
   </head>
 
@@ -38,7 +53,31 @@ import '../styles/global.css'
         <div id="doc-list" class="space-y-2"></div>
       </aside>
 
-      <section id="studio-workspace" class="studio-workspace">
+      <section id="studio-workspace" class="studio-workspace mode-surface">
+        <div class="studio-topbar">
+          <div class="studio-mode-switch" aria-label="Studio view">
+            <button class="studio-mode active" data-mode="surface" type="button">Surface</button>
+            <button class="studio-mode" data-mode="form" type="button">Details</button>
+            <button class="studio-mode" data-mode="files" type="button">Notes Library</button>
+          </div>
+          <div class="studio-surface-tools" aria-label="Insert content">
+            <button class="studio-tool" data-surface-add="heading" type="button">+ Heading</button>
+            <button class="studio-tool" data-surface-add="paragraph" type="button">+ Text</button>
+            <button class="studio-tool" data-surface-add="image" type="button">+ Image</button>
+            <button class="studio-tool" data-surface-add="file" type="button">+ File</button>
+            <button class="studio-tool" data-surface-add="callout" type="button">+ Callout</button>
+            <span class="studio-tool-separator"></span>
+            <button class="studio-tool" data-surface-format="heading" type="button">H1</button>
+            <button class="studio-tool" data-surface-format="subheading" type="button">H2</button>
+            <button class="studio-tool" data-surface-format="paragraph" type="button">Body</button>
+          </div>
+          <div class="studio-device-tools">
+            <button class="studio-tool is-active" data-width="desktop" type="button">Desktop</button>
+            <button class="studio-tool" data-width="tablet" type="button">Tablet</button>
+            <button class="studio-tool" data-width="mobile" type="button">Mobile</button>
+            <span id="surface-selection" class="studio-selection">Select a block</span>
+          </div>
+        </div>
         <div class="studio-editor">
           <div class="studio-editor-header mb-8 flex flex-wrap items-center justify-between gap-4">
             <div>
@@ -181,6 +220,24 @@ import '../styles/global.css'
           <article id="preview" class="mt-6 space-y-6"></article>
           <p class="mt-10 font-mono text-[0.6rem] uppercase tracking-widest text-[#555561]">Save <span class="studio-kbd">Ctrl</span> + <span class="studio-kbd">S</span></p>
         </aside>
+        <section id="file-browser" class="studio-file-browser" aria-labelledby="drive-title">
+          <div class="drive-head">
+            <div><small>NOTES / FILE WORKSPACE</small><h2 id="drive-title">Subject library</h2></div>
+            <div class="drive-actions">
+              <button id="drive-new-note" class="drive-action" type="button">+ New note</button>
+              <button id="drive-upload" class="drive-action primary" type="button">Upload files</button>
+              <input id="drive-file-input" type="file" multiple hidden />
+            </div>
+          </div>
+          <div class="drive-layout">
+            <nav id="drive-subjects" class="drive-subjects" aria-label="Note subjects"></nav>
+            <div id="drive-drop" class="drive-drop">
+              <div class="drive-path"><span id="drive-path">Notes / All subjects</span><span>Drop files anywhere</span></div>
+              <div id="drive-grid" class="drive-grid"></div>
+              <div id="drive-attachments" class="drive-attachments"></div>
+            </div>
+          </div>
+        </section>
       </section>
     </main>
 
@@ -311,7 +368,7 @@ import '../styles/global.css'
             temperatureUnit: "celsius",
             status: "Online",
             statusMessage: "Learning, training and building.",
-            cover: "/profile/yaohan-portrait-dark.png",
+            cover: "/profile/yaohan-kayak-hero.png",
           },
           fields: [
             { name: "order", label: "Order", type: "number" },
@@ -469,6 +526,9 @@ import '../styles/global.css'
       let currentData = {};
       let blocks = [];
       let isDirty = false;
+      let studioMode = "surface";
+      let driveSubject = "ALL";
+      let selectedSurfaceBlock = null;
 
       const $ = (id) => document.getElementById(id);
       const setSaveState = (state, label) => {
@@ -554,6 +614,7 @@ import '../styles/global.css'
         const data = await request(`${API}/docs?collection=${collection}`);
         docs = data.docs;
         renderDocList();
+        renderFileBrowser();
       };
 
       const renderDocList = () => {
@@ -591,6 +652,7 @@ import '../styles/global.css'
         renderBlocks();
         renderPreview();
         renderDocList();
+        renderFileBrowser();
         setSaveState("saved", "SAVED");
       };
 
@@ -602,6 +664,7 @@ import '../styles/global.css'
         fillFields();
         renderBlocks();
         renderPreview();
+        renderFileBrowser();
         markDirty();
       };
 
@@ -748,7 +811,7 @@ import '../styles/global.css'
 
         if (block.type === "heading" || block.type === "subheading") {
           return `
-            <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
+            <div id="block-card-${index}" data-editor-block="${index}" class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
               <div class="mb-3 flex justify-between">
                 <p class="font-mono text-xs text-[#c9ff5f]">${block.type === "heading" ? "Heading" : "Subheading"}</p>
                 ${controls}
@@ -765,7 +828,7 @@ import '../styles/global.css'
 
         if (block.type === "paragraph") {
           return `
-            <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
+            <div id="block-card-${index}" data-editor-block="${index}" class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
               <div class="mb-3 flex justify-between">
                 <p class="font-mono text-xs text-[#c9ff5f]">Paragraph</p>
                 ${controls}
@@ -782,7 +845,7 @@ import '../styles/global.css'
 
         if (block.type === "image") {
           return `
-            <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
+            <div id="block-card-${index}" data-editor-block="${index}" class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
               <div class="mb-3 flex justify-between">
                 <p class="font-mono text-xs text-[#c9ff5f]">Image</p>
                 ${controls}
@@ -813,7 +876,7 @@ import '../styles/global.css'
 
         if (block.type === "file") {
           return `
-            <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
+            <div id="block-card-${index}" data-editor-block="${index}" class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
               <div class="mb-3 flex justify-between">
                 <p class="font-mono text-xs text-[#c9ff5f]">File</p>
                 ${controls}
@@ -842,7 +905,7 @@ import '../styles/global.css'
 
         if (block.type === "code") {
           return `
-            <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
+            <div id="block-card-${index}" data-editor-block="${index}" class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
               <div class="mb-3 flex justify-between">
                 <p class="font-mono text-xs text-[#c9ff5f]">Code</p>
                 ${controls}
@@ -868,7 +931,7 @@ import '../styles/global.css'
 
         if (block.type === "callout") {
           return `
-            <div class="block-card rounded-2xl border border-[#ead27c]/20 bg-[#ead27c]/5 p-4">
+            <div id="block-card-${index}" data-editor-block="${index}" class="block-card rounded-2xl border border-[#ead27c]/20 bg-[#ead27c]/5 p-4">
               <div class="mb-3 flex justify-between">
                 <p class="font-mono text-xs text-[#ead27c]">Callout</p>
                 ${controls}
@@ -885,7 +948,7 @@ import '../styles/global.css'
         }
 
         return `
-          <div class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
+          <div id="block-card-${index}" data-editor-block="${index}" class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
             <div class="flex justify-between">
               <p class="font-mono text-xs text-[#c9ff5f]">Divider</p>
               ${controls}
@@ -971,61 +1034,96 @@ import '../styles/global.css'
         });
       };
 
+      const selectSurfaceBlock = (index) => {
+        selectedSurfaceBlock = Number.isInteger(index) ? index : null;
+        document.querySelectorAll("#preview .surface-block").forEach((node) => {
+          node.classList.toggle("surface-selected", Number(node.dataset.surfaceBlock) === selectedSurfaceBlock);
+        });
+        const selected = selectedSurfaceBlock === null ? null : blocks[selectedSurfaceBlock];
+        $("surface-selection").textContent = selected ? `${selected.type} ${String(selectedSurfaceBlock + 1).padStart(2, "0")}` : "Select a block";
+      };
+
+      const wireSurfaceEditor = () => {
+        const titleNode = $("preview").querySelector('[data-surface-field="title"]');
+        const summaryNode = $("preview").querySelector('[data-surface-field="summary"]');
+        titleNode?.addEventListener("input", () => {
+          const value = titleNode.innerText.replace(/\n/g, " ");
+          $("field-title").value = value;
+          currentData[config().titleField] = value;
+          markDirty();
+        });
+        summaryNode?.addEventListener("input", () => {
+          const value = summaryNode.innerText;
+          $("field-summary").value = value;
+          currentData[config().summaryField] = value;
+          markDirty();
+        });
+        document.querySelectorAll("#preview .surface-block").forEach((node) => {
+          const index = Number(node.dataset.surfaceBlock);
+          node.addEventListener("click", () => selectSurfaceBlock(index));
+          const editable = node.querySelector("[data-surface-key]");
+          editable?.addEventListener("input", () => {
+            const key = editable.dataset.surfaceKey;
+            blocks[index][key] = editable.innerText;
+            const formInput = document.querySelector(`.block-input[data-index="${index}"][data-field="${key}"]`);
+            if (formInput) formInput.value = blocks[index][key];
+            markDirty();
+          });
+        });
+      };
+
       const renderPreview = () => {
         collectFields();
-
         const title = displayTitle(currentData);
         const summary = displaySummary(currentData);
-
-        const cover = currentData.cover
-          ? `<img src="${escapeHtml(currentData.cover)}" class="mb-6 max-h-72 w-full rounded-2xl object-cover" />`
-          : "";
-
-        const body = blocks
-          .map((block) => {
-            if (block.type === "heading") {
-              return `<h2 class="text-3xl font-bold">${escapeHtml(block.text || "")}</h2>`;
-            }
-
-            if (block.type === "subheading") {
-              return `<h3 class="text-2xl font-bold">${escapeHtml(block.text || "")}</h3>`;
-            }
-
-            if (block.type === "paragraph") {
-              return `<p class="leading-8 text-[#a9a196]">${escapeHtml(block.text || "").replace(/\n/g, "<br>")}</p>`;
-            }
-
-            if (block.type === "image") {
-              return `<img src="${escapeHtml(block.src || "")}" alt="${escapeHtml(block.alt || "")}" class="max-h-72 w-full rounded-2xl object-cover" />`;
-            }
-
-            if (block.type === "file") {
-              return `<a href="${escapeHtml(block.url || "#")}" class="block rounded-xl border border-white/10 p-4 text-[#c9ff5f]">${escapeHtml(block.name || "Download file")}</a>`;
-            }
-
-            if (block.type === "code") {
-              return `<pre class="overflow-x-auto rounded-2xl bg-[#20252b] p-4 text-sm"><code>${escapeHtml(block.code || "")}</code></pre>`;
-            }
-
-            if (block.type === "callout") {
-              return `<blockquote class="rounded-2xl border border-[#ead27c]/20 bg-[#ead27c]/5 p-4 text-[#ead27c]">${escapeHtml(block.text || "")}</blockquote>`;
-            }
-
-            if (block.type === "divider") {
-              return `<hr class="border-white/10" />`;
-            }
-
-            return "";
-          })
-          .join("");
+        const cover = currentData.cover ? `<img src="${escapeHtml(currentData.cover)}" alt="" class="surface-cover" />` : "";
+        const body = blocks.map((block, index) => {
+          const selected = index === selectedSurfaceBlock ? " surface-selected" : "";
+          const open = `<section class="surface-block${selected}" data-surface-block="${index}" data-block-label="${escapeHtml(block.type)}">`;
+          if (block.type === "heading") return `${open}<h2 data-surface-key="text" contenteditable="true">${escapeHtml(block.text || "New heading")}</h2></section>`;
+          if (block.type === "subheading") return `${open}<h3 data-surface-key="text" contenteditable="true">${escapeHtml(block.text || "New subheading")}</h3></section>`;
+          if (block.type === "paragraph") return `${open}<p data-surface-key="text" contenteditable="true">${escapeHtml(block.text || "Start writing here...").replace(/\n/g, "<br>")}</p></section>`;
+          if (block.type === "image") return `${open}${block.src ? `<img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt || "")}" class="surface-cover" />` : `<button class="surface-file" type="button">Choose an image in the inspector <span>↗</span></button>`}</section>`;
+          if (block.type === "file") return `${open}<a href="${escapeHtml(block.url || "#")}" class="surface-file"><span data-surface-key="name" contenteditable="true">${escapeHtml(block.name || "Attached file")}</span><span>OPEN ↗</span></a></section>`;
+          if (block.type === "code") return `${open}<pre class="overflow-x-auto rounded-xl bg-[#20252b] p-5"><code data-surface-key="code" contenteditable="true">${escapeHtml(block.code || "# code")}</code></pre></section>`;
+          if (block.type === "callout") return `${open}<blockquote data-surface-key="text" contenteditable="true" class="rounded-xl border border-[#ead27c]/30 bg-[#ead27c]/5 p-5 text-[#ead27c]">${escapeHtml(block.text || "Add a callout...")}</blockquote></section>`;
+          if (block.type === "divider") return `${open}<hr class="border-white/15" /></section>`;
+          return "";
+        }).join("");
 
         $("preview").innerHTML = `
+          <p class="surface-label">${escapeHtml(config().label)} / LIVE SURFACE</p>
+          <h1 class="surface-title" data-surface-field="title" contenteditable="true">${escapeHtml(title || "Untitled")}</h1>
+          <p class="surface-summary" data-surface-field="summary" contenteditable="true">${escapeHtml(summary || "Add a short summary...")}</p>
           ${cover}
-          <p class="font-mono text-xs uppercase tracking-[0.25em] text-[#6f6a63]">${escapeHtml(config().label)}</p>
-          <h1 class="mt-3 text-4xl font-bold leading-tight">${escapeHtml(title || "Untitled")}</h1>
-          <p class="mt-4 text-[#a9a196]">${escapeHtml(summary || "")}</p>
-          <div class="mt-8 space-y-6">${body}</div>
+          <div>${body}</div>
         `;
+        wireSurfaceEditor();
+      };
+
+      const renderFileBrowser = () => {
+        if (!$('drive-grid')) return;
+        const subjects = ["ALL", "ECOMM", "ENNK", "EHIP", "FDS", "SADS"];
+        $("drive-subjects").innerHTML = subjects.map((subject) => `<button class="drive-subject ${driveSubject === subject ? "active" : ""}" data-drive-subject="${subject}" type="button">${subject === "ALL" ? "All notes" : subject}</button>`).join("");
+        const visible = collection === "notes" ? docs.filter((doc) => driveSubject === "ALL" || doc.data.subject === driveSubject) : [];
+        $("drive-path").textContent = `Notes / ${driveSubject === "ALL" ? "All subjects" : driveSubject}`;
+        $("drive-grid").innerHTML = visible.length ? visible.map((doc) => `
+          <article class="drive-card">
+            <button class="drive-card-actions" data-drive-open="${escapeHtml(doc.slug)}" aria-label="Open ${escapeHtml(displayTitle(doc.data))}" type="button">↗</button>
+            <button class="drive-open" data-drive-open="${escapeHtml(doc.slug)}" type="button">
+              <span class="drive-card-icon">${escapeHtml(doc.data.subject || "NOTE")}</span>
+              <h3>${escapeHtml(displayTitle(doc.data))}</h3>
+              <p>${escapeHtml(doc.data.date || doc.slug)}</p>
+            </button>
+          </article>
+        `).join("") : `<p class="studio-empty">NO NOTES IN THIS SUBJECT YET</p>`;
+
+        const attached = blocks.map((block, index) => ({ block, index })).filter(({ block }) => block.type === "file");
+        $("drive-attachments").innerHTML = `<h3>Files attached to ${escapeHtml(displayTitle(currentData) || "current note")}</h3>${attached.length ? attached.map(({ block, index }) => `<div class="drive-file-row"><span>FILE</span><b>${escapeHtml(block.name || "Untitled file")}</b><button data-remove-file="${index}" type="button">Remove</button></div>`).join("") : `<p class="studio-empty">DROP FILES HERE TO ATTACH THEM TO THIS NOTE</p>`}`;
+
+        document.querySelectorAll("[data-drive-subject]").forEach((button) => button.addEventListener("click", () => { driveSubject = button.dataset.driveSubject; renderFileBrowser(); }));
+        document.querySelectorAll("[data-drive-open]").forEach((button) => button.addEventListener("click", async () => { await loadDoc(button.dataset.driveOpen); setStudioMode("surface"); }));
+        document.querySelectorAll("[data-remove-file]").forEach((button) => button.addEventListener("click", () => { blocks.splice(Number(button.dataset.removeFile), 1); renderBlocks(); renderPreview(); renderFileBrowser(); markDirty(); }));
       };
 
       const addBlock = (type) => {
@@ -1041,8 +1139,53 @@ import '../styles/global.css'
         };
 
         blocks.push(defaults[type]);
+        selectedSurfaceBlock = blocks.length - 1;
         renderBlocks();
         renderPreview();
+        renderFileBrowser();
+      };
+
+      const setStudioMode = async (mode) => {
+        studioMode = mode;
+        const workspace = $("studio-workspace");
+        workspace.classList.remove("mode-surface", "mode-form", "mode-files", "preview-hidden");
+        workspace.classList.add(`mode-${mode}`);
+        document.querySelectorAll(".studio-mode").forEach((button) => button.classList.toggle("active", button.dataset.mode === mode));
+        if (mode === "files") {
+          if (collection !== "notes") await setCollection("notes");
+          renderFileBrowser();
+        }
+      };
+
+      const setSurfaceWidth = (width) => {
+        $("preview").classList.remove("surface-tablet", "surface-mobile");
+        if (width !== "desktop") $("preview").classList.add(`surface-${width}`);
+        document.querySelectorAll("[data-width]").forEach((button) => button.classList.toggle("is-active", button.dataset.width === width));
+      };
+
+      const formatSelectedSurfaceBlock = (type) => {
+        if (selectedSurfaceBlock === null || !blocks[selectedSurfaceBlock]) return;
+        const block = blocks[selectedSurfaceBlock];
+        const text = block.text || block.name || block.code || "";
+        blocks[selectedSurfaceBlock] = type === "paragraph" ? { type, text } : { type, text: text || (type === "heading" ? "New heading" : "New subheading") };
+        renderBlocks();
+        renderPreview();
+        markDirty();
+      };
+
+      const attachDriveFiles = async (files) => {
+        if (!files?.length) return;
+        if (collection !== "notes") await setCollection("notes");
+        setSaveState("dirty", "UPLOADING...");
+        for (const file of files) {
+          const url = await uploadFile(file);
+          blocks.push({ type: "file", name: file.name, url });
+        }
+        selectedSurfaceBlock = blocks.length - 1;
+        renderBlocks();
+        renderPreview();
+        renderFileBrowser();
+        markDirty();
       };
 
       const uploadFile = async (file) => {
@@ -1157,7 +1300,7 @@ import '../styles/global.css'
       $("duplicate-doc").addEventListener("click", duplicateDoc);
       $("delete-doc").addEventListener("click", deleteDoc);
       $("doc-search").addEventListener("input", renderDocList);
-      $("toggle-preview").addEventListener("click", () => $("studio-workspace").classList.toggle("preview-hidden"));
+      $("toggle-preview").addEventListener("click", () => setStudioMode(studioMode === "form" ? "surface" : "form"));
       document.addEventListener("keydown", (event) => {
         if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") { event.preventDefault(); saveDoc(); }
       });
@@ -1190,6 +1333,34 @@ import '../styles/global.css'
       document.querySelectorAll(".add-block").forEach((button) => {
         button.addEventListener("click", () => addBlock(button.dataset.add));
       });
+
+      document.querySelectorAll(".studio-mode").forEach((button) => {
+        button.addEventListener("click", () => setStudioMode(button.dataset.mode));
+      });
+      document.querySelectorAll("[data-surface-add]").forEach((button) => {
+        button.addEventListener("click", () => addBlock(button.dataset.surfaceAdd));
+      });
+      document.querySelectorAll("[data-surface-format]").forEach((button) => {
+        button.addEventListener("click", () => formatSelectedSurfaceBlock(button.dataset.surfaceFormat));
+      });
+      document.querySelectorAll("[data-width]").forEach((button) => {
+        button.addEventListener("click", () => setSurfaceWidth(button.dataset.width));
+      });
+
+      $("drive-new-note").addEventListener("click", async () => {
+        if (collection !== "notes") await setCollection("notes");
+        newDoc();
+        setStudioMode("surface");
+      });
+      $("drive-upload").addEventListener("click", () => $("drive-file-input").click());
+      $("drive-file-input").addEventListener("change", async () => {
+        await attachDriveFiles([...$("drive-file-input").files]);
+        $("drive-file-input").value = "";
+      });
+      const driveDrop = $("drive-drop");
+      ["dragenter", "dragover"].forEach((eventName) => driveDrop.addEventListener(eventName, (event) => { event.preventDefault(); driveDrop.classList.add("is-dragging"); }));
+      ["dragleave", "drop"].forEach((eventName) => driveDrop.addEventListener(eventName, (event) => { event.preventDefault(); driveDrop.classList.remove("is-dragging"); }));
+      driveDrop.addEventListener("drop", async (event) => attachDriveFiles([...event.dataTransfer.files]));
 
       renderCollectionButtons();
       setCollection("writeups");
