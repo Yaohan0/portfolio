@@ -15,7 +15,7 @@ const profile = profileEntries[0]?.data ?? {
   temperatureUnit: 'celsius',
   status: 'Online',
   statusMessage: 'Learning, training and building.',
-  cover: '/profile/yaohan-portrait-dark.png',
+  cover: '/profile/yaohan-kayak-hero.png',
 }
 const presence = profile.status.toLowerCase()
 
@@ -51,26 +51,44 @@ const focusAreas = [
       data-timezone={profile.timezone}
       data-temperature-unit={profile.temperatureUnit}
     >
+      <div class="profile-grid" aria-hidden="true"></div>
       <div class="profile-location">
-        <strong>Based in {profile.location}</strong>
-        <span><time id="sg-time">Singapore time</time> · <b id="sg-temp">Loading weather</b></span>
+        <span>LIVE FROM {profile.location.toUpperCase()}</span>
+        <strong><time id="sg-time">Singapore time</time></strong>
+        <b id="sg-temp">Loading weather</b>
       </div>
-      <div class="profile-nameplate">
-        <span class:list={['profile-presence', presence]} aria-hidden="true"><i></i></span>
-        <strong>{profile.name}</strong>
-        <small>{profile.status}</small>
+
+      <div class="profile-copy">
+        <p class="profile-handle typing-line" data-copy={`Hi, I’m ${profile.name}.`}><span>Hi, I’m {profile.name}.</span></p>
+        <h1 id="hero-title">{profile.name}<em aria-hidden="true">/</em></h1>
+        <p class="profile-role">{profile.role}</p>
+        <p class="profile-intro">I document the systems I break, rebuild, investigate and learn from — alongside the life I have away from the screen.</p>
+        <div class="profile-actions">
+          <a class="profile-primary" href="#records">Explore my work <span aria-hidden="true">↘</span></a>
+          <a href={withBase('/hobbies')}>Off the keyboard <span aria-hidden="true">↗</span></a>
+        </div>
+        <p class="profile-status-message">
+          <span class:list={['profile-presence', presence]} aria-hidden="true"><i></i></span>
+          <strong>{profile.status}</strong>
+          <span>{profile.statusMessage}</span>
+        </p>
       </div>
-      {profile.cover && <img class="profile-portrait" src={withBase(profile.cover)} alt={`${profile.name} portrait`} />}
-      <div class="profile-shade" aria-hidden="true"></div>
-      <h1 id="hero-title" aria-label={`Hi there. I am ${profile.name}.`}>
-        <span class="typing-line" data-copy="Hi there"><span>Hi there</span></span><br/>
-        <span class="typing-line" data-copy={`I am ${profile.name}`}><span>I am {profile.name}</span></span><em aria-hidden="true">.</em>
-      </h1>
-      <div class="profile-bottom">
-        <p>{profile.role}</p>
-        <a href="#records">Explore my work <span aria-hidden="true">↘</span></a>
-      </div>
-      <p class="profile-status-message"><span class:list={['profile-presence', presence]} aria-hidden="true"><i></i></span>{profile.statusMessage}</p>
+
+      <figure class="profile-visual">
+        {profile.cover && <img class="profile-portrait" src={withBase(profile.cover)} alt={`${profile.name} kayaking during race training`} />}
+        <figcaption><span>TP KAYAK RACING</span><span>ON THE WATER / 2026</span></figcaption>
+        <span class="float-icon float-icon--shield" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.6 2.8 8 7 10 4.2-2 7-5.4 7-10V6l-7-3Z"/><path d="m9.5 12 1.7 1.7 3.6-4"/></svg>
+        </span>
+        <span class="float-icon float-icon--code" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/></svg>
+        </span>
+        <span class="float-icon float-icon--paddle" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="m5 19 14-14M4 20c-1-1-1-3 0-4l3-3 4 4-3 3c-1 1-3 1-4 0ZM20 4c1 1 1 3 0 4l-3 3-4-4 3-3c1-1 3-1 4 0Z"/></svg>
+        </span>
+      </figure>
+
+      <div class="profile-scroll" aria-hidden="true"><span>SCROLL TO EXPLORE</span><i></i></div>
     </section>
 
     <script is:inline>
@@ -108,28 +126,23 @@ const focusAreas = [
           })
           .catch(() => { tempNode.textContent = 'Weather unavailable'; });
 
-        const typingLines = [...hero.querySelectorAll('.typing-line')];
-        if (!matchMedia('(prefers-reduced-motion: reduce)').matches && typingLines.length) {
-          typingLines.forEach((line) => { line.querySelector('span').textContent = ''; });
-          let lineIndex = 0;
+        const typingLine = hero.querySelector('.typing-line');
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches && typingLine) {
+          const output = typingLine.querySelector('span');
+          const copy = typingLine.dataset.copy || '';
+          output.textContent = '';
           let characterIndex = 0;
           const typeNext = () => {
-            const line = typingLines[lineIndex];
-            const output = line.querySelector('span');
-            const copy = line.dataset.copy || '';
-            line.classList.add('is-typing');
+            typingLine.classList.add('is-typing');
             output.textContent = copy.slice(0, characterIndex + 1);
             characterIndex += 1;
             if (characterIndex < copy.length) {
-              setTimeout(typeNext, 52 + Math.random() * 34);
+              setTimeout(typeNext, 46 + Math.random() * 38);
               return;
             }
-            line.classList.remove('is-typing');
-            lineIndex += 1;
-            characterIndex = 0;
-            if (lineIndex < typingLines.length) setTimeout(typeNext, 260);
+            typingLine.classList.remove('is-typing');
           };
-          setTimeout(typeNext, 420);
+          setTimeout(typeNext, 360);
         }
       })();
     </script>

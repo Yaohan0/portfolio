@@ -10,6 +10,6 @@ longitude: 103.8198
 temperatureUnit: celsius
 status: DND
 statusMessage: 'Learning, training and building.'
-cover: /profile/yaohan-portrait-dark.png
+cover: /profile/yaohan-kayak-hero.png
 ---
 Homepage identity, location and presence settings. Edit these fields from Studio.
