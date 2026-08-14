@@ -2,7 +2,7 @@
 .home-clean {
   --home-ink: #0d0d0c;
   --home-paper: #eae6dc;
-  --home-muted: #827f77;
+  --home-muted: #a09c93;
   --home-line: rgba(234, 230, 220, .12);
   --home-red: #d85443;
   --home-gold: #c8a875;
@@ -30,10 +30,10 @@
 }
 
 .home-clean .site-brand { color: var(--home-paper); }
-.home-clean .nav-links a { color: #77746d; }
+.home-clean .nav-links a { color: #a09c93; font-size: 11px; letter-spacing: .09em; }
 .home-clean .nav-links a:hover,
 .home-clean .nav-links a.active { background: transparent; color: var(--home-paper); }
-.home-clean .nav-contact { border-color: #3a3834; color: #aaa69d; }
+.home-clean .nav-contact { border-color: #3a3834; color: #aaa69d; font-size: 10px; }
 
 .profile-hero {
   position: relative;
@@ -83,13 +83,13 @@
 .profile-location > span {
   grid-column: 1 / -1;
   color: var(--home-muted);
-  font: 600 8px/1.2 "JetBrains Mono", monospace;
+  font: 600 11px/1.2 "JetBrains Mono", monospace;
   letter-spacing: .15em;
 }
 
 .profile-location strong,
 .profile-location b {
-  font: 500 11px/1.35 "Space Grotesk", sans-serif;
+  font: 500 14px/1.35 "Space Grotesk", sans-serif;
   color: #c3bfb6;
 }
 
@@ -106,8 +106,8 @@
   position: relative;
   display: inline-grid;
   margin: 0 0 34px;
-  color: #8d8980;
-  font: 600 11px/1 "JetBrains Mono", monospace;
+  color: #aaa69d;
+  font: 600 14px/1 "JetBrains Mono", monospace;
   letter-spacing: .16em;
   text-transform: uppercase;
 }
@@ -147,29 +147,48 @@
   max-width: 510px;
   margin: 0 0 13px;
   color: #cac6bc;
-  font: 500 clamp(.92rem, 1.35vw, 1.12rem)/1.4 "Space Grotesk", sans-serif;
+  font: 500 clamp(1.05rem, 1.5vw, 1.28rem)/1.4 "Space Grotesk", sans-serif;
 }
 
 .profile-intro {
-  max-width: 510px;
+  max-width: 570px;
   margin: 0;
   color: var(--home-muted);
-  font-size: .76rem;
-  line-height: 1.72;
+  font-size: clamp(1.02rem, 1.18vw, 1.12rem);
+  line-height: 1.7;
+}
+
+.profile-facts {
+  max-width: 580px;
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.profile-facts span {
+  padding: 8px 10px;
+  border: 1px solid #34322e;
+  background: rgba(255, 255, 255, .025);
+  color: #bcb8ae;
+  font: 600 10px/1 "JetBrains Mono", monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
 }
 
 .profile-actions {
   display: flex;
   align-items: center;
-  gap: 24px;
-  margin-top: 30px;
+  gap: 22px;
+  margin-top: 27px;
+  flex-wrap: wrap;
 }
 
 .profile-actions a {
   padding: 10px 0;
   border-bottom: 1px solid #514e49;
-  color: #b8b4ab;
-  font: 650 8px/1 "JetBrains Mono", monospace;
+  color: #c5c1b7;
+  font: 650 11px/1 "JetBrains Mono", monospace;
   letter-spacing: .09em;
   text-transform: uppercase;
   transition: color .2s, border-color .2s;
@@ -188,9 +207,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 31px 0 0;
-  color: #68655f;
-  font: 600 7px/1 "JetBrains Mono", monospace;
+  margin: 27px 0 0;
+  color: #8d8981;
+  font: 600 10px/1.25 "JetBrains Mono", monospace;
   letter-spacing: .09em;
   text-transform: uppercase;
 }
@@ -268,7 +287,7 @@
   border: 1px solid rgba(234, 230, 220, .18);
   border-top: 0;
   color: #77736c;
-  font: 600 7px/1 "JetBrains Mono", monospace;
+  font: 600 9px/1 "JetBrains Mono", monospace;
   letter-spacing: .12em;
 }
 
@@ -309,7 +328,7 @@
   align-items: center;
   gap: 12px;
   color: #5b5954;
-  font: 600 6px/1 "JetBrains Mono", monospace;
+  font: 600 8px/1 "JetBrains Mono", monospace;
   letter-spacing: .16em;
 }
 
@@ -366,6 +385,36 @@
   .profile-status-message { align-items: flex-start; flex-wrap: wrap; }
   .profile-status-message > span:last-child { flex-basis: calc(100% - 30px); margin-left: 18px; padding: 7px 0 0; border: 0; }
   .profile-visual figcaption span:last-child { display: none; }
+}
+
+/* Home content readability */
+.home-clean .project-preview > span { font-size: 9px; }
+.home-clean .project-card-copy { min-height: 186px; padding: 21px; }
+.home-clean .project-card-copy h3 { font-size: 1.16rem; }
+.home-clean .project-card-copy p {
+  min-height: 56px;
+  margin: 14px 0 20px;
+  font-size: .9rem;
+  line-height: 1.62;
+}
+.home-clean .project-card-copy > div span { padding: 5px 7px; font-size: 9px; }
+.home-clean .reference-project-wide { min-height: 116px; padding: 24px; }
+.home-clean .reference-project-wide strong { font-size: 1.16rem; }
+.home-clean .reference-project-wide p { font-size: .9rem; line-height: 1.55; }
+.home-clean .reference-project-wide > span { font-size: 10px; }
+.home-clean .reference-story p { font-size: 1.02rem; line-height: 1.82; }
+.home-clean .reference-focus section h3 { font-size: 1.04rem; }
+.home-clean .reference-focus section p { font-size: .92rem; line-height: 1.5; }
+
+@media (max-width: 720px) {
+  .home-clean .nav-links a { font-size: 11px; }
+  .profile-location > span { font-size: 9px; }
+  .profile-location strong,
+  .profile-location b { font-size: 12px; }
+  .profile-handle { font-size: 11px; }
+  .profile-intro { font-size: .94rem; }
+  .profile-facts span { font-size: 8px; }
+  .home-clean .reference-story p { font-size: .91rem; }
 }
 
 /* Real hobby photography */

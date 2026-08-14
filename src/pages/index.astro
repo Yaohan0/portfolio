@@ -62,10 +62,16 @@ const focusAreas = [
         <p class="profile-handle typing-line" data-copy={`Hi, I’m ${profile.name}.`}><span>Hi, I’m {profile.name}.</span></p>
         <h1 id="hero-title">{profile.name}<em aria-hidden="true">/</em></h1>
         <p class="profile-role">{profile.role}</p>
-        <p class="profile-intro">I document the systems I break, rebuild, investigate and learn from — alongside the life I have away from the screen.</p>
+        <p class="profile-intro">Year 2 Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic, focused on ethical hacking, digital forensics, networking and server security. This is where I document the practical work, mistakes and progress behind what I learn.</p>
+        <div class="profile-facts" aria-label="Current profile highlights">
+          <span>Temasek Polytechnic</span>
+          <span>Cybersecurity &amp; Forensics</span>
+          <span>TP Kayak Racing</span>
+        </div>
         <div class="profile-actions">
           <a class="profile-primary" href="#records">Explore my work <span aria-hidden="true">↘</span></a>
           <a href={withBase('/hobbies')}>Off the keyboard <span aria-hidden="true">↗</span></a>
+          <a href="https://www.linkedin.com/in/yaohan-wang-a22951363/" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
         </div>
         <p class="profile-status-message">
           <span class:list={['profile-presence', presence]} aria-hidden="true"><i></i></span>
