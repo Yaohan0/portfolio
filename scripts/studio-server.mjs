@@ -727,6 +727,21 @@ app.post('/api/docs/:collection/:slug', async (req, res) => {
     await fs.writeFile(newFilePath, output, 'utf8')
     queueForPublish(newFilePath)
 
+    const publicRoot = path.resolve(rootDir, 'public')
+    for (const block of blocks) {
+      const assetUrl = block.type === 'image' ? block.src : block.type === 'file' ? block.url : ''
+      if (!assetUrl || !/^\/(?:portfolio\/)?uploads\//.test(assetUrl)) continue
+      const relativeAsset = assetUrl.replace(/^\/portfolio\//, '/').replace(/^\/+/, '')
+      const assetPath = path.resolve(publicRoot, relativeAsset)
+      if (!assetPath.startsWith(`${publicRoot}${path.sep}`)) continue
+      try {
+        await fs.access(assetPath)
+        queueForPublish(assetPath)
+      } catch {
+        // The editor can still save a remote or temporarily missing attachment.
+      }
+    }
+
     if (oldSlug !== finalSlug) {
       try {
         await fs.unlink(oldFilePath)
