@@ -21,7 +21,7 @@ import '../styles/global.css'
       .studio-workspace.mode-form{grid-template-columns:minmax(0,1fr) 390px;grid-template-areas:"topbar topbar" "editor preview"}.studio-workspace.mode-form .studio-file-browser{display:none}
       .studio-workspace.mode-files{grid-template-columns:1fr;grid-template-areas:"topbar" "files"}.studio-workspace.mode-files .studio-editor,.studio-workspace.mode-files .studio-preview{display:none}.studio-workspace.mode-files .studio-file-browser{display:block}
       .studio-bridge{grid-column:1/-1;grid-row:2;min-height:calc(100vh - 58px);padding:60px;display:grid;place-items:center;background:radial-gradient(circle at 50% 20%,rgba(216,255,85,.07),transparent 32%),#0d0d12}.studio-bridge[hidden]{display:none}.studio-bridge-card{width:min(620px,100%);padding:44px;border:1px solid #30303a;border-radius:18px;background:#121218;box-shadow:0 36px 100px rgba(0,0,0,.38)}.studio-bridge-card small{color:var(--studio-acid);font:700 9px "JetBrains Mono",monospace;letter-spacing:.15em}.studio-bridge-card h1{margin:18px 0;font-size:2.4rem;line-height:1.05}.studio-bridge-card p{color:#9995a0;line-height:1.75}.studio-bridge-card a{display:inline-block;margin-top:28px;padding:13px 17px;border-radius:9px;background:var(--studio-acid);color:#111;font:800 10px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase}.studio-workspace.studio-hosted .studio-editor,.studio-workspace.studio-hosted .studio-preview,.studio-workspace.studio-hosted .studio-file-browser{display:none!important}
-      .drive-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:30px}.drive-head small{color:#747480;font:700 9px "JetBrains Mono",monospace;letter-spacing:.15em}.drive-head h2{margin-top:8px;font-size:2.2rem}.drive-actions{display:flex;gap:8px}.drive-action{padding:11px 14px;border:1px solid #34343f;border-radius:9px;background:#13131a;color:#cac7bf;font:700 9px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase}.drive-action.primary{border-color:#758f35;background:var(--studio-acid);color:#111}.drive-layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:28px}.drive-subjects{display:grid;align-content:start;gap:7px}.drive-subject{padding:12px 13px;border:1px solid transparent;border-radius:9px;background:transparent;color:#7d7d88;text-align:left;font:700 10px "JetBrains Mono",monospace}.drive-subject.active,.drive-subject:hover{border-color:#34343f;background:#15151c;color:#efede6}.drive-drop{min-height:520px;padding:24px;border:1px solid #292933;border-radius:14px;background:#101017;transition:.2s}.drive-drop.is-dragging{border-color:var(--studio-acid);background:rgba(216,255,85,.035)}.drive-path{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;color:#77737d;font:700 9px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase}.drive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}.drive-card{position:relative;min-height:150px;padding:17px;border:1px solid #2c2c36;border-radius:12px;background:#15151c;color:#e8e5dd;text-align:left;transition:.18s}.drive-card:hover{border-color:#5a5a66;transform:translateY(-2px)}.drive-card-icon{width:42px;height:34px;margin-bottom:27px;border:1px solid #474751;border-radius:4px 8px 5px 5px;background:#1d1d25;display:grid;place-items:center;color:var(--studio-acid);font:700 9px "JetBrains Mono",monospace}.drive-card h3{font-size:.94rem;line-height:1.35}.drive-card p{margin-top:7px;color:#6f6f7b;font:600 8px "JetBrains Mono",monospace;text-transform:uppercase}.drive-card-actions{position:absolute;right:10px;top:10px;display:flex;gap:4px}.drive-card-actions button{width:26px;height:26px;border:1px solid #33333d;border-radius:7px;background:#111117;color:#777781}.drive-attachments{grid-column:1/-1;margin-top:14px;padding-top:18px;border-top:1px solid #292933}.drive-attachments h3{margin-bottom:12px;color:#8d8993;font:700 9px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase}.drive-file-row{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 12px;border-bottom:1px solid #24242d;color:#bdb9b1}.drive-file-row b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.84rem}.drive-file-row span{color:#63636e;font:600 8px "JetBrains Mono",monospace}.drive-file-row button{border:0;background:transparent;color:#d2767c;font-size:.75rem}
+      .drive-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:30px}.drive-head small{color:#747480;font:700 9px "JetBrains Mono",monospace;letter-spacing:.15em}.drive-head h2{margin-top:8px;font-size:2.2rem}.drive-actions{display:flex;flex-wrap:wrap;gap:8px}.drive-action{padding:11px 14px;border:1px solid #34343f;border-radius:9px;background:#13131a;color:#cac7bf;font:700 9px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase}.drive-action:hover{border-color:#646471;color:#fff}.drive-action.primary{border-color:#758f35;background:var(--studio-acid);color:#111}.drive-action[hidden]{display:none}.drive-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:28px}.drive-subjects{display:grid;align-content:start;gap:7px}.drive-subject{padding:12px 13px;border:1px solid transparent;border-radius:9px;background:transparent;color:#7d7d88;text-align:left;font:700 10px "JetBrains Mono",monospace}.drive-subject.active,.drive-subject:hover{border-color:#34343f;background:#15151c;color:#efede6}.drive-subject span{display:block;margin-top:4px;color:#555560;font-size:8px}.drive-drop{min-height:520px;padding:24px;border:1px solid #292933;border-radius:14px;background:#101017;transition:.2s}.drive-drop.is-dragging{border-color:var(--studio-acid);background:rgba(216,255,85,.035)}.drive-path{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;color:#77737d;font:700 9px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase}.drive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}.drive-card{position:relative;min-height:164px;padding:17px;border:1px solid #2c2c36;border-radius:12px;background:#15151c;color:#e8e5dd;text-align:left;transition:.18s;cursor:default}.drive-card:hover,.drive-card.is-selected{border-color:#5a5a66;transform:translateY(-2px)}.drive-card.is-selected{box-shadow:0 0 0 1px rgba(216,255,85,.28)}.drive-open{width:100%;height:100%;border:0;background:transparent;color:inherit;text-align:left}.drive-card-icon{width:42px;height:34px;margin-bottom:27px;border:1px solid #474751;border-radius:4px 8px 5px 5px;background:#1d1d25;display:grid;place-items:center;color:var(--studio-acid);font:700 9px "JetBrains Mono",monospace}.drive-folder-icon{position:relative;width:55px;height:37px;margin:8px 0 30px;border:1px solid #d1a63a;border-radius:5px;background:linear-gradient(145deg,#f2c652,#c99a28);box-shadow:0 10px 20px rgba(0,0,0,.2)}.drive-folder-icon::before{content:"";position:absolute;left:3px;top:-8px;width:24px;height:10px;border:1px solid #d1a63a;border-bottom:0;border-radius:5px 5px 0 0;background:#e5b943}.drive-card h3{font-size:.94rem;line-height:1.35}.drive-card p{margin-top:7px;color:#6f6f7b;font:600 8px "JetBrains Mono",monospace;text-transform:uppercase}.drive-card-actions{position:absolute;right:10px;top:10px;width:28px;height:28px;border:1px solid #33333d;border-radius:7px;background:#111117;color:#8b8b95;display:grid;place-items:center}.drive-card-actions:hover{color:var(--studio-acid);border-color:#667d32}.drive-card-hint{position:absolute;right:16px;bottom:13px;color:#50505c!important}.drive-media-thumb{width:100%;height:88px;margin-bottom:18px;border-radius:8px;object-fit:cover;background:#0d0d12}.drive-attachments{grid-column:1/-1;margin-top:20px;padding-top:18px;border-top:1px solid #292933}.drive-attachments[hidden]{display:none}.drive-attachments h3{margin-bottom:12px;color:#8d8993;font:700 9px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase}.drive-file-row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 12px;border-bottom:1px solid #24242d;color:#bdb9b1}.drive-file-row b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.84rem}.drive-file-row span{color:#63636e;font:600 8px "JetBrains Mono",monospace}.drive-file-row a{color:#bdb9b1}.drive-file-row button{border:0;background:transparent;color:#d2767c;font-size:.75rem}.drive-empty-folder{grid-column:1/-1;min-height:240px;display:grid;place-items:center;text-align:center;color:#64646f;font:700 9px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase}.drive-empty-folder b{display:block;margin-bottom:10px;color:#aaa6ad;font-size:11px}
       @media(max-width:1450px){.studio-selection,.studio-surface-tools [data-surface-format],.studio-tool-separator{display:none}.studio-surface-tools{min-width:0}}
       @media(max-width:1200px){.studio-surface-tools{display:none}.studio-workspace.mode-surface{grid-template-columns:minmax(0,1fr) 320px}.studio-workspace.mode-surface .studio-preview{padding:40px 28px}.studio-workspace.mode-surface #preview{padding:52px 44px}}
       @media(max-width:900px){.studio-topbar{position:relative;flex-wrap:wrap;height:auto}.studio-device-tools{display:none}.studio-workspace,.studio-workspace.mode-surface,.studio-workspace.mode-form{display:block}.studio-workspace .studio-topbar{display:flex}.studio-workspace.mode-surface .studio-preview{height:auto;min-height:700px}.studio-workspace.mode-surface .studio-editor{height:auto;border-left:0;border-top:1px solid var(--studio-line)}.drive-layout{grid-template-columns:1fr}.drive-subjects{grid-template-columns:repeat(5,1fr)}.studio-file-browser{padding:24px 18px}}
@@ -233,9 +233,12 @@ import '../styles/global.css'
           <div class="drive-head">
             <div><small>NOTES / FILE WORKSPACE</small><h2 id="drive-title">Subject library</h2></div>
             <div class="drive-actions">
-              <button id="drive-new-note" class="drive-action" type="button">+ New note</button>
-              <button id="drive-upload" class="drive-action primary" type="button">Upload files</button>
+              <button id="drive-back" class="drive-action" type="button" hidden>← Subjects</button>
+              <button id="drive-new-note" class="drive-action" type="button" hidden>+ Text note</button>
+              <button id="drive-upload-images" class="drive-action" type="button" hidden>Add images</button>
+              <button id="drive-upload" class="drive-action primary" type="button" hidden>Upload files</button>
               <input id="drive-file-input" type="file" multiple hidden />
+              <input id="drive-image-input" type="file" accept="image/*" multiple hidden />
             </div>
           </div>
           <div class="drive-layout">
@@ -537,7 +540,17 @@ import '../styles/global.css'
       let isDirty = false;
       let studioMode = "surface";
       let driveSubject = "ALL";
+      let driveFolderOpen = false;
+      let driveSelection = "";
       let selectedSurfaceBlock = null;
+
+      const noteSubjects = {
+        ECOMM: "Effective Communication",
+        ENNK: "Enterprise Networking",
+        EHIP: "Ethical Hacking & Intrusion Prevention",
+        FDS: "Forensics in Digital Security",
+        SADS: "Servers Administration & Security",
+      };
 
       const $ = (id) => document.getElementById(id);
       const setSaveState = (state, label) => {
@@ -1110,28 +1123,91 @@ import '../styles/global.css'
         wireSurfaceEditor();
       };
 
+      const openDriveNote = async (slug) => {
+        await loadDoc(slug);
+        setStudioMode("surface");
+      };
+
+      const openDriveFolder = async (subject) => {
+        if (!noteSubjects[subject]) return;
+        driveSubject = subject;
+        driveFolderOpen = true;
+        driveSelection = "";
+        const subjectDocs = docs.filter((doc) => doc.data.subject === subject);
+        const indexDoc = subjectDocs.find((doc) => /subject index/i.test(displayTitle(doc.data))) || subjectDocs[0];
+        if (indexDoc && currentSlug !== indexDoc.slug) await loadDoc(indexDoc.slug);
+        renderFileBrowser();
+      };
+
+      const closeDriveFolder = () => {
+        driveFolderOpen = false;
+        driveSubject = "ALL";
+        driveSelection = "";
+        renderFileBrowser();
+      };
+
       const renderFileBrowser = () => {
-        if (!$('drive-grid')) return;
-        const subjects = ["ALL", "ECOMM", "ENNK", "EHIP", "FDS", "SADS"];
-        $("drive-subjects").innerHTML = subjects.map((subject) => `<button class="drive-subject ${driveSubject === subject ? "active" : ""}" data-drive-subject="${subject}" type="button">${subject === "ALL" ? "All notes" : subject}</button>`).join("");
-        const visible = collection === "notes" ? docs.filter((doc) => driveSubject === "ALL" || doc.data.subject === driveSubject) : [];
-        $("drive-path").textContent = `Notes / ${driveSubject === "ALL" ? "All subjects" : driveSubject}`;
-        $("drive-grid").innerHTML = visible.length ? visible.map((doc) => `
-          <article class="drive-card">
-            <button class="drive-card-actions" data-drive-open="${escapeHtml(doc.slug)}" aria-label="Open ${escapeHtml(displayTitle(doc.data))}" type="button">↗</button>
-            <button class="drive-open" data-drive-open="${escapeHtml(doc.slug)}" type="button">
-              <span class="drive-card-icon">${escapeHtml(doc.data.subject || "NOTE")}</span>
+        if (!$("drive-grid")) return;
+        const subjectCodes = Object.keys(noteSubjects);
+        const folderControls = ["drive-back", "drive-new-note", "drive-upload-images", "drive-upload"];
+        folderControls.forEach((id) => { $(id).hidden = !driveFolderOpen; });
+        $("drive-title").textContent = driveFolderOpen ? `${noteSubjects[driveSubject]} (${driveSubject})` : "Subject library";
+        $("drive-path").textContent = driveFolderOpen ? `Notes / ${noteSubjects[driveSubject]}` : "Notes / Subject folders";
+        $("drive-drop").querySelector(".drive-path span:last-child").textContent = driveFolderOpen ? "Drop files into this folder" : "Double-click a folder to open";
+
+        $("drive-subjects").innerHTML = `<button class="drive-subject ${!driveFolderOpen ? "active" : ""}" data-drive-root type="button">All subjects<span>${subjectCodes.length} folders</span></button>${subjectCodes.map((subject) => {
+          const count = docs.filter((doc) => doc.data.subject === subject).length;
+          return `<button class="drive-subject ${driveFolderOpen && driveSubject === subject ? "active" : ""}" data-drive-folder="${subject}" type="button">${subject}<span>${count} ${count === 1 ? "note" : "notes"}</span></button>`;
+        }).join("")}`;
+
+        if (!driveFolderOpen) {
+          $("drive-grid").innerHTML = subjectCodes.map((subject) => {
+            const subjectDocs = docs.filter((doc) => doc.data.subject === subject);
+            const latest = subjectDocs.map((doc) => doc.data.date).filter(Boolean).sort().at(-1) || "No date";
+            return `<article class="drive-card drive-folder-card ${driveSelection === subject ? "is-selected" : ""}" data-drive-folder-card="${subject}" tabindex="0" aria-label="${escapeHtml(noteSubjects[subject])} folder. Double-click to open.">
+              <button class="drive-card-actions" data-drive-folder="${subject}" aria-label="Open ${escapeHtml(noteSubjects[subject])}" type="button">↗</button>
+              <div class="drive-folder-icon" aria-hidden="true"></div>
+              <h3>${escapeHtml(noteSubjects[subject])}</h3>
+              <p>${subject} · ${subjectDocs.length} ${subjectDocs.length === 1 ? "item" : "items"} · ${escapeHtml(latest)}</p>
+              <p class="drive-card-hint">Double-click to open</p>
+            </article>`;
+          }).join("");
+          $("drive-attachments").hidden = true;
+        } else {
+          const visible = docs.filter((doc) => doc.data.subject === driveSubject);
+          $("drive-grid").innerHTML = visible.length ? visible.map((doc) => `
+            <article class="drive-card ${driveSelection === doc.slug ? "is-selected" : ""}" data-drive-note-card="${escapeHtml(doc.slug)}" tabindex="0" aria-label="${escapeHtml(displayTitle(doc.data))}. Double-click to edit.">
+              <button class="drive-card-actions" data-drive-open="${escapeHtml(doc.slug)}" aria-label="Edit ${escapeHtml(displayTitle(doc.data))}" type="button">↗</button>
+              <span class="drive-card-icon">TXT</span>
               <h3>${escapeHtml(displayTitle(doc.data))}</h3>
               <p>${escapeHtml(doc.data.date || doc.slug)}</p>
-            </button>
-          </article>
-        `).join("") : `<p class="studio-empty">NO NOTES IN THIS SUBJECT YET</p>`;
+              <p class="drive-card-hint">Double-click to edit</p>
+            </article>
+          `).join("") : `<div class="drive-empty-folder"><div><b>This folder is empty</b>Create a text note, add images, or drop files here.</div></div>`;
 
-        const attached = blocks.map((block, index) => ({ block, index })).filter(({ block }) => block.type === "file");
-        $("drive-attachments").innerHTML = `<h3>Files attached to ${escapeHtml(displayTitle(currentData) || "current note")}</h3>${attached.length ? attached.map(({ block, index }) => `<div class="drive-file-row"><span>FILE</span><b>${escapeHtml(block.name || "Untitled file")}</b><button data-remove-file="${index}" type="button">Remove</button></div>`).join("") : `<p class="studio-empty">DROP FILES HERE TO ATTACH THEM TO THIS NOTE</p>`}`;
+          const attached = blocks.map((block, index) => ({ block, index })).filter(({ block }) => ["file", "image"].includes(block.type));
+          $("drive-attachments").hidden = false;
+          $("drive-attachments").innerHTML = `<h3>Attachments in ${escapeHtml(displayTitle(currentData) || noteSubjects[driveSubject])}</h3>${attached.length ? attached.map(({ block, index }) => {
+            const isImage = block.type === "image";
+            const label = isImage ? (block.alt || "Untitled image") : (block.name || "Untitled file");
+            const url = isImage ? block.src : block.url;
+            return `<div class="drive-file-row"><span>${isImage ? "IMAGE" : "FILE"}</span><a href="${escapeHtml(url || "#")}" target="_blank" rel="noreferrer"><b>${escapeHtml(label)}</b></a><button data-remove-file="${index}" type="button">Remove</button></div>`;
+          }).join("") : `<p class="studio-empty">DROP FILES OR IMAGES HERE TO ADD THEM TO THIS NOTE</p>`}`;
+        }
 
-        document.querySelectorAll("[data-drive-subject]").forEach((button) => button.addEventListener("click", () => { driveSubject = button.dataset.driveSubject; renderFileBrowser(); }));
-        document.querySelectorAll("[data-drive-open]").forEach((button) => button.addEventListener("click", async () => { await loadDoc(button.dataset.driveOpen); setStudioMode("surface"); }));
+        document.querySelectorAll("[data-drive-root]").forEach((button) => button.addEventListener("click", closeDriveFolder));
+        document.querySelectorAll("[data-drive-folder]").forEach((button) => button.addEventListener("click", () => openDriveFolder(button.dataset.driveFolder)));
+        document.querySelectorAll("[data-drive-folder-card]").forEach((card) => {
+          card.addEventListener("click", () => { driveSelection = card.dataset.driveFolderCard; renderFileBrowser(); });
+          card.addEventListener("dblclick", () => openDriveFolder(card.dataset.driveFolderCard));
+          card.addEventListener("keydown", (event) => { if (event.key === "Enter") openDriveFolder(card.dataset.driveFolderCard); });
+        });
+        document.querySelectorAll("[data-drive-open]").forEach((button) => button.addEventListener("click", () => openDriveNote(button.dataset.driveOpen)));
+        document.querySelectorAll("[data-drive-note-card]").forEach((card) => {
+          card.addEventListener("click", () => { driveSelection = card.dataset.driveNoteCard; renderFileBrowser(); });
+          card.addEventListener("dblclick", () => openDriveNote(card.dataset.driveNoteCard));
+          card.addEventListener("keydown", (event) => { if (event.key === "Enter") openDriveNote(card.dataset.driveNoteCard); });
+        });
         document.querySelectorAll("[data-remove-file]").forEach((button) => button.addEventListener("click", () => { blocks.splice(Number(button.dataset.removeFile), 1); renderBlocks(); renderPreview(); renderFileBrowser(); markDirty(); }));
       };
 
@@ -1182,13 +1258,23 @@ import '../styles/global.css'
         markDirty();
       };
 
-      const attachDriveFiles = async (files) => {
+      const attachDriveFiles = async (files, forceImage = false) => {
         if (!files?.length) return;
         if (collection !== "notes") await setCollection("notes");
+        if (!driveFolderOpen || !noteSubjects[driveSubject]) {
+          alert("Open a subject folder before adding files.");
+          return;
+        }
+        if (currentData.subject !== driveSubject) {
+          const subjectDocs = docs.filter((doc) => doc.data.subject === driveSubject);
+          const target = subjectDocs.find((doc) => /subject index/i.test(displayTitle(doc.data))) || subjectDocs[0];
+          if (target) await loadDoc(target.slug);
+        }
         setSaveState("dirty", "UPLOADING...");
         for (const file of files) {
           const url = await uploadFile(file);
-          blocks.push({ type: "file", name: file.name, url });
+          const isImage = forceImage || file.type.startsWith("image/");
+          blocks.push(isImage ? { type: "image", src: url, alt: file.name } : { type: "file", name: file.name, url });
         }
         selectedSurfaceBlock = blocks.length - 1;
         renderBlocks();
@@ -1358,16 +1444,30 @@ import '../styles/global.css'
 
       $("drive-new-note").addEventListener("click", async () => {
         if (collection !== "notes") await setCollection("notes");
+        if (!driveFolderOpen) return;
         newDoc();
+        currentData.subject = driveSubject;
+        currentData.title = `Untitled ${driveSubject} Note`;
+        currentData.slug = `untitled-${driveSubject.toLowerCase()}-note`;
+        currentData.summary = `New note for ${noteSubjects[driveSubject]}.`;
+        currentSlug = currentData.slug;
+        fillFields();
+        renderPreview();
         setStudioMode("surface");
       });
+      $("drive-back").addEventListener("click", closeDriveFolder);
       $("drive-upload").addEventListener("click", () => $("drive-file-input").click());
+      $("drive-upload-images").addEventListener("click", () => $("drive-image-input").click());
       $("drive-file-input").addEventListener("change", async () => {
         await attachDriveFiles([...$("drive-file-input").files]);
         $("drive-file-input").value = "";
       });
+      $("drive-image-input").addEventListener("change", async () => {
+        await attachDriveFiles([...$("drive-image-input").files], true);
+        $("drive-image-input").value = "";
+      });
       const driveDrop = $("drive-drop");
-      ["dragenter", "dragover"].forEach((eventName) => driveDrop.addEventListener(eventName, (event) => { event.preventDefault(); driveDrop.classList.add("is-dragging"); }));
+      ["dragenter", "dragover"].forEach((eventName) => driveDrop.addEventListener(eventName, (event) => { event.preventDefault(); if (driveFolderOpen) driveDrop.classList.add("is-dragging"); }));
       ["dragleave", "drop"].forEach((eventName) => driveDrop.addEventListener(eventName, (event) => { event.preventDefault(); driveDrop.classList.remove("is-dragging"); }));
       driveDrop.addEventListener("drop", async (event) => attachDriveFiles([...event.dataTransfer.files]));
 
