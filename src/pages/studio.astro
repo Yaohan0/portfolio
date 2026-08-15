@@ -234,6 +234,7 @@ import '../styles/global.css'
             <div><small>NOTES / FILE WORKSPACE</small><h2 id="drive-title">Subject library</h2></div>
             <div class="drive-actions">
               <button id="drive-back" class="drive-action" type="button" hidden>← Subjects</button>
+              <button id="drive-new-folder" class="drive-action" type="button" hidden>+ Folder</button>
               <button id="drive-new-note" class="drive-action" type="button" hidden>+ Text note</button>
               <button id="drive-upload-images" class="drive-action" type="button" hidden>Add images</button>
               <button id="drive-upload" class="drive-action primary" type="button" hidden>Upload files</button>
@@ -348,6 +349,7 @@ import '../styles/global.css'
             date: new Date().toISOString().slice(0, 10),
             summary: "",
             status: "Active",
+            folder: "Notes",
             tags: [],
             files: [],
             cover: "",
@@ -357,6 +359,7 @@ import '../styles/global.css'
             { name: "subject", label: "Subject", type: "select", options: ["ECOMM", "ENNK", "EHIP", "FDS", "SADS"] },
             { name: "date", label: "Date", type: "text" },
             { name: "status", label: "Status", type: "text" },
+            { name: "folder", label: "Folder", type: "text" },
             { name: "tags", label: "Tags", type: "list" },
           ],
         },
@@ -541,6 +544,7 @@ import '../styles/global.css'
       let studioMode = "surface";
       let driveSubject = "ALL";
       let driveFolderOpen = false;
+      let driveSubfolder = "";
       let driveSelection = "";
       let selectedSurfaceBlock = null;
 
@@ -831,6 +835,10 @@ import '../styles/global.css'
       const blockTemplate = (block, index) => {
         const controls = blockControls(index);
 
+        if (block.type === "folder") {
+          return `<div id="block-card-${index}" data-editor-block="${index}" class="block-card rounded-2xl border border-[#e2b84c]/30 bg-[#e2b84c]/5 p-4"><div class="mb-3 flex justify-between"><p class="font-mono text-xs text-[#e2b84c]">Folder</p>${controls}</div><input data-index="${index}" data-field="name" value="${escapeHtml(block.name || "Notes")}" class="block-input w-full bg-transparent text-xl font-bold outline-none" /></div>`;
+        }
+
         if (block.type === "heading" || block.type === "subheading") {
           return `
             <div id="block-card-${index}" data-editor-block="${index}" class="block-card rounded-2xl border border-white/10 bg-[#111111] p-4">
@@ -1103,6 +1111,7 @@ import '../styles/global.css'
           const selected = index === selectedSurfaceBlock ? " surface-selected" : "";
           const open = `<section class="surface-block${selected}" data-surface-block="${index}" data-block-label="${escapeHtml(block.type)}">`;
           if (block.type === "heading") return `${open}<h2 data-surface-key="text" contenteditable="true">${escapeHtml(block.text || "New heading")}</h2></section>`;
+          if (block.type === "folder") return `${open}<h2>📁 ${escapeHtml(block.name || "Notes")}</h2></section>`;
           if (block.type === "subheading") return `${open}<h3 data-surface-key="text" contenteditable="true">${escapeHtml(block.text || "New subheading")}</h3></section>`;
           if (block.type === "paragraph") return `${open}<p data-surface-key="text" contenteditable="true">${escapeHtml(block.text || "Start writing here...").replace(/\n/g, "<br>")}</p></section>`;
           if (block.type === "image") return `${open}${block.src ? `<img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt || "")}" class="surface-cover" />` : `<button class="surface-file" type="button">Choose an image in the inspector <span>↗</span></button>`}</section>`;
@@ -1128,10 +1137,21 @@ import '../styles/global.css'
         setStudioMode("surface");
       };
 
+      const driveFolders = () => {
+        const names = new Set(["Notes", "Assignments"]);
+        docs.filter((doc) => doc.data.subject === driveSubject).forEach((doc) => names.add(doc.data.folder || "Notes"));
+        blocks.forEach((block) => {
+          if (block.type === "folder" && block.name) names.add(block.name);
+          if (["file", "image"].includes(block.type)) names.add(block.folder || "Notes");
+        });
+        return [...names].filter(Boolean);
+      };
+
       const openDriveFolder = async (subject) => {
         if (!noteSubjects[subject]) return;
         driveSubject = subject;
         driveFolderOpen = true;
+        driveSubfolder = "";
         driveSelection = "";
         const subjectDocs = docs.filter((doc) => doc.data.subject === subject);
         const indexDoc = subjectDocs.find((doc) => /subject index/i.test(displayTitle(doc.data))) || subjectDocs[0];
@@ -1140,8 +1160,20 @@ import '../styles/global.css'
       };
 
       const closeDriveFolder = () => {
+        if (driveSubfolder) {
+          driveSubfolder = "";
+          driveSelection = "";
+          renderFileBrowser();
+          return;
+        }
         driveFolderOpen = false;
         driveSubject = "ALL";
+        driveSelection = "";
+        renderFileBrowser();
+      };
+
+      const openDriveSubfolder = (folder) => {
+        driveSubfolder = folder;
         driveSelection = "";
         renderFileBrowser();
       };
@@ -1149,11 +1181,12 @@ import '../styles/global.css'
       const renderFileBrowser = () => {
         if (!$("drive-grid")) return;
         const subjectCodes = Object.keys(noteSubjects);
-        const folderControls = ["drive-back", "drive-new-note", "drive-upload-images", "drive-upload"];
-        folderControls.forEach((id) => { $(id).hidden = !driveFolderOpen; });
+        $("drive-back").hidden = !driveFolderOpen;
+        $("drive-new-folder").hidden = !driveFolderOpen || Boolean(driveSubfolder);
+        ["drive-new-note", "drive-upload-images", "drive-upload"].forEach((id) => { $(id).hidden = !driveSubfolder; });
         $("drive-title").textContent = driveFolderOpen ? `${noteSubjects[driveSubject]} (${driveSubject})` : "Subject library";
-        $("drive-path").textContent = driveFolderOpen ? `Notes / ${noteSubjects[driveSubject]}` : "Notes / Subject folders";
-        $("drive-drop").querySelector(".drive-path span:last-child").textContent = driveFolderOpen ? "Drop files into this folder" : "Double-click a folder to open";
+        $("drive-path").textContent = driveSubfolder ? `Notes / ${driveSubject} / ${driveSubfolder}` : driveFolderOpen ? `Notes / ${noteSubjects[driveSubject]}` : "Notes / Subject folders";
+        $("drive-drop").querySelector(".drive-path span:last-child").textContent = driveSubfolder ? "Drop files into this folder" : driveFolderOpen ? "Choose or create a folder" : "Double-click a folder to open";
 
         $("drive-subjects").innerHTML = `<button class="drive-subject ${!driveFolderOpen ? "active" : ""}" data-drive-root type="button">All subjects<span>${subjectCodes.length} folders</span></button>${subjectCodes.map((subject) => {
           const count = docs.filter((doc) => doc.data.subject === subject).length;
@@ -1173,9 +1206,18 @@ import '../styles/global.css'
             </article>`;
           }).join("");
           $("drive-attachments").hidden = true;
+        } else if (!driveSubfolder) {
+          const folders = driveFolders();
+          $("drive-grid").innerHTML = folders.map((folder) => {
+            const docCount = docs.filter((doc) => doc.data.subject === driveSubject && (doc.data.folder || "Notes") === folder && !/subject index/i.test(displayTitle(doc.data))).length;
+            const fileCount = blocks.filter((block) => ["file", "image"].includes(block.type) && (block.folder || "Notes") === folder).length;
+            return `<article class="drive-card drive-folder-card ${driveSelection === folder ? "is-selected" : ""}" data-drive-subfolder-card="${escapeHtml(folder)}" tabindex="0" aria-label="${escapeHtml(folder)} folder. Double-click to open."><button class="drive-card-actions" data-drive-subfolder="${escapeHtml(folder)}" aria-label="Open ${escapeHtml(folder)}" type="button">↗</button><div class="drive-folder-icon" aria-hidden="true"></div><h3>${escapeHtml(folder)}</h3><p>${docCount + fileCount} ${docCount + fileCount === 1 ? "item" : "items"}</p><p class="drive-card-hint">Double-click to open</p></article>`;
+          }).join("");
+          $("drive-attachments").hidden = true;
         } else {
-          const visible = docs.filter((doc) => doc.data.subject === driveSubject);
-          $("drive-grid").innerHTML = visible.length ? visible.map((doc) => `
+          const visible = docs.filter((doc) => doc.data.subject === driveSubject && (doc.data.folder || "Notes") === driveSubfolder && !/subject index/i.test(displayTitle(doc.data)));
+          const attached = blocks.map((block, index) => ({ block, index })).filter(({ block }) => ["file", "image"].includes(block.type) && (block.folder || "Notes") === driveSubfolder);
+          const noteCards = visible.map((doc) => `
             <article class="drive-card ${driveSelection === doc.slug ? "is-selected" : ""}" data-drive-note-card="${escapeHtml(doc.slug)}" tabindex="0" aria-label="${escapeHtml(displayTitle(doc.data))}. Double-click to edit.">
               <button class="drive-card-actions" data-drive-open="${escapeHtml(doc.slug)}" aria-label="Edit ${escapeHtml(displayTitle(doc.data))}" type="button">↗</button>
               <span class="drive-card-icon">TXT</span>
@@ -1183,16 +1225,15 @@ import '../styles/global.css'
               <p>${escapeHtml(doc.data.date || doc.slug)}</p>
               <p class="drive-card-hint">Double-click to edit</p>
             </article>
-          `).join("") : `<div class="drive-empty-folder"><div><b>This folder is empty</b>Create a text note, add images, or drop files here.</div></div>`;
-
-          const attached = blocks.map((block, index) => ({ block, index })).filter(({ block }) => ["file", "image"].includes(block.type));
-          $("drive-attachments").hidden = false;
-          $("drive-attachments").innerHTML = `<h3>Attachments in ${escapeHtml(displayTitle(currentData) || noteSubjects[driveSubject])}</h3>${attached.length ? attached.map(({ block, index }) => {
+          `).join("");
+          const fileCards = attached.map(({ block, index }) => {
             const isImage = block.type === "image";
             const label = isImage ? (block.alt || "Untitled image") : (block.name || "Untitled file");
             const url = isImage ? block.src : block.url;
-            return `<div class="drive-file-row"><span>${isImage ? "IMAGE" : "FILE"}</span><a href="${escapeHtml(url || "#")}" target="_blank" rel="noreferrer"><b>${escapeHtml(label)}</b></a><button data-remove-file="${index}" type="button">Remove</button></div>`;
-          }).join("") : `<p class="studio-empty">DROP FILES OR IMAGES HERE TO ADD THEM TO THIS NOTE</p>`}`;
+            return `<article class="drive-card"><a class="drive-open" href="${escapeHtml(url || "#")}" target="_blank" rel="noreferrer">${isImage && url ? `<img class="drive-media-thumb" src="${escapeHtml(url)}" alt="" />` : `<span class="drive-card-icon">FILE</span>`}<h3>${escapeHtml(label)}</h3><p>${isImage ? "IMAGE" : "DOCUMENT"}</p></a><button class="drive-card-actions" data-remove-file="${index}" aria-label="Remove ${escapeHtml(label)}" type="button">×</button></article>`;
+          }).join("");
+          $("drive-grid").innerHTML = noteCards + fileCards || `<div class="drive-empty-folder"><div><b>This folder is empty</b>Create a text note, add images, or drop files here.</div></div>`;
+          $("drive-attachments").hidden = true;
         }
 
         document.querySelectorAll("[data-drive-root]").forEach((button) => button.addEventListener("click", closeDriveFolder));
@@ -1201,6 +1242,12 @@ import '../styles/global.css'
           card.addEventListener("click", () => { driveSelection = card.dataset.driveFolderCard; renderFileBrowser(); });
           card.addEventListener("dblclick", () => openDriveFolder(card.dataset.driveFolderCard));
           card.addEventListener("keydown", (event) => { if (event.key === "Enter") openDriveFolder(card.dataset.driveFolderCard); });
+        });
+        document.querySelectorAll("[data-drive-subfolder]").forEach((button) => button.addEventListener("click", () => openDriveSubfolder(button.dataset.driveSubfolder)));
+        document.querySelectorAll("[data-drive-subfolder-card]").forEach((card) => {
+          card.addEventListener("click", () => { driveSelection = card.dataset.driveSubfolderCard; renderFileBrowser(); });
+          card.addEventListener("dblclick", () => openDriveSubfolder(card.dataset.driveSubfolderCard));
+          card.addEventListener("keydown", (event) => { if (event.key === "Enter") openDriveSubfolder(card.dataset.driveSubfolderCard); });
         });
         document.querySelectorAll("[data-drive-open]").forEach((button) => button.addEventListener("click", () => openDriveNote(button.dataset.driveOpen)));
         document.querySelectorAll("[data-drive-note-card]").forEach((card) => {
@@ -1261,8 +1308,8 @@ import '../styles/global.css'
       const attachDriveFiles = async (files, forceImage = false) => {
         if (!files?.length) return;
         if (collection !== "notes") await setCollection("notes");
-        if (!driveFolderOpen || !noteSubjects[driveSubject]) {
-          alert("Open a subject folder before adding files.");
+        if (!driveFolderOpen || !driveSubfolder || !noteSubjects[driveSubject]) {
+          alert("Open a folder inside the subject before adding files.");
           return;
         }
         if (currentData.subject !== driveSubject) {
@@ -1274,7 +1321,7 @@ import '../styles/global.css'
         for (const file of files) {
           const url = await uploadFile(file);
           const isImage = forceImage || file.type.startsWith("image/");
-          blocks.push(isImage ? { type: "image", src: url, alt: file.name } : { type: "file", name: file.name, url });
+          blocks.push(isImage ? { type: "image", src: url, alt: file.name, folder: driveSubfolder } : { type: "file", name: file.name, url, folder: driveSubfolder });
         }
         selectedSurfaceBlock = blocks.length - 1;
         renderBlocks();
@@ -1444,9 +1491,10 @@ import '../styles/global.css'
 
       $("drive-new-note").addEventListener("click", async () => {
         if (collection !== "notes") await setCollection("notes");
-        if (!driveFolderOpen) return;
+        if (!driveSubfolder) return;
         newDoc();
         currentData.subject = driveSubject;
+        currentData.folder = driveSubfolder || "Notes";
         currentData.title = `Untitled ${driveSubject} Note`;
         currentData.slug = `untitled-${driveSubject.toLowerCase()}-note`;
         currentData.summary = `New note for ${noteSubjects[driveSubject]}.`;
@@ -1454,6 +1502,20 @@ import '../styles/global.css'
         fillFields();
         renderPreview();
         setStudioMode("surface");
+      });
+      $("drive-new-folder").addEventListener("click", () => {
+        if (!driveFolderOpen || driveSubfolder) return;
+        const name = prompt("Folder name", "Assignments")?.trim();
+        if (!name) return;
+        if (driveFolders().some((folder) => folder.toLowerCase() === name.toLowerCase())) {
+          alert("That folder already exists.");
+          return;
+        }
+        blocks.push({ type: "folder", name });
+        renderBlocks();
+        renderPreview();
+        markDirty();
+        openDriveSubfolder(name);
       });
       $("drive-back").addEventListener("click", closeDriveFolder);
       $("drive-upload").addEventListener("click", () => $("drive-file-input").click());
@@ -1467,7 +1529,7 @@ import '../styles/global.css'
         $("drive-image-input").value = "";
       });
       const driveDrop = $("drive-drop");
-      ["dragenter", "dragover"].forEach((eventName) => driveDrop.addEventListener(eventName, (event) => { event.preventDefault(); if (driveFolderOpen) driveDrop.classList.add("is-dragging"); }));
+      ["dragenter", "dragover"].forEach((eventName) => driveDrop.addEventListener(eventName, (event) => { event.preventDefault(); if (driveSubfolder) driveDrop.classList.add("is-dragging"); }));
       ["dragleave", "drop"].forEach((eventName) => driveDrop.addEventListener(eventName, (event) => { event.preventDefault(); driveDrop.classList.remove("is-dragging"); }));
       driveDrop.addEventListener("drop", async (event) => attachDriveFiles([...event.dataTransfer.files]));
 

@@ -77,6 +77,7 @@ const collections = {
       date: today(),
       summary: '',
       status: 'Active',
+      folder: 'Notes',
       tags: [],
       files: [],
       cover: '',
@@ -340,6 +341,7 @@ function normalizeNumber(value, fallback = 999) {
 function markdownToBlocks(markdown) {
   const lines = String(markdown || '').split('\n')
   const blocks = []
+  let activeFolder = 'Notes'
   let i = 0
 
   while (i < lines.length) {
@@ -383,6 +385,13 @@ function markdownToBlocks(markdown) {
       continue
     }
 
+    if (line.startsWith('## 📁 ')) {
+      activeFolder = line.replace(/^## 📁 /, '').trim() || 'Notes'
+      blocks.push({ type: 'folder', name: activeFolder })
+      i += 1
+      continue
+    }
+
     if (line.startsWith('## ')) {
       blocks.push({
         type: 'heading',
@@ -419,6 +428,7 @@ function markdownToBlocks(markdown) {
         type: 'image',
         alt: imageMatch[1],
         src: imageMatch[2],
+        folder: activeFolder,
       })
 
       i += 1
@@ -432,6 +442,7 @@ function markdownToBlocks(markdown) {
         type: 'file',
         name: fileMatch[1],
         url: fileMatch[2],
+        folder: activeFolder,
       })
 
       i += 1
@@ -473,44 +484,63 @@ function markdownToBlocks(markdown) {
 }
 
 function blocksToMarkdown(blocks) {
-  return blocks
-    .map((block) => {
+  const output = []
+  let activeFolder = ''
+
+  for (const block of blocks) {
+      if (block.type === 'folder') {
+        activeFolder = block.name || 'Notes'
+        output.push(`## 📁 ${activeFolder}`)
+        continue
+      }
+
+      if (['file', 'image'].includes(block.type) && block.folder && block.folder !== activeFolder) {
+        activeFolder = block.folder
+        output.push(`## 📁 ${activeFolder}`)
+      }
+
       if (block.type === 'heading') {
-        return `## ${block.text || ''}`
+        output.push(`## ${block.text || ''}`)
+        continue
       }
 
       if (block.type === 'subheading') {
-        return `### ${block.text || ''}`
+        output.push(`### ${block.text || ''}`)
+        continue
       }
 
       if (block.type === 'paragraph') {
-        return block.text || ''
+        output.push(block.text || '')
+        continue
       }
 
       if (block.type === 'image') {
-        return `![${block.alt || 'Image'}](${block.src || ''})`
+        output.push(`![${block.alt || 'Image'}](${block.src || ''})`)
+        continue
       }
 
       if (block.type === 'file') {
-        return `[${block.name || 'Download file'}](${block.url || ''})`
+        output.push(`[${block.name || 'Download file'}](${block.url || ''})`)
+        continue
       }
 
       if (block.type === 'code') {
-        return `\`\`\`${block.language || ''}\n${block.code || ''}\n\`\`\``
+        output.push(`\`\`\`${block.language || ''}\n${block.code || ''}\n\`\`\``)
+        continue
       }
 
       if (block.type === 'callout') {
-        return `> ${block.text || ''}`
+        output.push(`> ${block.text || ''}`)
+        continue
       }
 
       if (block.type === 'divider') {
-        return '---'
+        output.push('---')
+        continue
       }
+  }
 
-      return ''
-    })
-    .join('\n\n')
-    .trim()
+  return output.join('\n\n').trim()
 }
 
 function normalizeData(collectionName, inputData, finalSlug) {

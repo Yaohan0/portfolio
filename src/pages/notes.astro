@@ -15,21 +15,26 @@ const subjects = [
 ]
 
 const fileItems = notes.flatMap((note) => {
-  const found = new Map<string, { name: string; url: string; type: string }>()
-  for (const file of note.data.files) found.set(file.url, { name: file.name, url: file.url, type: file.type || 'FILE' })
-  const linkPattern = /\[([^\]]+)\]\((\/uploads\/[^)]+)\)/g
-  for (const match of note.body?.matchAll(linkPattern) ?? []) {
+  const defaultFolder = note.data.folder || 'Notes'
+  const found = new Map<string, { name: string; url: string; type: string; folder: string }>()
+  for (const file of note.data.files) found.set(file.url, { name: file.name, url: file.url, type: file.type || 'FILE', folder: file.folder || defaultFolder })
+  let activeFolder = defaultFolder
+  for (const line of note.body?.split('\n') ?? []) {
+    const folderMatch = line.match(/^## 📁 (.+)$/)
+    if (folderMatch) { activeFolder = folderMatch[1].trim() || 'Notes'; continue }
+    const match = line.match(/^\[([^\]]+)\]\((\/uploads\/[^)]+)\)$/)
+    if (!match) continue
     const extension = match[2].split('.').pop()?.toUpperCase() || 'FILE'
-    found.set(match[2], { name: match[1], url: match[2], type: extension })
+    found.set(match[2], { name: match[1], url: match[2], type: extension, folder: activeFolder })
   }
   const assets = [...found.values()].map((file) => ({
-    kind: 'file', subject: note.data.subject, noteSlug: note.data.slug,
+    kind: 'file', subject: note.data.subject, folder: file.folder, noteSlug: note.data.slug,
     title: file.name, summary: `${file.type.toUpperCase()} document`, type: file.type.toUpperCase(),
     date: note.data.date, url: withBase(file.url),
   }))
   if (assets.length) return assets
   return [{
-    kind: 'note', subject: note.data.subject, noteSlug: note.data.slug,
+    kind: 'note', subject: note.data.subject, folder: defaultFolder, noteSlug: note.data.slug,
     title: note.data.title.replace(/ Subject Index$/i, ' Notes'), summary: note.data.summary,
     type: 'NOTE', date: note.data.date, url: '',
   }]
@@ -37,6 +42,15 @@ const fileItems = notes.flatMap((note) => {
 
 const countFor = (subject: string) => fileItems.filter((item) => item.subject === subject).length
 const updatedFor = (subject: string) => notes.find((note) => note.data.subject === subject)?.data.date ?? '—'
+const foldersFor = (subject: string) => {
+  const folders = new Set(['Notes', 'Assignments'])
+  notes.filter((note) => note.data.subject === subject).forEach((note) => {
+    folders.add(note.data.folder || 'Notes')
+    for (const match of note.body?.matchAll(/^## 📁 (.+)$/gm) ?? []) folders.add(match[1].trim())
+  })
+  fileItems.filter((item) => item.subject === subject).forEach((item) => folders.add(item.folder))
+  return [...folders].filter(Boolean)
+}
 ---
 
 <Layout title="Notes - Yaohan" description="Yaohan's structured cybersecurity and course notes.">
@@ -64,14 +78,22 @@ const updatedFor = (subject: string) => notes.find((note) => note.data.subject =
 
           <section class="workspace-focus" aria-live="polite">
             <div class="folder-view" id="folder-view">
-              <div class="focus-heading"><div><p>OPEN FOLDER</p><span id="active-subject-code">{subjects[0].code}</span></div><span class="focus-counter" id="file-count">{countFor(subjects[0].code)} ITEMS</span></div>
+              <div class="focus-heading"><div><p>OPEN FOLDER</p><span id="active-subject-code">{subjects[0].code}</span></div><div class="focus-actions"><button id="folder-up" type="button" hidden>← Subject</button><span class="focus-counter" id="file-count">{foldersFor(subjects[0].code).length} FOLDERS</span></div></div>
               <div class="open-folder-card" style={`--subject: ${subjects[0].color}`} id="open-folder-card">
                 <div class="open-folder-tab"></div><small id="active-subject-desk">{subjects[0].desk}</small><h1 id="active-subject-name">{subjects[0].name}</h1>
-                <p>Lecture notes, readings and reference material. Select any item to read it here.</p>
+                <p id="folder-description">Choose Notes, Assignments, or another folder to browse its contents.</p>
               </div>
               <div id="notes-file-list" class="workspace-files">
+                {subjects.flatMap((subject) => foldersFor(subject.code).map((folder) => {
+                  const itemCount = fileItems.filter((item) => item.subject === subject.code && item.folder === folder).length
+                  return (
+                    <button type="button" class="workspace-file workspace-subfolder" data-folder-subject={subject.code} data-public-folder={folder} hidden={subject.code !== subjects[0].code}>
+                      <span class="row-folder" aria-hidden="true"></span><div><strong>{folder}</strong><small>{itemCount} {itemCount === 1 ? 'item' : 'items'}</small></div><time>FOLDER</time><b>OPEN</b>
+                    </button>
+                  )
+                }))}
                 {fileItems.map((item, index) => (
-                  <button type="button" class="workspace-file" data-note-subject={item.subject} data-item-kind={item.kind} data-item-url={item.url} data-item-title={item.title} data-item-type={item.type} data-note-slug={item.noteSlug} hidden={item.subject !== subjects[0].code}>
+                  <button type="button" class="workspace-file" data-note-subject={item.subject} data-item-folder={item.folder} data-item-kind={item.kind} data-item-url={item.url} data-item-title={item.title} data-item-type={item.type} data-note-slug={item.noteSlug} hidden>
                     <span>{String(index + 1).padStart(2, '0')}</span><div><strong>{item.title}</strong><small>{item.summary}</small></div><time>{item.date}</time><b>VIEW</b>
                   </button>
                 ))}
@@ -106,6 +128,7 @@ const updatedFor = (subject: string) => notes.find((note) => note.data.subject =
   <script is:inline>
     const workspace = document.getElementById('notes-workspace');
     const subjectTabs = [...document.querySelectorAll('[data-subject-index]')];
+    const folderRows = [...document.querySelectorAll('[data-public-folder]')];
     const noteRows = [...document.querySelectorAll('[data-note-subject]')];
     const folderCard = document.getElementById('open-folder-card');
     const folderView = document.getElementById('folder-view');
@@ -120,10 +143,13 @@ const updatedFor = (subject: string) => notes.find((note) => note.data.subject =
     const activeDesk = document.getElementById('active-subject-desk');
     const activeMeta = document.getElementById('active-subject-meta');
     const activeUpdated = document.getElementById('active-updated-meta');
+    const folderDescription = document.getElementById('folder-description');
+    const folderUp = document.getElementById('folder-up');
     const fileCount = document.getElementById('file-count');
     const empty = document.getElementById('empty-notes');
     const subjectData = subjectTabs.map((tab) => ({ code: tab.querySelector('small').textContent, name: tab.querySelector('strong').textContent, color: getComputedStyle(tab).getPropertyValue('--subject').trim(), updated: tab.dataset.updated, desk: ['Communication', 'Networking', 'Offensive security', 'Digital forensics', 'Infrastructure'][Number(tab.dataset.subjectIndex)] }));
     let active = 0;
+    let currentFolder = '';
     let wheelLocked = false;
     let touchStartX = 0;
 
@@ -137,15 +163,32 @@ const updatedFor = (subject: string) => notes.find((note) => note.data.subject =
       if (kind === 'file') { readerFrame.src = url; readerFrame.hidden = false; readerPages.hidden = true; readerExternal.href = url; readerExternal.hidden = false; }
       else { readerFrame.hidden = true; readerPages.hidden = false; readerExternal.hidden = true; const page = readerPages.querySelector(`[data-note-body="${row.dataset.noteSlug}"]`); if (page) page.hidden = false; }
     };
+    const openPublicFolder = (name) => {
+      closeReader();
+      currentFolder = name;
+      const current = subjectData[active];
+      folderRows.forEach((row) => row.hidden = true);
+      let shown = 0;
+      noteRows.forEach((row) => { const visible = row.dataset.noteSubject === current.code && row.dataset.itemFolder === name; row.hidden = !visible; if (visible) shown += 1; });
+      activeCode.textContent = `${current.code} / ${name}`;
+      activeDesk.textContent = current.code;
+      activeName.textContent = name;
+      folderDescription.textContent = shown ? `Select a document to read it inside the desk.` : `This folder is empty.`;
+      fileCount.textContent = `${shown} ITEM${shown === 1 ? '' : 'S'}`;
+      folderUp.hidden = false;
+      empty.hidden = shown !== 0;
+    };
     const wrap = (value) => (value + subjectTabs.length) % subjectTabs.length;
     const selectSubject = (next) => {
-      closeReader(); active = wrap(next); const current = subjectData[active]; subjectTabs.forEach((tab, index) => tab.classList.toggle('active', index === active));
-      activeName.textContent = current.name; activeCode.textContent = current.code; activeDesk.textContent = current.desk; activeMeta.textContent = current.code; activeUpdated.textContent = current.updated; folderCard.style.setProperty('--subject', current.color);
-      let shown = 0; noteRows.forEach((row) => { const visible = row.dataset.noteSubject === current.code; row.hidden = !visible; if (visible) shown += 1; }); fileCount.textContent = `${shown} ITEM${shown === 1 ? '' : 'S'}`; empty.hidden = shown !== 0;
+      closeReader(); currentFolder = ''; active = wrap(next); const current = subjectData[active]; subjectTabs.forEach((tab, index) => tab.classList.toggle('active', index === active));
+      activeName.textContent = current.name; activeCode.textContent = current.code; activeDesk.textContent = current.desk; activeMeta.textContent = current.code; activeUpdated.textContent = current.updated; folderCard.style.setProperty('--subject', current.color); folderDescription.textContent = 'Choose Notes, Assignments, or another folder to browse its contents.'; folderUp.hidden = true;
+      noteRows.forEach((row) => row.hidden = true); let shown = 0; folderRows.forEach((row) => { const visible = row.dataset.folderSubject === current.code; row.hidden = !visible; if (visible) shown += 1; }); fileCount.textContent = `${shown} FOLDER${shown === 1 ? '' : 'S'}`; empty.hidden = true;
     };
 
     subjectTabs.forEach((tab, index) => tab.addEventListener('click', () => selectSubject(index)));
+    folderRows.forEach((row) => row.addEventListener('click', () => openPublicFolder(row.dataset.publicFolder)));
     noteRows.forEach((row) => row.addEventListener('click', () => openReader(row)));
+    folderUp?.addEventListener('click', () => selectSubject(active));
     document.getElementById('reader-back')?.addEventListener('click', closeReader);
     workspace?.addEventListener('keydown', (event) => { if (!reader.hidden && event.key === 'Escape') { event.preventDefault(); closeReader(); return; } if (['ArrowRight', 'ArrowDown'].includes(event.key)) { event.preventDefault(); selectSubject(active + 1); } if (['ArrowLeft', 'ArrowUp'].includes(event.key)) { event.preventDefault(); selectSubject(active - 1); } });
     workspace?.addEventListener('wheel', (event) => { if (!matchMedia('(pointer:fine)').matches || event.target.closest('.workspace-files, .workspace-reader')) return; event.preventDefault(); if (wheelLocked) return; wheelLocked = true; selectSubject(active + (event.deltaY > 0 ? 1 : -1)); setTimeout(() => wheelLocked = false, 240); }, { passive: false });
@@ -162,6 +205,7 @@ const updatedFor = (subject: string) => notes.find((note) => note.data.subject =
 
   <style>
     .folder-view{height:100%;min-height:0;display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:17px}.workspace-file{width:100%;font:inherit;text-align:left;cursor:pointer}.workspace-file:focus-visible{outline:1px solid rgba(255,255,255,.65);outline-offset:-2px;background:rgba(255,255,255,.05)}
+    .focus-actions{display:flex;align-items:center;gap:12px}.focus-actions button{padding:7px 9px;border:1px solid rgba(255,255,255,.15);border-radius:6px;background:transparent;color:#d1cdc6;font:700 7px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}.focus-actions button[hidden]{display:none}.workspace-subfolder{min-height:66px}.row-folder{position:relative!important;width:25px!important;height:18px!important;border-radius:3px;background:#d9b04a;color:transparent!important;box-shadow:0 6px 14px rgba(0,0,0,.2)}.row-folder:before{content:'';position:absolute;left:2px;top:-4px;width:11px;height:6px;border-radius:2px 2px 0 0;background:#d9b04a}
     .workspace-reader{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden;border:1px solid rgba(255,255,255,.14);border-radius:15px;background:#171719;box-shadow:0 25px 70px rgba(0,0,0,.28)}.workspace-reader[hidden],.folder-view[hidden],.reader-note-pages[hidden],.workspace-reader iframe[hidden],.reader-note-pages article[hidden]{display:none!important}
     .reader-bar{min-height:66px;padding:11px 14px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;border-bottom:1px solid rgba(255,255,255,.12);background:#202022}.reader-bar button,.reader-bar a{padding:9px 11px;border:1px solid rgba(255,255,255,.16);border-radius:7px;background:transparent;color:#d3d0ca;font:700 7px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}.reader-bar a{color:#d6f26b}.reader-bar div{min-width:0}.reader-bar small,.reader-bar strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.reader-bar small{margin-bottom:4px;color:#89858b;font:700 7px "JetBrains Mono",monospace;letter-spacing:.14em}.reader-bar strong{font:650 12px "Space Grotesk",sans-serif}.workspace-reader iframe{width:100%;height:100%;border:0;background:#ececec}
     .reader-note-pages{min-height:0;overflow:auto;padding:34px;color:#b3afa8;line-height:1.75}.reader-note-pages article{max-width:760px;margin:auto}.reader-note-heading{padding-bottom:26px;margin-bottom:22px;border-bottom:1px solid rgba(255,255,255,.12)}.reader-note-heading small{color:#d6f26b;font:700 7px "JetBrains Mono",monospace;letter-spacing:.16em}.reader-note-heading h2{margin:8px 0 10px;color:#f4f1ea;font:650 clamp(2rem,4vw,3.7rem)/.96 "Space Grotesk",sans-serif;letter-spacing:-.06em}.reader-note-heading p{color:#7f7b80;font-size:.78rem}.reader-note-pages :global(h2){margin:28px 0 10px;color:#f0ede7;font:620 1.45rem "Space Grotesk",sans-serif}.reader-note-pages :global(ul){padding-left:1.2rem}.reader-note-pages :global(a){color:#d6f26b;text-decoration:underline}

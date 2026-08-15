@@ -5,6 +5,7 @@ const fileSchema = z.object({
   name: z.string(),
   type: z.string(),
   url: z.string(),
+  folder: z.string().default('Notes'),
 })
 
 const linkSchema = z.object({
@@ -160,6 +161,7 @@ const notes = defineCollection({
     date: z.string(),
     summary: z.string(),
     status: z.string().default('Active'),
+    folder: z.string().default('Notes'),
     tags: z.array(z.string()).default([]),
     files: z.array(fileSchema).default([]),
     cover: z.string().optional(),
