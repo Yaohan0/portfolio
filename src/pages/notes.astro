@@ -1,10 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import Navbar from '../components/Navbar.astro'
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 import { withBase } from '../utils/paths'
 
 const notes = (await getCollection('notes')).sort((a, b) => a.data.order - b.data.order)
+const renderedNotes = await Promise.all(notes.map(async (note) => ({ note, Content: (await render(note)).Content })))
 const subjects = [
   { code: 'ECOMM', name: 'Effective Communication', color: '#ffc95c', desk: 'Communication' },
   { code: 'ENNK', name: 'Enterprise Networking', color: '#8edcff', desk: 'Networking' },
@@ -12,88 +13,90 @@ const subjects = [
   { code: 'FDS', name: 'Forensics in Digital Security', color: '#ff8ca0', desk: 'Digital forensics' },
   { code: 'SADS', name: 'Servers Administration & Security', color: '#bda7ff', desk: 'Infrastructure' },
 ]
+
+const fileItems = notes.flatMap((note) => {
+  const found = new Map<string, { name: string; url: string; type: string }>()
+  for (const file of note.data.files) found.set(file.url, { name: file.name, url: file.url, type: file.type || 'FILE' })
+  const linkPattern = /\[([^\]]+)\]\((\/uploads\/[^)]+)\)/g
+  for (const match of note.body?.matchAll(linkPattern) ?? []) {
+    const extension = match[2].split('.').pop()?.toUpperCase() || 'FILE'
+    found.set(match[2], { name: match[1], url: match[2], type: extension })
+  }
+  const assets = [...found.values()].map((file) => ({
+    kind: 'file', subject: note.data.subject, noteSlug: note.data.slug,
+    title: file.name, summary: `${file.type.toUpperCase()} document`, type: file.type.toUpperCase(),
+    date: note.data.date, url: withBase(file.url),
+  }))
+  if (assets.length) return assets
+  return [{
+    kind: 'note', subject: note.data.subject, noteSlug: note.data.slug,
+    title: note.data.title.replace(/ Subject Index$/i, ' Notes'), summary: note.data.summary,
+    type: 'NOTE', date: note.data.date, url: '',
+  }]
+})
+
+const countFor = (subject: string) => fileItems.filter((item) => item.subject === subject).length
+const updatedFor = (subject: string) => notes.find((note) => note.data.subject === subject)?.data.date ?? '—'
 ---
 
 <Layout title="Notes - Yaohan" description="Yaohan's structured cybersecurity and course notes.">
   <main class="notes-page">
     <Navbar current="Notes" />
-
     <section class="notes-desk-stage" style={`--desk-image: url('${withBase('notes-desk.png')}')`}>
       <div class="desk-shade" aria-hidden="true"></div>
-
-      <div id="notes-workspace" class="notes-workspace" tabindex="0" aria-label="Notes workspace. Scroll or use arrow keys to change subject.">
+      <div id="notes-workspace" class="notes-workspace" tabindex="0" aria-label="Notes workspace. Choose a subject, then open a document in the desk reader.">
         <header class="workspace-bar">
-          <div class="workspace-identity">
-            <span class="workspace-mark">Y.</span>
-            <div><strong>Notes desk</strong><small>Yaohan's subject library</small></div>
-          </div>
-          <div class="workspace-status"><span></span> {subjects.length} SUBJECTS / {String(notes.length).padStart(2, '0')} FILES</div>
+          <div class="workspace-identity"><span class="workspace-mark">Y.</span><div><strong>Notes desk</strong><small>Yaohan's subject library</small></div></div>
+          <div class="workspace-status"><span></span> {subjects.length} SUBJECTS / {String(fileItems.length).padStart(2, '0')} ITEMS</div>
         </header>
 
         <div class="workspace-body">
           <nav class="subject-dock" aria-label="Note subjects">
             <p>SUBJECTS</p>
             {subjects.map((subject, index) => (
-              <button
-                type="button"
-                class:list={['subject-tab', { active: index === 0 }]}
-                data-subject-index={index}
-                style={`--subject: ${subject.color}; --tab-index: ${index}`}
-              >
+              <button type="button" class:list={['subject-tab', { active: index === 0 }]} data-subject-index={index} data-updated={updatedFor(subject.code)} style={`--subject: ${subject.color}; --tab-index: ${index}`}>
                 <span class="subject-folder" aria-hidden="true"><i></i></span>
-                <span class="subject-tab-copy">
-                  <small>{subject.code}</small>
-                  <strong>{subject.name}</strong>
-                </span>
-                <em>{String(notes.filter((note) => note.data.subject === subject.code).length).padStart(2, '0')}</em>
+                <span class="subject-tab-copy"><small>{subject.code}</small><strong>{subject.name}</strong></span>
+                <em>{String(countFor(subject.code)).padStart(2, '0')}</em>
               </button>
             ))}
           </nav>
 
           <section class="workspace-focus" aria-live="polite">
-            <div class="focus-heading">
-              <div><p>OPEN FOLDER</p><span id="active-subject-code">{subjects[0].code}</span></div>
-              <span class="focus-counter" id="file-count">{notes.filter((note) => note.data.subject === subjects[0].code).length} FILE</span>
+            <div class="folder-view" id="folder-view">
+              <div class="focus-heading"><div><p>OPEN FOLDER</p><span id="active-subject-code">{subjects[0].code}</span></div><span class="focus-counter" id="file-count">{countFor(subjects[0].code)} ITEMS</span></div>
+              <div class="open-folder-card" style={`--subject: ${subjects[0].color}`} id="open-folder-card">
+                <div class="open-folder-tab"></div><small id="active-subject-desk">{subjects[0].desk}</small><h1 id="active-subject-name">{subjects[0].name}</h1>
+                <p>Lecture notes, readings and reference material. Select any item to read it here.</p>
+              </div>
+              <div id="notes-file-list" class="workspace-files">
+                {fileItems.map((item, index) => (
+                  <button type="button" class="workspace-file" data-note-subject={item.subject} data-item-kind={item.kind} data-item-url={item.url} data-item-title={item.title} data-item-type={item.type} data-note-slug={item.noteSlug} hidden={item.subject !== subjects[0].code}>
+                    <span>{String(index + 1).padStart(2, '0')}</span><div><strong>{item.title}</strong><small>{item.summary}</small></div><time>{item.date}</time><b>VIEW</b>
+                  </button>
+                ))}
+                <div id="empty-notes" class="notes-empty" hidden>No notes here yet. Add the first one from Studio.</div>
+              </div>
             </div>
 
-            <div class="open-folder-card" style={`--subject: ${subjects[0].color}`} id="open-folder-card">
-              <div class="open-folder-tab"></div>
-              <small id="active-subject-desk">{subjects[0].desk}</small>
-              <h1 id="active-subject-name">{subjects[0].name}</h1>
-              <p>Course notes, references, screenshots and working files.</p>
-            </div>
-
-            <div id="notes-file-list" class="workspace-files">
-              {notes.map((note, index) => (
-                <a
-                  href={withBase(`notes/${note.data.slug}`)}
-                  class="workspace-file"
-                  data-note-subject={note.data.subject}
-                  hidden={note.data.subject !== subjects[0].code}
-                >
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <div><strong>{note.data.title}</strong><small>{note.data.summary}</small></div>
-                  <time>{note.data.date}</time>
-                  <b>OPEN</b>
-                </a>
-              ))}
-              <div id="empty-notes" class="notes-empty" hidden>No notes here yet. Add the first one from Studio.</div>
-            </div>
+            <section id="workspace-reader" class="workspace-reader" hidden aria-label="Document reader">
+              <header class="reader-bar"><button id="reader-back" type="button">← Folder</button><div><small id="reader-type">DOCUMENT</small><strong id="reader-title">Document</strong></div><a id="reader-external" href="#" target="_blank" rel="noreferrer">OPEN ↗</a></header>
+              <iframe id="reader-frame" title="Document preview" hidden></iframe>
+              <div id="reader-note-pages" class="reader-note-pages" hidden>
+                {renderedNotes.map(({ note, Content }) => (
+                  <article data-note-body={note.data.slug} hidden>
+                    <div class="reader-note-heading"><small>{note.data.subject}</small><h2>{note.data.title.replace(/ Subject Index$/i, ' Notes')}</h2><p>{note.data.summary}</p></div><Content />
+                  </article>
+                ))}
+              </div>
+            </section>
           </section>
 
           <aside class="workspace-info">
-            <div class="workspace-info-top">
-              <p>DESK INDEX</p>
-              <span>LIVE</span>
-            </div>
-            <div class="mini-stack" aria-hidden="true">
-              {subjects.map((subject, index) => <i style={`--subject:${subject.color};--mini-index:${index}`}></i>)}
-            </div>
-            <div class="workspace-meta">
-              <span>ACTIVE</span><strong id="active-subject-meta">{subjects[0].code}</strong>
-              <span>UPDATED</span><strong>{notes[0]?.data.date ?? '—'}</strong>
-            </div>
-            <p class="workspace-help"><kbd>SCROLL</kbd> or use arrow keys<br/>to move through folders.</p>
+            <div class="workspace-info-top"><p>DESK INDEX</p><span>LIVE</span></div>
+            <div class="mini-stack" aria-hidden="true">{subjects.map((subject, index) => <i style={`--subject:${subject.color};--mini-index:${index}`}></i>)}</div>
+            <div class="workspace-meta"><span>ACTIVE</span><strong id="active-subject-meta">{subjects[0].code}</strong><span>UPDATED</span><strong id="active-updated-meta">{updatedFor(subjects[0].code)}</strong></div>
+            <p class="workspace-help"><kbd>CLICK</kbd> a document to read it<br/>without leaving this desk.</p>
           </aside>
         </div>
       </div>
@@ -105,73 +108,63 @@ const subjects = [
     const subjectTabs = [...document.querySelectorAll('[data-subject-index]')];
     const noteRows = [...document.querySelectorAll('[data-note-subject]')];
     const folderCard = document.getElementById('open-folder-card');
+    const folderView = document.getElementById('folder-view');
+    const reader = document.getElementById('workspace-reader');
+    const readerFrame = document.getElementById('reader-frame');
+    const readerPages = document.getElementById('reader-note-pages');
+    const readerTitle = document.getElementById('reader-title');
+    const readerType = document.getElementById('reader-type');
+    const readerExternal = document.getElementById('reader-external');
     const activeName = document.getElementById('active-subject-name');
     const activeCode = document.getElementById('active-subject-code');
     const activeDesk = document.getElementById('active-subject-desk');
     const activeMeta = document.getElementById('active-subject-meta');
+    const activeUpdated = document.getElementById('active-updated-meta');
     const fileCount = document.getElementById('file-count');
     const empty = document.getElementById('empty-notes');
-    const subjectData = [...document.querySelectorAll('.subject-tab')].map((tab) => ({
-      code: tab.querySelector('small').textContent,
-      name: tab.querySelector('strong').textContent,
-      color: getComputedStyle(tab).getPropertyValue('--subject').trim(),
-      desk: ['Communication', 'Networking', 'Offensive security', 'Digital forensics', 'Infrastructure'][Number(tab.dataset.subjectIndex)],
-    }));
+    const subjectData = subjectTabs.map((tab) => ({ code: tab.querySelector('small').textContent, name: tab.querySelector('strong').textContent, color: getComputedStyle(tab).getPropertyValue('--subject').trim(), updated: tab.dataset.updated, desk: ['Communication', 'Networking', 'Offensive security', 'Digital forensics', 'Infrastructure'][Number(tab.dataset.subjectIndex)] }));
     let active = 0;
     let wheelLocked = false;
     let touchStartX = 0;
 
+    const closeReader = () => {
+      reader.hidden = true; folderView.hidden = false; workspace.classList.remove('reader-active'); readerFrame.hidden = true; readerFrame.src = 'about:blank'; readerPages.hidden = true;
+      readerPages.querySelectorAll('[data-note-body]').forEach((page) => page.hidden = true);
+    };
+    const openReader = (row) => {
+      const kind = row.dataset.itemKind; const url = row.dataset.itemUrl;
+      readerTitle.textContent = row.dataset.itemTitle; readerType.textContent = row.dataset.itemType; folderView.hidden = true; reader.hidden = false; workspace.classList.add('reader-active');
+      if (kind === 'file') { readerFrame.src = url; readerFrame.hidden = false; readerPages.hidden = true; readerExternal.href = url; readerExternal.hidden = false; }
+      else { readerFrame.hidden = true; readerPages.hidden = false; readerExternal.hidden = true; const page = readerPages.querySelector(`[data-note-body="${row.dataset.noteSlug}"]`); if (page) page.hidden = false; }
+    };
     const wrap = (value) => (value + subjectTabs.length) % subjectTabs.length;
     const selectSubject = (next) => {
-      active = wrap(next);
-      const current = subjectData[active];
-      subjectTabs.forEach((tab, index) => tab.classList.toggle('active', index === active));
-      activeName.textContent = current.name;
-      activeCode.textContent = current.code;
-      activeDesk.textContent = current.desk;
-      activeMeta.textContent = current.code;
-      folderCard.style.setProperty('--subject', current.color);
-      let shown = 0;
-      noteRows.forEach((row) => {
-        const visible = row.dataset.noteSubject === current.code;
-        row.hidden = !visible;
-        if (visible) shown += 1;
-      });
-      fileCount.textContent = `${shown} FILE${shown === 1 ? '' : 'S'}`;
-      empty.hidden = shown !== 0;
+      closeReader(); active = wrap(next); const current = subjectData[active]; subjectTabs.forEach((tab, index) => tab.classList.toggle('active', index === active));
+      activeName.textContent = current.name; activeCode.textContent = current.code; activeDesk.textContent = current.desk; activeMeta.textContent = current.code; activeUpdated.textContent = current.updated; folderCard.style.setProperty('--subject', current.color);
+      let shown = 0; noteRows.forEach((row) => { const visible = row.dataset.noteSubject === current.code; row.hidden = !visible; if (visible) shown += 1; }); fileCount.textContent = `${shown} ITEM${shown === 1 ? '' : 'S'}`; empty.hidden = shown !== 0;
     };
 
     subjectTabs.forEach((tab, index) => tab.addEventListener('click', () => selectSubject(index)));
-    workspace?.addEventListener('keydown', (event) => {
-      if (['ArrowRight', 'ArrowDown'].includes(event.key)) { event.preventDefault(); selectSubject(active + 1); }
-      if (['ArrowLeft', 'ArrowUp'].includes(event.key)) { event.preventDefault(); selectSubject(active - 1); }
-    });
-    workspace?.addEventListener('wheel', (event) => {
-      if (!matchMedia('(pointer:fine)').matches || event.target.closest('.workspace-files')) return;
-      event.preventDefault();
-      if (wheelLocked) return;
-      wheelLocked = true;
-      selectSubject(active + (event.deltaY > 0 ? 1 : -1));
-      setTimeout(() => wheelLocked = false, 240);
-    }, { passive: false });
+    noteRows.forEach((row) => row.addEventListener('click', () => openReader(row)));
+    document.getElementById('reader-back')?.addEventListener('click', closeReader);
+    workspace?.addEventListener('keydown', (event) => { if (!reader.hidden && event.key === 'Escape') { event.preventDefault(); closeReader(); return; } if (['ArrowRight', 'ArrowDown'].includes(event.key)) { event.preventDefault(); selectSubject(active + 1); } if (['ArrowLeft', 'ArrowUp'].includes(event.key)) { event.preventDefault(); selectSubject(active - 1); } });
+    workspace?.addEventListener('wheel', (event) => { if (!matchMedia('(pointer:fine)').matches || event.target.closest('.workspace-files, .workspace-reader')) return; event.preventDefault(); if (wheelLocked) return; wheelLocked = true; selectSubject(active + (event.deltaY > 0 ? 1 : -1)); setTimeout(() => wheelLocked = false, 240); }, { passive: false });
     workspace?.addEventListener('touchstart', (event) => touchStartX = event.touches[0].clientX, { passive: true });
-    workspace?.addEventListener('touchend', (event) => {
-      const delta = touchStartX - event.changedTouches[0].clientX;
-      if (Math.abs(delta) > 45) selectSubject(active + (delta > 0 ? 1 : -1));
-    }, { passive: true });
-
+    workspace?.addEventListener('touchend', (event) => { if (!reader.hidden) return; const delta = touchStartX - event.changedTouches[0].clientX; if (Math.abs(delta) > 45) selectSubject(active + (delta > 0 ? 1 : -1)); }, { passive: true });
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(pointer:fine)').matches) {
-      workspace?.addEventListener('pointermove', (event) => {
-        const rect = workspace.getBoundingClientRect();
-        workspace.style.setProperty('--desk-ry', `${((event.clientX - rect.left) / rect.width - .5) * 1.4}deg`);
-        workspace.style.setProperty('--desk-rx', `${(.5 - (event.clientY - rect.top) / rect.height) * 1.1}deg`);
-        workspace.style.setProperty('--light-x', `${((event.clientX - rect.left) / rect.width) * 100}%`);
-        workspace.style.setProperty('--light-y', `${((event.clientY - rect.top) / rect.height) * 100}%`);
-      });
-      workspace?.addEventListener('pointerleave', () => {
-        workspace.style.setProperty('--desk-ry', '0deg');
-        workspace.style.setProperty('--desk-rx', '0deg');
-      });
+      workspace?.addEventListener('pointermove', (event) => { const rect = workspace.getBoundingClientRect(); workspace.style.setProperty('--desk-ry', `${((event.clientX - rect.left) / rect.width - .5) * 1.1}deg`); workspace.style.setProperty('--desk-rx', `${(.5 - (event.clientY - rect.top) / rect.height) * .8}deg`); workspace.style.setProperty('--light-x', `${((event.clientX - rect.left) / rect.width) * 100}%`); workspace.style.setProperty('--light-y', `${((event.clientY - rect.top) / rect.height) * 100}%`); });
+      workspace?.addEventListener('pointerleave', () => { workspace.style.setProperty('--desk-ry', '0deg'); workspace.style.setProperty('--desk-rx', '0deg'); });
     }
+    const requestedSubject = new URLSearchParams(location.search).get('subject');
+    const requestedIndex = subjectData.findIndex((subject) => subject.code === requestedSubject);
+    if (requestedIndex >= 0) selectSubject(requestedIndex);
   </script>
+
+  <style>
+    .folder-view{height:100%;min-height:0;display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:17px}.workspace-file{width:100%;font:inherit;text-align:left;cursor:pointer}.workspace-file:focus-visible{outline:1px solid rgba(255,255,255,.65);outline-offset:-2px;background:rgba(255,255,255,.05)}
+    .workspace-reader{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden;border:1px solid rgba(255,255,255,.14);border-radius:15px;background:#171719;box-shadow:0 25px 70px rgba(0,0,0,.28)}.workspace-reader[hidden],.folder-view[hidden],.reader-note-pages[hidden],.workspace-reader iframe[hidden],.reader-note-pages article[hidden]{display:none!important}
+    .reader-bar{min-height:66px;padding:11px 14px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;border-bottom:1px solid rgba(255,255,255,.12);background:#202022}.reader-bar button,.reader-bar a{padding:9px 11px;border:1px solid rgba(255,255,255,.16);border-radius:7px;background:transparent;color:#d3d0ca;font:700 7px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}.reader-bar a{color:#d6f26b}.reader-bar div{min-width:0}.reader-bar small,.reader-bar strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.reader-bar small{margin-bottom:4px;color:#89858b;font:700 7px "JetBrains Mono",monospace;letter-spacing:.14em}.reader-bar strong{font:650 12px "Space Grotesk",sans-serif}.workspace-reader iframe{width:100%;height:100%;border:0;background:#ececec}
+    .reader-note-pages{min-height:0;overflow:auto;padding:34px;color:#b3afa8;line-height:1.75}.reader-note-pages article{max-width:760px;margin:auto}.reader-note-heading{padding-bottom:26px;margin-bottom:22px;border-bottom:1px solid rgba(255,255,255,.12)}.reader-note-heading small{color:#d6f26b;font:700 7px "JetBrains Mono",monospace;letter-spacing:.16em}.reader-note-heading h2{margin:8px 0 10px;color:#f4f1ea;font:650 clamp(2rem,4vw,3.7rem)/.96 "Space Grotesk",sans-serif;letter-spacing:-.06em}.reader-note-heading p{color:#7f7b80;font-size:.78rem}.reader-note-pages :global(h2){margin:28px 0 10px;color:#f0ede7;font:620 1.45rem "Space Grotesk",sans-serif}.reader-note-pages :global(ul){padding-left:1.2rem}.reader-note-pages :global(a){color:#d6f26b;text-decoration:underline}
+    @media(max-width:720px){.folder-view{min-height:485px}.workspace-reader{min-height:540px}.reader-bar{grid-template-columns:auto minmax(0,1fr)}.reader-bar a{grid-column:1/-1;text-align:center}.reader-note-pages{padding:24px 20px}.workspace-reader iframe{min-height:470px}}
+  </style>
 </Layout>
