@@ -79,3 +79,9 @@ This folder is for clear subject notes. Practical walkthroughs should remain in 
 [B. Online EC-Council Lab Exercises.pptx](/uploads/1786845403772-b.-online-ec-council-lab-exercises.pptx)
 
 [C. Basic Networking for Security.pptx](/uploads/1786845403782-c.-basic-networking-for-security.pptx)
+
+## 📁 Assignments
+
+[AY26 APR Apr Sem EHIP Case Study - Final.pdf](/uploads/1786846512690-ay26-apr-apr-sem-ehip-case-study-final.pdf)
+
+[EHIP_CaseStudy_Report_Pxx_Gyy - Final.docx](/uploads/1786846512703-ehip_casestudy_report_pxx_gyy-final.docx)
