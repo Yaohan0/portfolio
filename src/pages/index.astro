@@ -40,37 +40,31 @@ const focusAreas = [
 ---
 
 <Layout title="Yaohan — Cybersecurity Portfolio">
-  <div class="entry-loader" data-entry-loader data-state="loading" role="dialog" aria-modal="true" aria-labelledby="entry-title">
-    <div class="entry-loader__grain" aria-hidden="true"></div>
-    <header class="entry-loader__header">
-      <a href={withBase('/')} aria-label="Yaohan home">YH<span>/26</span></a>
-      <div><span>01.3521° N</span><span>103.8198° E</span></div>
+  <div class="entry-loader world-entry" data-entry-loader data-state="loading" role="dialog" aria-modal="true" aria-labelledby="entry-title">
+    <div class="world-entry__texture" aria-hidden="true"></div>
+    <header class="world-entry__header">
+      <div><strong>YH</strong><span>Java portfolio</span></div>
+      <p>Singapore · World 2026</p>
     </header>
 
-    <div class="entry-loader__scene" aria-hidden="true">
-      <div class="entry-loader__course"><i></i><i></i><i></i><i></i><i></i></div>
-      <div class="entry-loader__wake"></div>
-      <svg viewBox="0 0 480 170" focusable="false">
-        <path class="entry-loader__route" pathLength="1" d="M22 137C96 135 118 52 204 64c74 10 82 85 150 62 46-16 43-80 106-91"/>
-        <path class="entry-loader__boat" d="m220 72 43 0-10 8h-24l-9-8Zm18-13 8 12m-18-4 35-17"/>
-      </svg>
-    </div>
-
-    <div class="entry-loader__copy">
-      <p>FIELD ARCHIVE / SINGAPORE</p>
-      <h1 id="entry-title"><span>Yaohan’s</span><span>portfolio.</span></h1>
-      <p class="entry-loader__note">Cybersecurity, field notes and life on the water.</p>
-    </div>
-
-    <div class="entry-loader__footer">
-      <div class="entry-loader__progress" aria-live="polite">
-        <div><span data-loader-status>Preparing archive</span><b data-loader-count>00</b></div>
-        <i><span data-loader-bar></span></i>
+    <section class="world-entry__generator" aria-describedby="world-entry-help">
+      <h1 id="entry-title" class="sr-only">Loading Yaohan’s portfolio world</h1>
+      <div class="world-entry__percentage" aria-live="polite"><span data-loader-count>0</span>%</div>
+      <div class="world-entry__map" data-world-map>
+        <canvas width="288" height="288" data-world-canvas aria-hidden="true"></canvas>
+        <span class="world-entry__scan" aria-hidden="true"></span>
       </div>
-      <button class="entry-loader__enter" type="button" data-loader-enter disabled>
-        <span>Enter portfolio</span><i aria-hidden="true">↗</i>
+      <p class="world-entry__status" data-loader-status>Generating terrain...</p>
+      <p id="world-entry-help" class="world-entry__help">Building a world from field notes, cybersecurity labs and life on the water.</p>
+      <button class="world-entry__enter" type="button" data-loader-enter disabled>
+        <span>Enter World</span><i aria-hidden="true">›</i>
       </button>
-    </div>
+    </section>
+
+    <footer class="world-entry__footer">
+      <span>Yaohan’s Portfolio</span>
+      <span data-world-seed>Seed: 2503587</span>
+    </footer>
   </div>
   <noscript><style>.entry-loader{display:none!important}</style></noscript>
 
@@ -230,30 +224,97 @@ const focusAreas = [
 
       const enter = loader.querySelector('[data-loader-enter]');
       const count = loader.querySelector('[data-loader-count]');
-      const bar = loader.querySelector('[data-loader-bar]');
       const status = loader.querySelector('[data-loader-status]');
+      const canvas = loader.querySelector('[data-world-canvas]');
+      const map = loader.querySelector('[data-world-map]');
+      const context = canvas?.getContext('2d', { alpha: false });
       const page = document.querySelector('main');
       const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
       let progress = 0;
       let ready = false;
       let departed = false;
       let frame;
-      const minimumTime = reduceMotion ? 120 : 1350;
+      let lastDrawnProgress = -1;
+      const startedAt = performance.now();
+      const minimumTime = reduceMotion ? 160 : 3200;
+      const gridSize = 48;
+      const cellSize = 6;
 
       document.documentElement.classList.add('entry-is-loading');
       page?.setAttribute('inert', '');
 
-      const render = (value) => {
-        progress = Math.max(progress, Math.min(100, Math.round(value)));
-        count.textContent = String(progress).padStart(2, '0');
-        bar.style.transform = `scaleX(${progress / 100})`;
-        loader.style.setProperty('--entry-progress', String(progress / 100));
+      const noise = (x, y, salt = 0) => {
+        const value = Math.sin(x * 12.9898 + y * 78.233 + salt * 37.719) * 43758.5453;
+        return value - Math.floor(value);
       };
 
-      const tick = () => {
-        if (!ready) render(Math.min(91, progress + Math.max(1, (92 - progress) * .055)));
-        if (!ready) frame = requestAnimationFrame(tick);
+      const terrainColour = (x, y) => {
+        const broad = (Math.sin(x * .22) + Math.cos(y * .19) + Math.sin((x + y) * .11)) / 3;
+        const detail = noise(x, y) * .42 - .21;
+        const height = broad + detail;
+        const moisture = noise(Math.floor(x / 3), Math.floor(y / 3), 9);
+        if (height < -.33) return noise(x, y, 2) > .72 ? '#315f72' : '#244b62';
+        if (height < -.18) return '#b6a468';
+        if (height > .54) return noise(x, y, 6) > .55 ? '#9a978e' : '#777b72';
+        if (moisture > .73) return noise(x, y, 3) > .42 ? '#294d2d' : '#1f3d26';
+        return noise(x, y, 4) > .58 ? '#547a39' : '#456d34';
       };
+
+      const drawWorld = (value) => {
+        if (!context || value === lastDrawnProgress) return;
+        lastDrawnProgress = value;
+        context.imageSmoothingEnabled = false;
+        context.fillStyle = '#050604';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        const centre = Math.floor(gridSize / 2);
+        const radius = Math.max(1, Math.ceil((value / 100) * (gridSize / 2)));
+        for (let y = 0; y < gridSize; y += 1) {
+          for (let x = 0; x < gridSize; x += 1) {
+            const distance = Math.max(Math.abs(x - centre), Math.abs(y - centre));
+            if (distance > radius) continue;
+            context.fillStyle = terrainColour(x, y);
+            context.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+            if (noise(x, y, 12) > .91) {
+              context.fillStyle = 'rgba(255,255,255,.11)';
+              context.fillRect(x * cellSize, y * cellSize, cellSize, 1);
+            }
+          }
+        }
+
+        const spawnX = centre * cellSize;
+        const spawnY = centre * cellSize;
+        context.fillStyle = '#f1eee5';
+        context.fillRect(spawnX - 2, spawnY - 2, 4, 4);
+        context.fillStyle = '#d85443';
+        context.fillRect(spawnX - 1, spawnY - 1, 2, 2);
+      };
+
+      const phase = (value) => {
+        if (value < 18) return 'Preparing spawn area...';
+        if (value < 48) return 'Loading terrain...';
+        if (value < 76) return 'Generating world...';
+        if (value < 96) return 'Joining region files...';
+        return 'World ready';
+      };
+
+      const render = (value) => {
+        progress = Math.max(progress, Math.min(100, Math.round(value)));
+        count.textContent = String(progress);
+        status.textContent = phase(progress);
+        loader.style.setProperty('--entry-progress', String(progress / 100));
+        drawWorld(progress);
+      };
+
+      const tick = (now) => {
+        if (!ready) {
+          const elapsed = Math.min(1, (now - startedAt) / minimumTime);
+          const eased = 1 - Math.pow(1 - elapsed, 2.1);
+          render(Math.min(96, eased * 96));
+          frame = requestAnimationFrame(tick);
+        }
+      };
+      render(0);
       frame = requestAnimationFrame(tick);
 
       const heroImage = document.querySelector('.profile-portrait');
@@ -270,7 +331,6 @@ const focusAreas = [
         ready = true;
         cancelAnimationFrame(frame);
         render(100);
-        status.textContent = 'Archive ready';
         loader.dataset.state = 'ready';
         enter.disabled = false;
         enter.focus({ preventScroll: true });
@@ -280,9 +340,10 @@ const focusAreas = [
         if (!ready || departed) return;
         departed = true;
         loader.dataset.state = 'leaving';
+        map?.setAttribute('aria-hidden', 'true');
         document.documentElement.classList.remove('entry-is-loading');
         page?.removeAttribute('inert');
-        window.setTimeout(() => loader.remove(), reduceMotion ? 0 : 850);
+        window.setTimeout(() => loader.remove(), reduceMotion ? 0 : 1300);
       };
 
       enter.addEventListener('click', leave);
