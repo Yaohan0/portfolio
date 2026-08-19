@@ -96,6 +96,8 @@ Full Chain:
 
 A spectrogram is a tool used to visualize how the frequency content of a signal changes over time. It displays frequencies on the vertical axis, time on the horizontal axis, and the intensity of each frequency is represented by color or brightness. In the context of audio signals, spectrograms are particularly useful for analyzing speech, music, and other sounds. The different names such as sonographs, voiceprints, or voicegrams refer to their application in various fields like audio analysis, phonetics, and voice recognition. When represented in 3D, with an additional dimension often showing amplitude or intensity, they are referred to as waterfall plots, providing a more detailed and immersive view of the frequency dynamics over time.
 
+## 📁 Notes
+
 [secretaudio_1559007588454(1).wav](/uploads/1787122183510-secretaudio_1559007588454-1-.wav)
 
 ![Image](/uploads/1787122227525-screenshot-2026-08-19-144959.png)
@@ -110,4 +112,25 @@ Steganography is the practice of hiding a secret message, file, or image inside 
 
 download image to Linux Machine 
 
-## New heading
+![Image](/uploads/1787125007162-screenshot-2026-08-19-153549.png)
+
+Mount from Windows to Linux Machine 
+
+![Image](/uploads/1787125046177-screenshot-2026-08-19-153717.png)
+
+Steghide info [image]
+Steghide extract -sf [image]
+
+need password/ passphrase -> crack it 
+
+stegseek [image] -wordlist 
+
+
+![Image](/uploads/1787125218347-screenshot-2026-08-19-154010.png)
+
+password was just " " 
+extracted the ouput 
+
+![Image](/uploads/1787125251466-screenshot-2026-08-19-154045.png)
+
+Answer: Spaghetti Steg
