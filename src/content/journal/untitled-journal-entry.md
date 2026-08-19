@@ -5,11 +5,90 @@ order: 999
 date: '2026-08-19'
 mood: Writing
 category: Journal
-summary: "Simple CTF for beginners!\_"
+summary: "Simple CTF for beginners!\_\nTool needed: Cyberchef"
 tags: []
 lesson: ''
-cover: ''
+cover: /uploads/1787108396309-screenshot-2026-08-19-105948.png
 pinned: false
 featured: false
 ---
-## Task 1
+## Task 1 - Translation & Shifting
+
+Q1: c4n y0u c4p7u23 7h3 f149?
+
+```bash
+answer: can you capture the flag?
+literal translation 
+```
+
+Q2: 01101100 01100101 01110100 01110011 00100000 01110100 01110010 01111001 00100000 01110011 01101111 01101101 01100101 00100000 01100010 01101001 01101110 01100001 01110010 01111001 00100000 01101111 01110101 01110100 00100001
+
+```bash
+Answer: lets try some binary out! 
+[Binary Format] 
+```
+
+Q3: MJQXGZJTGIQGS4ZAON2XAZLSEBRW63LNN5XCA2LOEBBVIRRHOM======
+
+```bash
+Answer: base32 is super common in CTF's
+Base32: uses A–Z and 2–7, often with = padding.
+Base64: normally uses A–Z, a–z, 0–9, +, / (or -, _ in URL-safe Base64).
+```
+
+Q4: RWFjaCBCYXNlNjQgZGlnaXQgcmVwcmVzZW50cyBleGFjdGx5IDYgYml0cyBvZiBkYXRhLg==
+
+```bash
+Answer: Each Base64 digit represents exactly 6 bits of data.
+Base64 
+```
+
+Q5: 68 65 78 61 64 65 63 69 6d 61 6c 20 6f 72 20 62 61 73 65 31 36 3f
+
+
+```bash
+Answer: hexadecimal or base16?
+basically hexadecimal and base16 are the same thing 
+Base 16 is the mathematical number system. It means you have 16 possible digits: 0–9 and A–F.
+```
+
+Q6: Ebgngr zr 13 cynprf!
+
+```bash
+Answer: Rotate me 13 places!
+
+```
+
+Q7: *@F DA:? >6 C:89E C@F?5 323J C:89E C@F?5 Wcf E:>6DX
+
+```bash
+Answer: You spin me right round baby right round (47 times)
+Cipher Text (ROT47) - Put in Cyberchef! 
+
+```
+
+Q8: - . .-.. . -.-. --- -- -- ..- -. .. -.-. .- - .. --- -.
+
+. -. -.-. --- -.. .. -. --.
+
+```bash
+Answer: telecommunication encoding
+
+Morse Code decryption
+```
+
+Q9: 85 110 112 97 99 107 32 116 104 105 115 32 66 67 68
+
+```bash
+Answer: Unpack this BCD
+
+```
+
+Q10: LS0tLS0gLi0tLS0gLi0tLS0gLS0tLS0gLS0tLS0gLi0tLS0gLi0tLS0gLS0tLS0KLS0tLS0gLi0tLS0gLi0tLS0gLS0tLS0gLS0tLS0gLi0tLS0gLS0tLS0gLi0tLS0KLS0tLS0gLS0tLS0gLi0tLS0gLS0tLS0gLS0tLS0gLS
+
+```bash
+Answer: Let's make this a bit trickier...
+Multiple Layers to this one...
+Full Chain:
+
+```
