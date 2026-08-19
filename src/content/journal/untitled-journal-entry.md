@@ -125,7 +125,6 @@ need password/ passphrase -> crack it
 
 stegseek [image] -wordlist 
 
-
 ![Image](/uploads/1787125218347-screenshot-2026-08-19-154010.png)
 
 password was just " " 
@@ -134,3 +133,16 @@ extracted the ouput
 ![Image](/uploads/1787125251466-screenshot-2026-08-19-154045.png)
 
 Answer: Spaghetti Steg
+
+## Security Through Obscurity 
+
+Security through obscurity is the reliance in security engineering on the secrecy of the design or implementation as the main method of providing security for a system or component of a system.
+
+![Image](/uploads/1787125820237-screenshot-2026-08-19-155017.png)
+
+Mounting the image to linux from windows 
+
+![Image](/uploads/1787125850303-screenshot-2026-08-19-155042.png)
+
+strings [image]
+displays image context in text format? something lidat and revealed these.
