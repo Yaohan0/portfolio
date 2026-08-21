@@ -23,10 +23,11 @@ const records = [
   { no: '01', key: 'logbook', title: 'Logbook', href: '/journal', type: 'PROGRESS LOG', desc: 'Short updates from projects, competitions, training, mistakes, and lessons in progress.' },
   { no: '02', key: 'notes', title: 'Notes', href: '/notes', type: 'CLASS LIBRARY', desc: 'The working home for everything I capture in class, organised by subject and folder.' },
   { no: '03', key: 'labs', title: 'Labs', href: '/labs', type: 'PRACTICE', desc: 'Hands-on ethical hacking, networking, cloud, Linux, and digital forensics work.' },
-  { no: '04', key: 'writeups', title: 'Projects + Writeups', href: '/writeups', type: 'BUILDS & RECORDS', desc: 'Built projects, technical decisions, and finished challenge solutions with the method documented.' },
-  { no: '05', key: 'achievements', title: 'Achievements', href: '/achievements', type: 'MILESTONES', desc: 'Certifications, awards, competitions, school milestones, and completed goals.' },
-  { no: '06', key: 'skills', title: 'Skills', href: '/skills', type: 'TOOLKIT', desc: 'A living tracker of tools, techniques, topics, and what I am currently learning.' },
-  { no: '07', key: 'archive', title: 'Archive', href: '/archive', type: 'STORAGE', desc: 'Older exports, references, experiments, media, and anything kept outside active class notes.' },
+  { no: '04', key: 'projects', title: 'Projects', href: '/projects', type: 'BUILDS', desc: 'Things I have designed and built, with the decisions, stack, outcome, and next iteration kept together.' },
+  { no: '05', key: 'writeups', title: 'Writeups', href: '/writeups', type: 'SOLVED RECORDS', desc: 'Finished challenges and technical explanations, documented so the method matters as much as the result.' },
+  { no: '06', key: 'achievements', title: 'Achievements', href: '/achievements', type: 'MILESTONES', desc: 'Certifications, awards, competitions, school milestones, and completed goals.' },
+  { no: '07', key: 'skills', title: 'Skills', href: '/skills', type: 'TOOLKIT', desc: 'A living tracker of tools, techniques, topics, and what I am currently learning.' },
+  { no: '08', key: 'archive', title: 'Archive', href: '/archive', type: 'STORAGE', desc: 'Older exports, references, experiments, media, and anything kept outside active class notes.' },
 ]
 const projectRecords = records.filter((record) => record.title !== 'Archive')
 const secondaryRecords = records.filter((record) => record.title === 'Archive')
@@ -206,6 +207,7 @@ const focusAreas = [
               {record.key === 'logbook' && <div class="project-symbol symbol-logbook"><i></i><i></i><i></i><b></b></div>}
               {record.key === 'notes' && <div class="project-symbol symbol-notes"><i></i><i></i><i></i></div>}
               {record.key === 'labs' && <div class="project-symbol symbol-labs"><b></b><i></i><i></i><i></i></div>}
+              {record.key === 'projects' && <div class="project-symbol symbol-projects"><b></b><i></i><i></i><i></i></div>}
               {record.key === 'writeups' && <div class="project-symbol symbol-writeups"><b>&gt;_</b><i></i><i></i></div>}
               {record.key === 'achievements' && <div class="project-symbol symbol-achievements"><b></b>{Array.from({ length: 8 }).map(() => <i></i>)}</div>}
               {record.key === 'skills' && <div class="project-symbol symbol-skills"><b></b><i></i><i></i><i></i><i></i></div>}

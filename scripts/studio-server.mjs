@@ -20,8 +20,28 @@ let publishQueue = Promise.resolve()
 const today = () => new Date().toISOString().slice(0, 10)
 
 const collections = {
+  projects: {
+    label: 'Projects',
+    folder: path.join(rootDir, 'src/content/projects'),
+    defaults: {
+      title: 'Untitled Project',
+      slug: 'untitled-project',
+      order: 999,
+      status: 'In progress',
+      date: today(),
+      summary: '',
+      category: 'Project',
+      stack: [],
+      highlights: [],
+      links: [],
+      files: [],
+      cover: '',
+      featured: false,
+    },
+  },
+
   writeups: {
-    label: 'Projects + Writeups',
+    label: 'Writeups',
     folder: path.join(rootDir, 'src/content/writeups'),
     defaults: {
       title: 'Untitled Writeup',
@@ -567,6 +587,14 @@ function normalizeData(collectionName, inputData, finalSlug) {
     } else {
       data.level = normalizeNumber(data.level, 0)
     }
+  }
+
+  if (collectionName === 'projects') {
+    data.stack = splitList(data.stack)
+    data.highlights = splitList(data.highlights)
+    data.links = Array.isArray(data.links) ? data.links : []
+    data.files = Array.isArray(data.files) ? data.files : []
+    data.featured = normalizeBoolean(data.featured)
   }
 
   if (collectionName === 'journal') {

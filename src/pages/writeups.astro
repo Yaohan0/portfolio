@@ -4,15 +4,15 @@ import Navbar from '../components/Navbar.astro'
 import { getCollection } from 'astro:content'
 import { withBase } from '../utils/paths'
 const writeups=(await getCollection('writeups')).sort((a,b)=>a.data.order-b.data.order)
-const tracks=['Projects','Writeups']
+const platforms=[...new Set(writeups.map(item=>item.data.platform||'General'))]
 ---
-<Layout title="Projects + Writeups — Yaohan"><main class="section-page writeups-page"><Navbar current="Writeups" />
-  <header class="terminal-hero"><div class="terminal-top"><span>YH-TERM / PROJECTS + WRITEUPS</span><span>● ● ●</span></div><p>root@yaohan:~/field-archive$ <span>ls work --all</span></p><h1>PROJECTS<br/><span>+ WRITEUPS_</span></h1><div class="terminal-summary">A shared home for built projects and technical writeups—from project decisions and outcomes to CTF solutions, payload tests, and lessons from what failed.</div></header>
-  <section class="platform-strip"><button type="button" data-track="all" class="active">/all</button>{tracks.map(track=><button type="button" data-track={track.toLowerCase()}>/{track.toLowerCase()}</button>)}<b><span id="writeup-count">{writeups.length}</span> RECORDS</b></section>
-  <section class="writeup-ledger"><div class="ledger-head"><span>ID</span><span>PROJECT / WRITEUP</span><span>TRACK</span><span>TYPE</span><span>STATUS</span></div>{writeups.map((item,index)=><a href={withBase(`writeups/${item.data.slug}`)} class="ledger-row" data-track={(item.data.track||'Writeups').toLowerCase()}>
-    <span>{String(index+1).padStart(3,'0')}</span><span><strong>{item.data.title}</strong><small>{item.data.summary}</small></span><span>{item.data.track||'Writeups'}</span><span>{item.data.category}</span><span>{item.data.status} ↗</span></a>)}</section>
+<Layout title="Writeups — Yaohan"><main class="section-page writeups-page"><Navbar current="Writeups" />
+  <header class="terminal-hero"><div class="terminal-top"><span>YH-TERM / WRITEUPS</span><span>● ● ●</span></div><p>root@yaohan:~/field-archive$ <span>ls writeups --solved</span></p><h1>WRITE<br/><span>UPS_</span></h1><div class="terminal-summary">CTF solutions, payload tests, exploitation steps, and technical notes—with the method, mistakes, and lessons kept visible.</div></header>
+  <section class="platform-strip"><button type="button" data-platform="all" class="active">/all</button>{platforms.map(platform=><button type="button" data-platform={platform.toLowerCase()}>/{platform.toLowerCase()}</button>)}<b><span id="writeup-count">{writeups.length}</span> RECORDS</b></section>
+  <section class="writeup-ledger"><div class="ledger-head"><span>ID</span><span>WRITEUP</span><span>PLATFORM</span><span>TYPE</span><span>STATUS</span></div>{writeups.map((item,index)=><a href={withBase(`writeups/${item.data.slug}`)} class="ledger-row" data-platform={(item.data.platform||'General').toLowerCase()}>
+    <span>{String(index+1).padStart(3,'0')}</span><span><strong>{item.data.title}</strong><small>{item.data.summary}</small></span><span>{item.data.platform||'General'}</span><span>{item.data.category}</span><span>{item.data.status} ↗</span></a>)}</section>
   <script is:inline>
-    const trackButtons=[...document.querySelectorAll('[data-track]')];const ledgerRows=[...document.querySelectorAll('.ledger-row[data-track]')];const writeupCount=document.getElementById('writeup-count');
-    trackButtons.forEach(button=>button.addEventListener('click',()=>{trackButtons.forEach(b=>b.classList.remove('active'));button.classList.add('active');let shown=0;ledgerRows.forEach(row=>{const visible=button.dataset.track==='all'||row.dataset.track===button.dataset.track;row.hidden=!visible;if(visible)shown++});writeupCount.textContent=shown;}));
+    const platformButtons=[...document.querySelectorAll('[data-platform]')];const ledgerRows=[...document.querySelectorAll('.ledger-row[data-platform]')];const writeupCount=document.getElementById('writeup-count');
+    platformButtons.forEach(button=>button.addEventListener('click',()=>{platformButtons.forEach(b=>b.classList.remove('active'));button.classList.add('active');let shown=0;ledgerRows.forEach(row=>{const visible=button.dataset.platform==='all'||row.dataset.platform===button.dataset.platform;row.hidden=!visible;if(visible)shown++});writeupCount.textContent=shown;}));
   </script>
 </main></Layout>

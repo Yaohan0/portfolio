@@ -1,0 +1,75 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Navbar from '../components/Navbar.astro'
+import { getCollection } from 'astro:content'
+import { withBase } from '../utils/paths'
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
+const categories = [...new Set(projects.map((project) => project.data.category || 'Project'))]
+---
+
+<Layout title="Projects — Yaohan">
+  <main class="section-page projects-page">
+    <Navbar current="Projects" />
+
+    <header class="collection-hero project-hero">
+      <div class="project-hero-copy">
+        <p>BUILD INDEX / {String(projects.length).padStart(2, '0')} PROJECTS</p>
+        <h1>Projects<span>.</span></h1>
+        <div class="project-hero-note">
+          <strong>Things made to work.</strong>
+          <span>Each record keeps the problem, decisions, stack, outcome, and what I would improve next.</span>
+        </div>
+      </div>
+      <div class="project-object" aria-hidden="true"><i></i><i></i><i></i><b></b></div>
+    </header>
+
+    {categories.length > 1 && (
+      <nav class="project-filters" aria-label="Project categories">
+        <button class="active" type="button" data-category="all">All</button>
+        {categories.map((category) => <button type="button" data-category={category.toLowerCase()}>{category}</button>)}
+      </nav>
+    )}
+
+    <section class="project-index" aria-label="Project index">
+      {projects.map((project, index) => (
+        <a class="project-record" data-project-category={(project.data.category || 'Project').toLowerCase()} href={withBase(`projects/${project.data.slug}`)}>
+          <span class="project-record-number">{String(index + 1).padStart(2, '0')}</span>
+          <div class="project-record-image">
+            {project.data.cover ? <img src={withBase(project.data.cover)} alt="" /> : <div aria-hidden="true"><i></i><i></i><i></i></div>}
+          </div>
+          <div class="project-record-copy">
+            <p>{project.data.category} / {project.data.date}</p>
+            <h2>{project.data.title}</h2>
+            <span>{project.data.summary}</span>
+            {project.data.stack.length > 0 && <div>{project.data.stack.slice(0, 4).map((item) => <b>{item}</b>)}</div>}
+          </div>
+          <span class="project-record-open">View project ↗</span>
+        </a>
+      ))}
+      {projects.length === 0 && (
+        <div class="project-empty">
+          <span>00</span><h2>No projects published yet.</h2><p>The Projects space is ready. Add the first build from Studio when you have one worth showing.</p>
+        </div>
+      )}
+    </section>
+  </main>
+
+  <script is:inline>
+    const filters=[...document.querySelectorAll('[data-category]')];const records=[...document.querySelectorAll('[data-project-category]')];
+    filters.forEach(button=>button.addEventListener('click',()=>{filters.forEach(item=>item.classList.remove('active'));button.classList.add('active');records.forEach(record=>record.hidden=button.dataset.category!=='all'&&record.dataset.projectCategory!==button.dataset.category)}));
+  </script>
+
+  <style>
+    .projects-page{--paper:#efede6;--ink:#181818;--lime:#d3ff4d;min-height:100vh;background:var(--paper);color:var(--ink)}
+    .project-hero{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,38vw);min-height:82vh;padding:clamp(9rem,15vw,13rem) clamp(1.5rem,5vw,6rem) 5rem;overflow:hidden;border-bottom:1px solid rgba(24,24,24,.18)}
+    .project-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(rgba(24,24,24,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(24,24,24,.055) 1px,transparent 1px);background-size:54px 54px;mask-image:linear-gradient(to bottom,black,transparent 82%)}
+    .project-hero-copy{position:relative;z-index:1;align-self:end}.project-hero-copy>p{font:700 .72rem/1.2 'JetBrains Mono',monospace;letter-spacing:.22em;text-transform:uppercase}
+    .project-hero h1{margin:.55rem 0 2.2rem;font:500 clamp(5.5rem,15vw,14rem)/.72 Georgia,serif;letter-spacing:-.085em}.project-hero h1 span{color:#789000}
+    .project-hero-note{display:grid;grid-template-columns:170px minmax(0,560px);gap:2rem;padding-top:1.5rem;border-top:1px solid rgba(24,24,24,.24);font-size:clamp(.95rem,1.4vw,1.16rem);line-height:1.65}.project-hero-note strong{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}.project-hero-note span{color:#5a5954}
+    .project-object{position:relative;z-index:1;align-self:center;justify-self:center;width:min(28vw,360px);aspect-ratio:1;transform:rotate(-7deg)}.project-object b{position:absolute;inset:17%;border:2px solid #181818;background:rgba(239,237,230,.86);box-shadow:22px 22px 0 #181818}.project-object i{position:absolute;width:27%;aspect-ratio:1;border:2px solid #181818;background:var(--lime);z-index:2}.project-object i:nth-child(1){left:6%;top:11%}.project-object i:nth-child(2){right:7%;top:37%;background:#8fd2ff}.project-object i:nth-child(3){left:32%;bottom:4%;background:#ffa7c6}
+    .project-filters{display:flex;gap:.55rem;flex-wrap:wrap;padding:2.2rem clamp(1.5rem,5vw,6rem);border-bottom:1px solid rgba(24,24,24,.18)}.project-filters button{padding:.7rem 1rem;border:1px solid rgba(24,24,24,.3);border-radius:999px;background:transparent;font:700 .68rem 'JetBrains Mono',monospace;text-transform:uppercase}.project-filters button.active,.project-filters button:hover{background:#181818;color:#fff}
+    .project-index{padding:0 clamp(1.5rem,5vw,6rem) 8rem}.project-record{display:grid;grid-template-columns:65px minmax(180px,28vw) minmax(0,1fr) auto;gap:clamp(1rem,3vw,3.5rem);align-items:center;padding:2rem 0;border-bottom:1px solid rgba(24,24,24,.2);color:inherit;transition:transform .25s}.project-record:hover{transform:translateX(8px)}.project-record-number,.project-record-copy>p,.project-record-open{font:700 .68rem 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase}.project-record-image{height:clamp(140px,19vw,250px);overflow:hidden;background:#d9d6cd}.project-record-image img{width:100%;height:100%;object-fit:cover;filter:saturate(.85)}.project-record-image>div{position:relative;width:100%;height:100%;background:linear-gradient(135deg,#d3ff4d,#9be7c4)}.project-record-image i{position:absolute;width:28%;aspect-ratio:1;border:2px solid #181818;background:#efede6}.project-record-image i:nth-child(1){left:15%;top:22%}.project-record-image i:nth-child(2){left:38%;top:40%}.project-record-image i:nth-child(3){right:12%;top:18%}.project-record-copy h2{margin:.35rem 0 .7rem;font-size:clamp(1.7rem,3vw,3.5rem);line-height:1;letter-spacing:-.045em}.project-record-copy>span{display:block;max-width:650px;color:#66635c;line-height:1.65}.project-record-copy>div{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1rem}.project-record-copy b{padding:.35rem .55rem;border:1px solid rgba(24,24,24,.25);font:600 .62rem 'JetBrains Mono',monospace;text-transform:uppercase}.project-record-open{white-space:nowrap}.project-empty{min-height:50vh;display:grid;place-content:center;max-width:700px}.project-empty span{font:700 .7rem 'JetBrains Mono',monospace}.project-empty h2{margin:.6rem 0;font-size:clamp(2rem,5vw,4.5rem);letter-spacing:-.05em}.project-empty p{color:#66635c;line-height:1.7}
+    @media(max-width:850px){.project-hero{grid-template-columns:1fr;min-height:auto}.project-object{display:none}.project-hero-note{grid-template-columns:1fr;gap:.6rem}.project-record{grid-template-columns:42px 1fr}.project-record-image{grid-column:2}.project-record-copy{grid-column:2}.project-record-open{display:none}}
+  </style>
+</Layout>

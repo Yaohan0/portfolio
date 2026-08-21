@@ -42,6 +42,15 @@
 .reference-project-card:hover .symbol-labs i:nth-of-type(2) { animation: tube-two .44s ease-in-out infinite alternate; }
 .reference-project-card:hover .symbol-labs i:nth-of-type(3) { animation: bubble-up .8s ease-out infinite; }
 
+.symbol-projects { width: 126px !important; height: 88px !important; perspective: 220px; }
+.symbol-projects b { position:absolute; inset:9px 13px 13px; border:2px solid currentColor; border-radius:5px; background:rgba(255,255,255,.72); transform:rotateX(8deg) rotateY(-10deg); box-shadow:9px 9px 0 color-mix(in srgb,currentColor 22%,transparent); transition:transform .35s ease; }
+.symbol-projects i { position:absolute; width:22px; height:22px; border:2px solid currentColor; border-radius:3px; background:rgba(255,255,255,.82); transition:transform .35s ease; }
+.symbol-projects i:nth-of-type(1){left:25px;top:25px}.symbol-projects i:nth-of-type(2){left:54px;top:25px}.symbol-projects i:nth-of-type(3){left:83px;top:25px}
+.reference-project-card:hover .symbol-projects b { transform:rotateX(2deg) rotateY(7deg) translateY(-4px); }
+.reference-project-card:hover .symbol-projects i:nth-of-type(1){transform:translate(-5px,-4px) rotate(-5deg)}
+.reference-project-card:hover .symbol-projects i:nth-of-type(2){transform:translateY(-9px)}
+.reference-project-card:hover .symbol-projects i:nth-of-type(3){transform:translate(5px,-3px) rotate(5deg)}
+
 .symbol-writeups { width: 128px !important; height: 86px !important; padding: 17px 15px; border: 2px solid currentColor; border-radius: 5px; background: rgba(4,8,9,.86); box-shadow: 7px 8px 0 color-mix(in srgb, currentColor 20%, transparent); }
 .symbol-writeups b { font: 700 24px/1 monospace; }
 .symbol-writeups i { display: block; height: 2px; margin-top: 10px; background: currentColor; opacity: .6; }

@@ -1,0 +1,39 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Navbar from '../../components/Navbar.astro'
+import { getCollection, render } from 'astro:content'
+import { withBase } from '../../utils/paths'
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects')
+  return projects.map((project) => ({ params: { slug: project.data.slug }, props: { project } }))
+}
+
+const { project } = Astro.props
+const { Content } = await render(project)
+---
+
+<Layout title={`${project.data.title} — Projects`}>
+  <main class="project-detail">
+    <Navbar current="Projects" />
+    <header>
+      <a href={withBase('projects')}>← Projects</a>
+      <p>{project.data.category} / {project.data.status} / {project.data.date}</p>
+      <h1>{project.data.title}</h1>
+      <div class="project-detail-summary">{project.data.summary}</div>
+      {project.data.cover && <img src={withBase(project.data.cover)} alt={project.data.title} />}
+    </header>
+    <section class="project-detail-grid">
+      <article class="project-detail-body"><Content /></article>
+      <aside>
+        <section><small>STACK</small><div>{project.data.stack.map((item) => <span>{item}</span>)}</div></section>
+        {project.data.highlights.length > 0 && <section><small>HIGHLIGHTS</small>{project.data.highlights.map((item, index) => <p><b>{String(index + 1).padStart(2, '0')}</b>{item}</p>)}</section>}
+        {project.data.links.length > 0 && <section><small>LINKS</small>{project.data.links.map((link) => <a href={link.url} target="_blank" rel="noreferrer">{link.name} ↗</a>)}</section>}
+        {project.data.files.length > 0 && <section><small>FILES</small>{project.data.files.map((file) => <a href={withBase(file.url)} target="_blank">{file.name} ↗</a>)}</section>}
+      </aside>
+    </section>
+  </main>
+  <style>
+    .project-detail{--paper:#efede6;--ink:#181818;min-height:100vh;background:var(--paper);color:var(--ink)}.project-detail>header{padding:clamp(9rem,14vw,13rem) clamp(1.5rem,7vw,8rem) 5rem;border-bottom:1px solid rgba(24,24,24,.18)}.project-detail>header>a,.project-detail>header>p,.project-detail aside small{font:700 .7rem 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:inherit}.project-detail h1{max-width:1200px;margin:2.5rem 0 1.3rem;font-size:clamp(3.8rem,10vw,10rem);line-height:.82;letter-spacing:-.075em}.project-detail-summary{max-width:760px;color:#5f5d56;font-size:clamp(1.05rem,1.8vw,1.4rem);line-height:1.7}.project-detail header img{width:100%;max-height:70vh;margin-top:4rem;object-fit:cover}.project-detail-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:clamp(2rem,7vw,8rem);padding:5rem clamp(1.5rem,7vw,8rem) 8rem}.project-detail-body{font-size:1.04rem;line-height:1.85}.project-detail-body :global(h2){margin:3rem 0 1rem;font-size:2.3rem;line-height:1}.project-detail-body :global(h3){margin:2.2rem 0 .8rem;font-size:1.4rem}.project-detail-body :global(a){text-decoration:underline}.project-detail-body :global(pre){overflow:auto;padding:1.2rem;background:#181818;color:#f4f1e9}.project-detail aside{display:grid;align-content:start;gap:1rem}.project-detail aside section{padding:1.4rem;border:1px solid rgba(24,24,24,.2)}.project-detail aside div{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1rem}.project-detail aside span{padding:.4rem .55rem;border:1px solid rgba(24,24,24,.25);font:600 .65rem 'JetBrains Mono',monospace;text-transform:uppercase}.project-detail aside p{display:grid;grid-template-columns:30px 1fr;gap:.8rem;margin-top:1rem;line-height:1.45}.project-detail aside p b{font:600 .65rem 'JetBrains Mono',monospace}.project-detail aside a{display:block;margin-top:1rem;color:inherit;text-decoration:underline}@media(max-width:800px){.project-detail-grid{grid-template-columns:1fr}}
+  </style>
+</Layout>

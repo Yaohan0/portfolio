@@ -26,6 +26,34 @@ import '../styles/global.css'
       @media(max-width:1200px){.studio-surface-tools{display:none}.studio-workspace.mode-surface{grid-template-columns:minmax(0,1fr) 320px}.studio-workspace.mode-surface .studio-preview{padding:40px 28px}.studio-workspace.mode-surface #preview{padding:52px 44px}}
       @media(max-width:900px){.studio-topbar{position:relative;flex-wrap:wrap;height:auto}.studio-device-tools{display:none}.studio-workspace,.studio-workspace.mode-surface,.studio-workspace.mode-form{display:block}.studio-workspace .studio-topbar{display:flex}.studio-workspace.mode-surface .studio-preview{height:auto;min-height:700px}.studio-workspace.mode-surface .studio-editor{height:auto;border-left:0;border-top:1px solid var(--studio-line)}.drive-layout{grid-template-columns:1fr}.drive-subjects{grid-template-columns:repeat(5,1fr)}.studio-file-browser{padding:24px 18px}}
       @media(max-width:600px){.studio-mode{padding-inline:8px;font-size:8px}.studio-selection{display:none}.studio-workspace.mode-surface .studio-preview{padding:28px 12px}.studio-workspace.mode-surface #preview{width:100%!important;min-height:620px;padding:34px 22px}.drive-head{align-items:flex-start;flex-direction:column}.drive-subjects{grid-template-columns:repeat(2,1fr)}.drive-grid{grid-template-columns:1fr 1fr}}
+      /* Clean surface canvas */
+      .studio-workspace.mode-surface{grid-template-columns:minmax(0,1fr) 340px;background:#f7f7f5;color:#151515}
+      .studio-workspace.mode-surface .studio-topbar{border-color:#deded8;background:rgba(250,250,248,.94);color:#161616}
+      .studio-workspace.mode-surface .studio-mode,.studio-workspace.mode-surface .studio-tool{color:#77776f}
+      .studio-workspace.mode-surface .studio-mode:hover,.studio-workspace.mode-surface .studio-tool:hover{border-color:#b8b8b0;color:#151515}
+      .studio-workspace.mode-surface .studio-mode.active{border-color:#168b24;background:#fff;color:#168b24}
+      .studio-workspace.mode-surface .studio-surface-tools{display:none}
+      .studio-workspace.mode-surface .studio-preview{display:block!important;padding:0;background:#fbfbf9;background-image:radial-gradient(circle at 16% 12%,rgba(30,138,43,.035),transparent 25%),linear-gradient(#ecece7 1px,transparent 1px),linear-gradient(90deg,#ecece7 1px,transparent 1px);background-size:auto,40px 40px,40px 40px}
+      .studio-workspace.mode-surface #preview{width:min(100%,1180px);min-height:calc(100vh - 58px);margin:0 auto;padding:clamp(72px,9vw,130px) clamp(44px,10vw,150px);border:0;border-radius:0;background:rgba(255,255,253,.96);color:#171717;box-shadow:0 0 70px rgba(20,20,20,.07)}
+      .studio-workspace.mode-surface #preview.surface-tablet{width:768px}.studio-workspace.mode-surface #preview.surface-mobile{width:390px;padding:58px 28px}
+      .studio-workspace.mode-surface .studio-editor{border-color:#deded8;background:#f2f2ee;color:#181818}
+      .studio-workspace.mode-surface .studio-editor-header{border-color:#d8d8d1;background:rgba(242,242,238,.96)}
+      .studio-workspace.mode-surface .studio-editor-header p{color:#77776f!important}.studio-workspace.mode-surface .studio-editor-header h2{color:#181818}
+      .studio-workspace.mode-surface .studio-status{border-color:#c9c9c1;color:#77776f}.studio-workspace.mode-surface .studio-status.saved{border-color:#168b24;color:#168b24}
+      .studio-workspace.mode-surface .studio-action,.studio-workspace.mode-surface #open-page{border-color:#c9c9c1;color:#5d5d57}.studio-workspace.mode-surface #save-doc{background:#168b24;color:#fff}
+      .studio-workspace.mode-surface .studio-editor label>span,.studio-workspace.mode-surface details summary{color:#5e5e57!important}
+      .studio-workspace.mode-surface .studio-editor input,.studio-workspace.mode-surface .studio-editor textarea,.studio-workspace.mode-surface .studio-editor select{border-color:#d1d1ca!important;background:#fff!important;color:#171717!important}
+      .studio-workspace.mode-surface .studio-editor details,.studio-workspace.mode-surface .block-toolbar,.studio-workspace.mode-surface .block-card{border-color:#d2d2ca!important;background:#fff!important;color:#171717!important;box-shadow:none}
+      .studio-workspace.mode-surface .block-card p{color:#168b24!important}.studio-workspace.mode-surface .block-card button{border-color:#d4d4cc;color:#6f6f68}.studio-workspace.mode-surface .block-card .delete-block{color:#a53a43}
+      #preview [contenteditable="true"]{border-radius:1px}#preview [contenteditable="true"]:hover{background:rgba(23,142,37,.045);box-shadow:0 0 0 7px rgba(23,142,37,.045)}#preview [contenteditable="true"]:focus,#preview .surface-selected{background:rgba(23,142,37,.04);box-shadow:0 0 0 2px #168b24,0 0 0 8px rgba(23,142,37,.04)}
+      #preview .surface-label{margin:0 0 28px;color:#95958e}#preview .surface-title{max-width:920px;color:#aaa9a4;font:400 clamp(4.8rem,9vw,9rem)/.83 Georgia,serif;letter-spacing:-.065em}
+      #preview .surface-summary{max-width:760px;margin:34px 0 54px;color:#686861;font-size:1.05rem;line-height:1.75}
+      #preview .surface-cover{border:0;border-radius:4px}#preview .surface-block::before{color:#8b8b84}#preview .surface-block h2,#preview .surface-block h3{color:#171717}#preview .surface-block p{color:#5f5f59}#preview .surface-file{border-color:#c9c9c1;color:#168b24;background:#fff}
+      .surface-insert-dock{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:42px 0 54px;padding:0;border:0}
+      .surface-insert{position:relative;display:grid;place-items:center;width:58px;height:58px;border:2px solid #168b24;border-radius:50%;background:#fff;color:#168b24;font:500 22px/1 Arial,sans-serif;transition:transform .18s,background .18s,color .18s;cursor:pointer}
+      .surface-insert:first-child{margin-right:28px;border-color:#272727;color:#272727;font-size:35px;font-weight:200}.surface-insert:hover{transform:translateY(-4px);background:#168b24;color:#fff}.surface-insert:first-child:hover{background:#272727;color:#fff}
+      .surface-insert span{pointer-events:none}.surface-insert small{position:absolute;top:calc(100% + 8px);left:50%;width:max-content;max-width:110px;transform:translateX(-50%);color:#73736d;font:600 8px/1.2 "JetBrains Mono",monospace;letter-spacing:.06em;text-transform:uppercase;opacity:0;transition:.15s}.surface-insert:hover small,.surface-insert:focus-visible small{opacity:1}
+      @media(max-width:900px){.studio-workspace.mode-surface{display:block}.studio-workspace.mode-surface .studio-preview{min-height:auto}.studio-workspace.mode-surface #preview{min-height:720px}.studio-workspace.mode-surface .studio-editor{border-left:0}.surface-insert-dock{gap:10px}.surface-insert{width:50px;height:50px}.surface-insert:first-child{margin-right:10px}}
     </style>
   </head>
 
@@ -258,8 +286,39 @@ import '../styles/global.css'
       const API = "http://localhost:8787/api";
 
       const collectionConfigs = {
+        projects: {
+          label: "Projects",
+          titleField: "title",
+          summaryField: "summary",
+          pageBase: "/projects/",
+          defaults: {
+            title: "Untitled Project",
+            slug: "untitled-project",
+            order: 999,
+            status: "In progress",
+            date: new Date().toISOString().slice(0, 10),
+            summary: "",
+            category: "Project",
+            stack: [],
+            highlights: [],
+            links: [],
+            files: [],
+            cover: "",
+            featured: false,
+          },
+          fields: [
+            { name: "order", label: "Order", type: "number" },
+            { name: "status", label: "Status", type: "select", options: ["Idea", "In progress", "Completed", "Archived"] },
+            { name: "date", label: "Date", type: "text" },
+            { name: "category", label: "Category", type: "text" },
+            { name: "stack", label: "Stack / tools", type: "list" },
+            { name: "highlights", label: "Highlights", type: "list" },
+            { name: "featured", label: "Featured", type: "checkbox" },
+          ],
+        },
+
         writeups: {
-          label: "Projects + Writeups",
+          label: "Writeups",
           titleField: "title",
           summaryField: "summary",
           pageBase: "/writeups/",
@@ -287,7 +346,6 @@ import '../styles/global.css'
           },
           fields: [
             { name: "order", label: "Order", type: "number" },
-            { name: "track", label: "Track", type: "select", options: ["Projects", "Writeups"] },
             { name: "platform", label: "Platform", type: "text" },
             { name: "series", label: "Series", type: "text" },
             { name: "category", label: "Category", type: "text" },
@@ -1087,6 +1145,14 @@ import '../styles/global.css'
             markDirty();
           });
         });
+        document.querySelectorAll("#preview [data-canvas-add]").forEach((button) => {
+          button.addEventListener("click", () => addBlock(button.dataset.canvasAdd));
+        });
+        $("preview").querySelector("[data-canvas-clear]")?.addEventListener("click", () => selectSurfaceBlock(null));
+        $("preview").querySelector("[data-canvas-more]")?.addEventListener("click", () => {
+          document.querySelector(".studio-editor")?.scrollTo({ top: 0, behavior: "smooth" });
+          $("field-title")?.focus();
+        });
       };
 
       const renderPreview = () => {
@@ -1112,6 +1178,15 @@ import '../styles/global.css'
         $("preview").innerHTML = `
           <p class="surface-label">${escapeHtml(config().label)} / LIVE SURFACE</p>
           <h1 class="surface-title" data-surface-field="title" contenteditable="true">${escapeHtml(title || "Untitled")}</h1>
+          <nav class="surface-insert-dock" aria-label="Add content to this page">
+            <button class="surface-insert" data-canvas-clear type="button" aria-label="Clear block selection"><span aria-hidden="true">×</span><small>Clear</small></button>
+            <button class="surface-insert" data-canvas-add="image" type="button" aria-label="Add image"><span aria-hidden="true">▧</span><small>Image</small></button>
+            <button class="surface-insert" data-canvas-add="paragraph" type="button" aria-label="Add text block"><span aria-hidden="true">▦</span><small>Text</small></button>
+            <button class="surface-insert" data-canvas-add="file" type="button" aria-label="Add media or file"><span aria-hidden="true">▶</span><small>Media / file</small></button>
+            <button class="surface-insert" data-canvas-add="code" type="button" aria-label="Add code"><span aria-hidden="true">‹›</span><small>Code</small></button>
+            <button class="surface-insert" data-canvas-add="callout" type="button" aria-label="Add callout"><span aria-hidden="true">{ }</span><small>Callout</small></button>
+            <button class="surface-insert" data-canvas-more type="button" aria-label="Show page settings"><span aria-hidden="true">•••</span><small>Page settings</small></button>
+          </nav>
           <p class="surface-summary" data-surface-field="summary" contenteditable="true">${escapeHtml(summary || "Add a short summary...")}</p>
           ${cover}
           <div>${body}</div>
