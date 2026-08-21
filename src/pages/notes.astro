@@ -181,7 +181,7 @@ const foldersFor = (subject: string) => {
     const wrap = (value) => (value + subjectTabs.length) % subjectTabs.length;
     const selectSubject = (next) => {
       closeReader(); currentFolder = ''; active = wrap(next); const current = subjectData[active]; subjectTabs.forEach((tab, index) => tab.classList.toggle('active', index === active));
-      activeName.textContent = current.name; activeCode.textContent = current.code; activeDesk.textContent = current.desk; activeMeta.textContent = current.code; activeUpdated.textContent = current.updated; folderCard.style.setProperty('--subject', current.color); folderDescription.textContent = 'Choose Notes, Assignments, or another folder to browse its contents.'; folderUp.hidden = true;
+      activeName.textContent = current.name; window.typeCollectionHeading?.(activeName); activeCode.textContent = current.code; activeDesk.textContent = current.desk; activeMeta.textContent = current.code; activeUpdated.textContent = current.updated; folderCard.style.setProperty('--subject', current.color); folderDescription.textContent = 'Choose Notes, Assignments, or another folder to browse its contents.'; folderUp.hidden = true;
       noteRows.forEach((row) => row.hidden = true); let shown = 0; folderRows.forEach((row) => { const visible = row.dataset.folderSubject === current.code; row.hidden = !visible; if (visible) shown += 1; }); fileCount.textContent = `${shown} FOLDER${shown === 1 ? '' : 'S'}`; empty.hidden = true;
     };
 

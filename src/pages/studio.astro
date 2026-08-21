@@ -259,7 +259,7 @@ import '../styles/global.css'
 
       const collectionConfigs = {
         writeups: {
-          label: "Writeups",
+          label: "Projects + Writeups",
           titleField: "title",
           summaryField: "summary",
           pageBase: "/writeups/",
@@ -287,7 +287,7 @@ import '../styles/global.css'
           },
           fields: [
             { name: "order", label: "Order", type: "number" },
-            { name: "track", label: "Track", type: "text" },
+            { name: "track", label: "Track", type: "select", options: ["Projects", "Writeups"] },
             { name: "platform", label: "Platform", type: "text" },
             { name: "series", label: "Series", type: "text" },
             { name: "category", label: "Category", type: "text" },

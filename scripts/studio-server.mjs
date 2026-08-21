@@ -21,7 +21,7 @@ const today = () => new Date().toISOString().slice(0, 10)
 
 const collections = {
   writeups: {
-    label: 'Writeups',
+    label: 'Projects + Writeups',
     folder: path.join(rootDir, 'src/content/writeups'),
     defaults: {
       title: 'Untitled Writeup',
