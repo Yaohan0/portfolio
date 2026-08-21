@@ -3,11 +3,10 @@ import { base, withBase } from '../utils/paths'
 interface Props { current?: string; theme?: 'dark' | 'light' }
 const { current = 'Home' } = Astro.props
 const links = [
-  { label: 'Home', href: base }, { label: 'Journal', href: withBase('journal') },
+  { label: 'Home', href: base }, { label: 'Logbook', href: withBase('journal') },
   { label: 'Notes', href: withBase('notes') },
   { label: 'Labs', href: withBase('labs') }, { label: 'Writeups', href: withBase('writeups') },
   { label: 'Achievements', href: withBase('achievements') }, { label: 'Skills', href: withBase('skills') },
-  { label: 'Hobbies', href: withBase('hobbies') },
   { label: 'Archive', href: withBase('archive') },
 ]
 ---

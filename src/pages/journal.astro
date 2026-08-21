@@ -4,15 +4,29 @@ import Navbar from '../components/Navbar.astro'
 import { getCollection } from 'astro:content'
 import { withBase } from '../utils/paths'
 const entries=(await getCollection('journal')).sort((a,b)=>a.data.order-b.data.order)
-const categories=[...new Set(entries.map(entry=>entry.data.category))]
+const groups=['Progress','Challenges','Reflections','Events']
+const groupFor=(entry) => {
+  const haystack=`${entry.data.title} ${entry.data.category} ${entry.data.tags.join(' ')}`.toLowerCase()
+  if(/ctf|challenge|whitehacks|hackathon|capture the flag/.test(haystack)) return 'Challenges'
+  if(/reflection|lesson|mistake|takeaway/.test(haystack)) return 'Reflections'
+  if(/event|race|competition|pesta|milestone/.test(haystack)) return 'Events'
+  return 'Progress'
+}
+const groupedEntries=entries.map(entry=>({entry,group:groupFor(entry)}))
 ---
-<Layout title="Journal — Yaohan"><main class="section-page journal-page"><Navbar current="Journal" />
-  <header class="collection-hero journal-hero"><div><p class="collection-kicker">FIELD NOTES &amp; REFLECTIONS</p><h1>Journal</h1></div><div class="journal-note"><span>NOTE TO SELF</span><p>Writing makes the process visible. These are the rough edges, lessons, and working thoughts behind the finished result.</p></div></header>
-  <div class="journal-stats"><span>{entries.length} entries</span><span>{categories.length} categories</span><span>2026 / ongoing</span></div>
-  <section class="journal-stack">{entries.map((entry,index)=><a class="journal-entry" href={withBase(`journal/${entry.data.slug}`)}>
+<Layout title="Logbook — Yaohan"><main class="section-page journal-page"><Navbar current="Logbook" />
+  <header class="collection-hero journal-hero"><div><p class="collection-kicker">PROGRESS, CHALLENGES &amp; REFLECTIONS</p><h1>Logbook</h1></div><div class="journal-note"><span>WHAT BELONGS HERE</span><p>Quick records of work in progress: competitions, project updates, training, mistakes and the lesson I want to remember. Finished technical solutions live under Writeups; class material lives under Notes.</p></div></header>
+  <div class="journal-stats"><span>{entries.length} entries</span><span>{groups.length} views</span><span>2026 / ongoing</span></div>
+  <nav class="logbook-filters" aria-label="Filter logbook"><button class="active" type="button" data-log-filter="all">All</button>{groups.map(group=><button type="button" data-log-filter={group.toLowerCase()}>{group}</button>)}</nav>
+  <section class="journal-stack">{groupedEntries.map(({entry,group},index)=><a class="journal-entry" data-log-group={group.toLowerCase()} href={withBase(`journal/${entry.data.slug}`)}>
     <div class="entry-index">{String(index+1).padStart(2,'0')}</div>
     <div class="entry-date">{entry.data.date}<span>{entry.data.mood}</span></div>
-    <div class="entry-copy"><p>{entry.data.category}</p><h2>{entry.data.title}</h2><p>{entry.data.summary || 'A working note from the archive—open the entry for the full record and supporting evidence.'}</p><div>{entry.data.tags.map(tag=><span>#{tag}</span>)}</div></div>
+    <div class="entry-copy"><p>{group} · {entry.data.category}</p><h2>{entry.data.title}</h2><p>{entry.data.summary || 'A quick record of the work, decision, or lesson—open it for the full entry.'}</p><div>{entry.data.tags.map(tag=><span>#{tag}</span>)}</div></div>
     {entry.data.cover && <img src={withBase(entry.data.cover)} alt={entry.data.title} loading="lazy" />}
     <span class="entry-plus">+</span></a>)}</section>
+  <p class="logbook-empty" hidden>No entries in this view yet.</p>
+  <script is:inline>
+    const logButtons=[...document.querySelectorAll('[data-log-filter]')]; const logEntries=[...document.querySelectorAll('[data-log-group]')]; const logEmpty=document.querySelector('.logbook-empty');
+    logButtons.forEach(button=>button.addEventListener('click',()=>{const group=button.dataset.logFilter;let shown=0;logButtons.forEach(item=>item.classList.toggle('active',item===button));logEntries.forEach(entry=>{const visible=group==='all'||entry.dataset.logGroup===group;entry.hidden=!visible;if(visible)shown+=1});logEmpty.hidden=shown>0;}));
+  </script>
 </main></Layout>

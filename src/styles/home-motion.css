@@ -1,0 +1,127 @@
+.project-preview .project-symbol {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 112px;
+  height: 112px;
+  transform: translate(-50%, -46%);
+  color: currentColor;
+}
+
+.symbol-logbook {
+  width: 96px !important;
+  height: 116px !important;
+  border: 2px solid currentColor;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, .8);
+  box-shadow: 9px 9px 0 color-mix(in srgb, currentColor 24%, transparent);
+  transform: translate(-50%, -46%) rotate(-4deg) !important;
+  transition: transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.symbol-logbook i { display: block; height: 2px; margin: 18px 16px -7px; background: currentColor; opacity: .55; }
+.symbol-logbook b { position: absolute; width: 10px; height: 86px; right: -18px; top: 15px; border-radius: 4px 4px 0 0; background: currentColor; transform: rotate(9deg); transform-origin: bottom; }
+.symbol-logbook b::after { content: ''; position: absolute; bottom: -10px; border: 5px solid transparent; border-top: 10px solid currentColor; }
+.reference-project-card:hover .symbol-logbook { transform: translate(-50%, -48%) rotate(2deg) !important; }
+.reference-project-card:hover .symbol-logbook b { animation: scribble .55s ease-in-out infinite alternate; }
+
+.symbol-notes i { position: absolute; inset: 7px 18px 11px 12px; border: 2px solid currentColor; border-radius: 4px; background: rgba(255,255,255,.84); box-shadow: inset 0 -22px 0 rgba(0,0,0,.04); transition: transform .35s ease; }
+.symbol-notes i:nth-child(1) { transform: rotate(-10deg) translate(-13px, 4px); opacity: .55; }
+.symbol-notes i:nth-child(2) { transform: rotate(7deg) translate(12px, 1px); opacity: .72; }
+.symbol-notes i:nth-child(3) { transform: translateY(-7px); background: repeating-linear-gradient(to bottom, rgba(255,255,255,.92) 0 19px, currentColor 20px 21px); }
+.reference-project-card:hover .symbol-notes i:nth-child(1) { transform: rotate(-15deg) translate(-20px, 1px); }
+.reference-project-card:hover .symbol-notes i:nth-child(2) { transform: rotate(12deg) translate(20px, -2px); }
+.reference-project-card:hover .symbol-notes i:nth-child(3) { transform: translateY(-13px); }
+
+.symbol-labs b { position: absolute; left: 5px; bottom: 4px; width: 62px; height: 67px; border: 3px solid currentColor; border-top: 0; border-radius: 10px 10px 28px 28px; clip-path: polygon(0 25%, 35% 25%, 35% 0, 65% 0, 65% 25%, 100% 25%, 100% 100%, 0 100%); background: linear-gradient(to top, color-mix(in srgb, currentColor 26%, transparent) 0 44%, transparent 45%); transform-origin: 50% 100%; }
+.symbol-labs b::after { content: ''; position: absolute; left: 12px; right: 9px; top: 37px; height: 3px; background: currentColor; opacity: .5; transform: rotate(-8deg); }
+.symbol-labs i { position: absolute; right: 2px; bottom: 4px; width: 16px; height: 78px; border: 3px solid currentColor; border-top: 0; border-radius: 0 0 10px 10px; transform-origin: bottom; background: linear-gradient(to top, color-mix(in srgb, currentColor 28%, transparent) 0 38%, transparent 39%); }
+.symbol-labs i:nth-of-type(1) { right: 9px; transform: rotate(9deg); }
+.symbol-labs i:nth-of-type(2) { right: 35px; height: 63px; transform: rotate(-3deg); }
+.symbol-labs i:nth-of-type(3) { width: 7px; height: 7px; border: 0; border-radius: 50%; right: 28px; bottom: 57px; background: currentColor; opacity: .75; }
+.reference-project-card:hover .symbol-labs b { animation: lab-shake .42s ease-in-out infinite alternate; }
+.reference-project-card:hover .symbol-labs i:nth-of-type(1) { animation: tube-one .5s ease-in-out infinite alternate; }
+.reference-project-card:hover .symbol-labs i:nth-of-type(2) { animation: tube-two .44s ease-in-out infinite alternate; }
+.reference-project-card:hover .symbol-labs i:nth-of-type(3) { animation: bubble-up .8s ease-out infinite; }
+
+.symbol-writeups { width: 128px !important; height: 86px !important; padding: 17px 15px; border: 2px solid currentColor; border-radius: 5px; background: rgba(4,8,9,.86); box-shadow: 7px 8px 0 color-mix(in srgb, currentColor 20%, transparent); }
+.symbol-writeups b { font: 700 24px/1 monospace; }
+.symbol-writeups i { display: block; height: 2px; margin-top: 10px; background: currentColor; opacity: .6; }
+.symbol-writeups i:nth-of-type(2) { width: 62%; }
+.reference-project-card:hover .symbol-writeups b::after { content: ''; display: inline-block; width: 9px; height: 22px; margin-left: 3px; vertical-align: -3px; background: currentColor; animation: terminal-blink .62s steps(1) infinite; }
+
+.symbol-achievements b { position: absolute; inset: 25px 27px 7px; border: 3px solid currentColor; border-radius: 7px 7px 34px 34px; }
+.symbol-achievements b::before, .symbol-achievements b::after { content: ''; position: absolute; top: 7px; width: 28px; height: 34px; border: 3px solid currentColor; }
+.symbol-achievements b::before { right: 100%; border-right: 0; border-radius: 20px 0 0 20px; }
+.symbol-achievements b::after { left: 100%; border-left: 0; border-radius: 0 20px 20px 0; }
+.symbol-achievements i { position: absolute; width: 7px; height: 13px; top: 18px; left: 50%; opacity: 0; background: currentColor; }
+.reference-project-card:hover .symbol-achievements i { animation: confetti .9s ease-out infinite; }
+.symbol-achievements i:nth-of-type(1) { --x:-58px; --r:35deg; animation-delay: 0s !important; }
+.symbol-achievements i:nth-of-type(2) { --x:-37px; --r:-28deg; animation-delay: .12s !important; }
+.symbol-achievements i:nth-of-type(3) { --x:-18px; --r:80deg; animation-delay: .24s !important; }
+.symbol-achievements i:nth-of-type(4) { --x:5px; --r:-50deg; animation-delay: .08s !important; }
+.symbol-achievements i:nth-of-type(5) { --x:28px; --r:45deg; animation-delay: .32s !important; }
+.symbol-achievements i:nth-of-type(6) { --x:48px; --r:-70deg; animation-delay: .18s !important; }
+.symbol-achievements i:nth-of-type(7) { --x:-48px; --r:100deg; animation-delay: .38s !important; }
+.symbol-achievements i:nth-of-type(8) { --x:60px; --r:20deg; animation-delay: .42s !important; }
+
+.symbol-skills { border: 1px solid color-mix(in srgb, currentColor 50%, transparent); border-radius: 50%; animation: orbit-shell 12s linear infinite; }
+.symbol-skills b { position: absolute; width: 34px; height: 34px; left: 39px; top: 39px; border: 3px solid currentColor; transform: rotate(45deg); background: color-mix(in srgb, currentColor 15%, transparent); }
+.symbol-skills i { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 5px color-mix(in srgb, currentColor 18%, transparent); }
+.symbol-skills i:nth-of-type(1) { left: 48px; top: -8px; }
+.symbol-skills i:nth-of-type(2) { right: -8px; top: 48px; }
+.symbol-skills i:nth-of-type(3) { left: 48px; bottom: -8px; }
+.symbol-skills i:nth-of-type(4) { left: -8px; top: 48px; }
+.reference-project-card:hover .symbol-skills { animation-duration: 3s; }
+
+.reference-project-wide { gap: 1.25rem; }
+.archive-symbol { flex: 0 0 72px; width: 72px; height: 58px; position: relative; border: 2px solid currentColor; border-radius: 4px; overflow: hidden; }
+.archive-symbol i { position: absolute; left: 9px; right: 9px; height: 9px; border: 1px solid currentColor; border-radius: 2px; transition: transform .25s ease; }
+.archive-symbol i:nth-child(1) { top: 8px; }.archive-symbol i:nth-child(2) { top: 24px; }.archive-symbol i:nth-child(3) { top: 40px; }
+.reference-project-wide:hover .archive-symbol i:nth-child(2) { transform: translateX(10px); }
+
+@keyframes scribble { to { transform: rotate(4deg) translateX(5px); } }
+@keyframes lab-shake { to { transform: rotate(-4deg) translateY(-2px); } }
+@keyframes tube-one { to { transform: rotate(14deg) translateY(-3px); } }
+@keyframes tube-two { to { transform: rotate(-8deg) translateY(-2px); } }
+@keyframes bubble-up { from { transform: translateY(10px) scale(.65); opacity: 0; } 45% { opacity: .8; } to { transform: translateY(-34px) scale(1.2); opacity: 0; } }
+@keyframes terminal-blink { 50% { opacity: 0; } }
+@keyframes confetti { from { transform: translate(0,10px) rotate(0); opacity: 0; } 20% { opacity: 1; } to { transform: translate(var(--x),-62px) rotate(var(--r)); opacity: 0; } }
+@keyframes orbit-shell { to { transform: translate(-50%, -46%) rotate(360deg); } }
+
+.logbook-filters,
+.archive-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  margin: 1.25rem 0 2.25rem;
+}
+.logbook-filters button,
+.archive-groups button {
+  border: 1px solid var(--line, #2b2b33);
+  border-radius: 999px;
+  padding: .72rem 1rem;
+  background: transparent;
+  color: inherit;
+  font: 700 .75rem/1 "JetBrains Mono", monospace;
+  letter-spacing: .06em;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s, transform .2s;
+}
+.logbook-filters button:hover,
+.logbook-filters button.active,
+.archive-groups button:hover,
+.archive-groups button.active { background: var(--ink, #f4f1e9); color: var(--paper, #0d0d12); border-color: var(--ink, #f4f1e9); transform: translateY(-2px); }
+.archive-groups button span { margin-left: .45rem; opacity: .55; }
+.logbook-empty { padding: 4rem 1rem; text-align: center; opacity: .55; }
+.archive-purpose { max-width: 760px; margin: -1.25rem 0 2rem; font-size: clamp(.95rem, 1.5vw, 1.15rem); line-height: 1.7; color: var(--muted, #8f8c98); }
+.archive-groups { margin: 1rem 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .project-symbol, .project-symbol *, .archive-symbol *, .reference-project-card:hover .project-symbol * { animation: none !important; transition: none !important; }
+}
+
+@media (max-width: 760px) {
+  .project-preview .project-symbol { transform: translate(-50%, -45%) scale(.82); }
+  .archive-symbol { display: none; }
+  .logbook-filters, .archive-groups { gap: .4rem; }
+  .logbook-filters button, .archive-groups button { padding: .65rem .78rem; }
+}

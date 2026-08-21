@@ -48,15 +48,15 @@ const collections = {
   },
 
   journal: {
-    label: 'Journal',
+    label: 'Logbook',
     folder: path.join(rootDir, 'src/content/journal'),
     defaults: {
-      title: 'Untitled Journal Entry',
-      slug: 'untitled-journal-entry',
+      title: 'Untitled Logbook Entry',
+      slug: 'untitled-logbook-entry',
       order: 999,
       date: today(),
       mood: 'Writing',
-      category: 'Journal',
+      category: 'Progress',
       summary: '',
       tags: [],
       lesson: '',
@@ -144,7 +144,7 @@ const collections = {
       title: 'Untitled Archive Note',
       slug: 'untitled-archive-note',
       order: 999,
-      type: 'Class Notes',
+      type: 'Miscellaneous',
       status: 'Active',
       date: today(),
       summary: '',

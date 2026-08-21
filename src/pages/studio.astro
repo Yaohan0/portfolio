@@ -37,7 +37,7 @@ import '../styles/global.css'
           <p class="font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">Local Editor</p>
 
           <p class="mt-3 text-sm leading-6 text-[#a9a196]">
-            Edit your profile, hobbies, notes, projects and every portfolio collection.
+            Edit your profile, class notes, logbook, projects and every portfolio collection.
           </p>
         </div>
 
@@ -306,17 +306,17 @@ import '../styles/global.css'
         },
 
         journal: {
-          label: "Journal",
+          label: "Logbook",
           titleField: "title",
           summaryField: "summary",
           pageBase: "/journal/",
           defaults: {
-            title: "Untitled Journal Entry",
-            slug: "untitled-journal-entry",
+            title: "Untitled Logbook Entry",
+            slug: "untitled-logbook-entry",
             order: 999,
             date: new Date().toISOString().slice(0, 10),
             mood: "Writing",
-            category: "Journal",
+            category: "Progress",
             summary: "",
             tags: [],
             lesson: "",
@@ -328,7 +328,7 @@ import '../styles/global.css'
             { name: "order", label: "Order", type: "number" },
             { name: "date", label: "Date", type: "text" },
             { name: "mood", label: "Mood", type: "text" },
-            { name: "category", label: "Category", type: "text" },
+            { name: "category", label: "Category", type: "select", options: ["Progress", "Challenges", "Reflections", "Events"] },
             { name: "tags", label: "Tags", type: "list" },
             { name: "lesson", label: "Takeaway", type: "textarea" },
             { name: "pinned", label: "Pinned", type: "checkbox" },
@@ -397,33 +397,6 @@ import '../styles/global.css'
           ],
         },
 
-        hobbies: {
-          label: "Hobbies",
-          titleField: "title",
-          summaryField: "summary",
-          pageBase: "/hobbies/",
-          defaults: {
-            title: "Untitled Hobby",
-            slug: "untitled-hobby",
-            order: 999,
-            category: "Other",
-            status: "Active",
-            summary: "",
-            context: "Personal",
-            highlights: [],
-            accent: "#ed4b91",
-            cover: "",
-          },
-          fields: [
-            { name: "order", label: "Order", type: "number" },
-            { name: "category", label: "Category", type: "select", options: ["CCA", "Gaming", "Other"] },
-            { name: "status", label: "Status", type: "text" },
-            { name: "context", label: "Context", type: "text" },
-            { name: "highlights", label: "Highlights", type: "list" },
-            { name: "accent", label: "Accent colour", type: "text" },
-          ],
-        },
-
         labs: {
           label: "Labs",
           titleField: "title",
@@ -459,7 +432,7 @@ import '../styles/global.css'
             title: "Untitled Archive Note",
             slug: "untitled-archive-note",
             order: 999,
-            type: "Class Notes",
+            type: "Miscellaneous",
             status: "Active",
             date: new Date().toISOString().slice(0, 10),
             summary: "",
@@ -470,7 +443,7 @@ import '../styles/global.css'
           },
           fields: [
             { name: "order", label: "Order", type: "number" },
-            { name: "type", label: "Type", type: "text" },
+            { name: "type", label: "Group", type: "select", options: ["Old coursework", "References", "Experiments", "Media", "Miscellaneous"] },
             { name: "status", label: "Status", type: "text" },
             { name: "date", label: "Date", type: "text" },
             { name: "tags", label: "Tags", type: "list" },
@@ -547,6 +520,18 @@ import '../styles/global.css'
       let driveSubfolder = "";
       let driveSelection = "";
       let selectedSurfaceBlock = null;
+      const STUDIO_VIEW_KEY = "yaohan-studio-view";
+
+      const saveStudioView = () => {
+        try {
+          localStorage.setItem(STUDIO_VIEW_KEY, JSON.stringify({ collection, currentSlug, studioMode, driveSubject, driveFolderOpen, driveSubfolder }));
+        } catch {}
+      };
+
+      const readStudioView = () => {
+        try { return JSON.parse(localStorage.getItem(STUDIO_VIEW_KEY) || "{}"); }
+        catch { return {}; }
+      };
 
       const noteSubjects = {
         ECOMM: "Effective Communication",
@@ -680,6 +665,7 @@ import '../styles/global.css'
         renderDocList();
         renderFileBrowser();
         setSaveState("saved", "SAVED");
+        saveStudioView();
       };
 
       const newDoc = () => {
@@ -692,6 +678,7 @@ import '../styles/global.css'
         renderPreview();
         renderFileBrowser();
         markDirty();
+        saveStudioView();
       };
 
       const renderMetadataFields = () => {
@@ -1157,6 +1144,7 @@ import '../styles/global.css'
         const indexDoc = subjectDocs.find((doc) => /subject index/i.test(displayTitle(doc.data))) || subjectDocs[0];
         if (indexDoc && currentSlug !== indexDoc.slug) await loadDoc(indexDoc.slug);
         renderFileBrowser();
+        saveStudioView();
       };
 
       const closeDriveFolder = () => {
@@ -1164,18 +1152,21 @@ import '../styles/global.css'
           driveSubfolder = "";
           driveSelection = "";
           renderFileBrowser();
+          saveStudioView();
           return;
         }
         driveFolderOpen = false;
         driveSubject = "ALL";
         driveSelection = "";
         renderFileBrowser();
+        saveStudioView();
       };
 
       const openDriveSubfolder = (folder) => {
         driveSubfolder = folder;
         driveSelection = "";
         renderFileBrowser();
+        saveStudioView();
       };
 
       const renderFileBrowser = () => {
@@ -1287,6 +1278,7 @@ import '../styles/global.css'
           if (collection !== "notes") await setCollection("notes");
           renderFileBrowser();
         }
+        saveStudioView();
       };
 
       const setSurfaceWidth = (width) => {
@@ -1368,6 +1360,7 @@ import '../styles/global.css'
 
           currentSlug = result.slug;
           savedLocally = true;
+          saveStudioView();
 
           await loadDocs();
           await loadDoc(currentSlug);
@@ -1424,17 +1417,19 @@ import '../styles/global.css'
         }
       };
 
-      const setCollection = async (nextCollection) => {
+      const setCollection = async (nextCollection, preferredSlug = "") => {
         collection = nextCollection;
 
         renderCollectionButtons();
         await loadDocs();
 
         if (docs.length > 0) {
-          await loadDoc(docs[0].slug);
+          const target = docs.find((doc) => doc.slug === preferredSlug) || docs[0];
+          await loadDoc(target.slug);
         } else {
           newDoc();
         }
+        saveStudioView();
       };
 
       $("new-doc").addEventListener("click", newDoc);
@@ -1536,7 +1531,18 @@ import '../styles/global.css'
       const localStudio = ["localhost", "127.0.0.1"].includes(location.hostname);
       if (localStudio) {
         renderCollectionButtons();
-        setCollection("writeups");
+        (async () => {
+          const restoredView = readStudioView();
+          const startCollection = collectionConfigs[restoredView.collection] ? restoredView.collection : "writeups";
+          await setCollection(startCollection, restoredView.currentSlug || "");
+          if (startCollection === "notes" && noteSubjects[restoredView.driveSubject]) {
+            driveSubject = restoredView.driveSubject;
+            driveFolderOpen = Boolean(restoredView.driveFolderOpen);
+            driveSubfolder = restoredView.driveSubfolder || "";
+          }
+          await setStudioMode(["surface", "form", "files"].includes(restoredView.studioMode) ? restoredView.studioMode : "surface");
+          renderFileBrowser();
+        })().catch((error) => { setSaveState("dirty", "LOAD FAILED"); alert(error.message); });
       } else {
         $("studio-workspace").classList.add("studio-hosted");
         $("studio-bridge").hidden = false;
