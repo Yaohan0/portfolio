@@ -2,6 +2,8 @@
 import '../styles/global.css'
 import '../styles/profile-and-hobbies.css'
 import '../styles/minecraft-loader.css'
+import '../styles/home-motion.css'
+import '../styles/collection-refine.css'
 import { base, withBase } from '../utils/paths'
 
 interface Props {
@@ -35,6 +37,7 @@ const socialImage = new URL(withBase('og.png'), Astro.site ?? Astro.url.origin)
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
     <title>{title}</title>
+    <script is:inline>document.documentElement.classList.add('js')</script>
 
     <script
       is:inline
@@ -44,6 +47,51 @@ const socialImage = new URL(withBase('og.png'), Astro.site ?? Astro.url.origin)
 
   <body>
     <slot />
+
+    <script is:inline>
+      (() => {
+        const selector = '.collection-hero h1, .terminal-hero h1, .skills-hero h1, .archive-hero h1, #active-subject-name';
+        const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const timers = new WeakMap();
+        window.typeCollectionHeading = (heading) => {
+          if (!heading) return;
+          const oldTimer = timers.get(heading);
+          if (oldTimer) clearTimeout(oldTimer);
+          const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
+          const nodes = [];
+          let node;
+          while ((node = walker.nextNode())) nodes.push({ node, text: node.textContent || '' });
+          heading.classList.add('page-title-ready');
+          heading.classList.remove('page-title-typing');
+          if (reduceMotion) return;
+          const accessibleName = nodes.map((item) => item.text).join(' ').replace(/\s+/g, ' ').trim();
+          if (accessibleName) heading.setAttribute('aria-label', accessibleName);
+          nodes.forEach((item) => { item.node.textContent = ''; });
+          heading.classList.add('page-title-typing');
+          let nodeIndex = 0;
+          let characterIndex = 0;
+          const typeNext = () => {
+            const current = nodes[nodeIndex];
+            if (!current) {
+              heading.classList.remove('page-title-typing');
+              timers.delete(heading);
+              return;
+            }
+            if (characterIndex < current.text.length) {
+              current.node.textContent += current.text[characterIndex];
+              characterIndex += 1;
+            } else {
+              nodeIndex += 1;
+              characterIndex = 0;
+            }
+            timers.set(heading, setTimeout(typeNext, current.text[characterIndex - 1] === ' ' ? 18 : 42));
+          };
+          typeNext();
+        };
+        document.querySelectorAll(selector).forEach((heading, index) => setTimeout(() => window.typeCollectionHeading(heading), 120 + index * 90));
+      })();
+    </script>
+    <noscript><style>.collection-hero h1,.terminal-hero h1,.skills-hero h1,.archive-hero h1,#active-subject-name{visibility:visible!important}</style></noscript>
 
     <script is:inline define:vars={{ base }}>
       const assetBase = base.endsWith('/') ? base : `${base}/`;

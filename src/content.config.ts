@@ -148,6 +148,28 @@ const skills = defineCollection({
   }),
 })
 
+const projects = defineCollection({
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/projects',
+  }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    order: z.number(),
+    status: z.string(),
+    date: z.string(),
+    summary: z.string(),
+    category: z.string().default('Project'),
+    stack: z.array(z.string()).default([]),
+    highlights: z.array(z.string()).default([]),
+    links: z.array(linkSchema).default([]),
+    files: z.array(fileSchema).default([]),
+    cover: z.string().optional(),
+    featured: z.boolean().default(false),
+  }),
+})
+
 const notes = defineCollection({
   loader: glob({
     pattern: '**/*.md',
@@ -210,6 +232,7 @@ const profile = defineCollection({
 
 export const collections = {
   labs,
+  projects,
   writeups,
   journal,
   archive,

@@ -20,6 +20,26 @@ let publishQueue = Promise.resolve()
 const today = () => new Date().toISOString().slice(0, 10)
 
 const collections = {
+  projects: {
+    label: 'Projects',
+    folder: path.join(rootDir, 'src/content/projects'),
+    defaults: {
+      title: 'Untitled Project',
+      slug: 'untitled-project',
+      order: 999,
+      status: 'In progress',
+      date: today(),
+      summary: '',
+      category: 'Project',
+      stack: [],
+      highlights: [],
+      links: [],
+      files: [],
+      cover: '',
+      featured: false,
+    },
+  },
+
   writeups: {
     label: 'Writeups',
     folder: path.join(rootDir, 'src/content/writeups'),
@@ -48,15 +68,15 @@ const collections = {
   },
 
   journal: {
-    label: 'Journal',
+    label: 'Logbook',
     folder: path.join(rootDir, 'src/content/journal'),
     defaults: {
-      title: 'Untitled Journal Entry',
-      slug: 'untitled-journal-entry',
+      title: 'Untitled Logbook Entry',
+      slug: 'untitled-logbook-entry',
       order: 999,
       date: today(),
       mood: 'Writing',
-      category: 'Journal',
+      category: 'Progress',
       summary: '',
       tags: [],
       lesson: '',
@@ -144,7 +164,7 @@ const collections = {
       title: 'Untitled Archive Note',
       slug: 'untitled-archive-note',
       order: 999,
-      type: 'Class Notes',
+      type: 'Miscellaneous',
       status: 'Active',
       date: today(),
       summary: '',
@@ -567,6 +587,14 @@ function normalizeData(collectionName, inputData, finalSlug) {
     } else {
       data.level = normalizeNumber(data.level, 0)
     }
+  }
+
+  if (collectionName === 'projects') {
+    data.stack = splitList(data.stack)
+    data.highlights = splitList(data.highlights)
+    data.links = Array.isArray(data.links) ? data.links : []
+    data.files = Array.isArray(data.files) ? data.files : []
+    data.featured = normalizeBoolean(data.featured)
   }
 
   if (collectionName === 'journal') {

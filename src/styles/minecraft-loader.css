@@ -1,4 +1,4 @@
-/* Procedural block-world entrance. No game textures or external assets are used. */
+/* Chunk generation entrance, drawn locally in the visual language of the reference animation. */
 .world-entry.entry-loader {
   --world-cream: #f3f1e9;
   --world-shadow: rgba(0, 0, 0, .48);
@@ -55,9 +55,8 @@
   text-shadow: 2px 2px 0 rgba(0, 0, 0, .65);
 }
 
-.world-entry__header > div { display: flex; align-items: baseline; gap: 13px; }
+.world-entry__header > div { display: flex; align-items: baseline; }
 .world-entry__header strong { color: #fff; font: 900 20px/1 "Space Grotesk", sans-serif; }
-.world-entry__header span,
 .world-entry__header p { font-size: 8px; line-height: 1; letter-spacing: .13em; text-transform: uppercase; }
 
 .world-entry__generator {
@@ -80,12 +79,12 @@
 
 .world-entry__map {
   position: relative;
-  width: clamp(188px, 25vw, 310px);
+  width: clamp(220px, 28vw, 430px);
   aspect-ratio: 1;
   display: grid;
   place-items: center;
   overflow: hidden;
-  border: clamp(9px, 1.2vw, 15px) solid #050604;
+  border: clamp(11px, 1.2vw, 17px) solid #050604;
   background: #050604;
   box-shadow:
     0 0 0 2px rgba(255, 255, 255, .08),
@@ -107,11 +106,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, .05);
-  background: linear-gradient(180deg, transparent 49%, rgba(255, 255, 255, .06) 50%, transparent 51%);
-  background-size: 100% 12px;
-  mix-blend-mode: screen;
-  opacity: .5;
+  display: none;
 }
 
 .world-entry__status {
@@ -123,18 +118,8 @@
   text-shadow: 2px 2px 0 #000;
 }
 
-.world-entry__help {
-  max-width: 500px;
-  margin-top: 10px;
-  color: rgba(255, 255, 255, .54);
-  font-size: 8px;
-  line-height: 1.65;
-  letter-spacing: .06em;
-  text-shadow: 1px 1px 0 #000;
-}
-
 .world-entry__enter {
-  width: min(340px, 82vw);
+  width: min(430px, 82vw);
   min-height: 58px;
   margin-top: 24px;
   padding: 0 18px;
@@ -163,21 +148,6 @@
 .world-entry[data-state='ready'] .world-entry__enter:focus-visible { filter: brightness(1.18); }
 .world-entry[data-state='ready'] .world-entry__enter:active { box-shadow: inset 3px 3px 0 #3b3b3b; transform: translateY(2px); }
 
-.world-entry__footer {
-  position: absolute;
-  z-index: 4;
-  left: clamp(20px, 4vw, 58px);
-  right: clamp(20px, 4vw, 58px);
-  bottom: clamp(20px, 4vh, 38px);
-  display: flex;
-  justify-content: space-between;
-  color: rgba(255, 255, 255, .48);
-  font-size: 7px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  text-shadow: 1px 1px 0 #000;
-}
-
 .world-entry[data-state='leaving'] {
   opacity: 1;
   visibility: visible;
@@ -193,10 +163,8 @@
 
 .world-entry[data-state='leaving'] .world-entry__percentage,
 .world-entry[data-state='leaving'] .world-entry__status,
-.world-entry[data-state='leaving'] .world-entry__help,
 .world-entry[data-state='leaving'] .world-entry__enter,
-.world-entry[data-state='leaving'] .world-entry__header,
-.world-entry[data-state='leaving'] .world-entry__footer { opacity: 0; transition: opacity .18s; }
+.world-entry[data-state='leaving'] .world-entry__header { opacity: 0; transition: opacity .18s; }
 
 @keyframes world-overlay-out {
   0%, 62% { opacity: 1; }
@@ -219,17 +187,14 @@
   .world-entry__header p { display: none; }
   .world-entry__generator { transform: translate(-50%, -50%); }
   .world-entry__map { width: min(68vw, 270px); }
-  .world-entry__help { max-width: 84vw; }
-  .world-entry__footer span:last-child { display: none; }
 }
 
 @media (max-height: 620px) and (orientation: landscape) {
-  .world-entry__generator { width: 90vw; grid-template-columns: auto minmax(230px, 390px); grid-template-rows: auto auto auto auto; column-gap: 34px; align-items: center; }
+  .world-entry__generator { width: 90vw; grid-template-columns: auto minmax(230px, 430px); grid-template-rows: auto auto auto; column-gap: 34px; align-items: center; }
   .world-entry__percentage { grid-column: 1; grid-row: 1; margin-bottom: 7px; align-self: end; }
-  .world-entry__map { grid-column: 1; grid-row: 2 / 5; width: min(43vh, 230px); }
+  .world-entry__map { grid-column: 1; grid-row: 2 / 4; width: min(50vh, 270px); }
   .world-entry__status { grid-column: 2; grid-row: 1; align-self: end; }
-  .world-entry__help { grid-column: 2; grid-row: 2; margin-top: 0; }
-  .world-entry__enter { grid-column: 2; grid-row: 3; margin-top: 18px; }
+  .world-entry__enter { grid-column: 2; grid-row: 2; margin-top: 18px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

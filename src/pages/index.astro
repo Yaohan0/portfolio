@@ -20,17 +20,17 @@ const profile = profileEntries[0]?.data ?? {
 const presence = profile.status.toLowerCase()
 
 const records = [
-  { no: '01', title: 'Journal', href: '/journal', type: 'FIELD NOTES', desc: 'Reflections, mistakes, progress logs, and the stories behind what I am learning.' },
-  { no: '02', title: 'Notes', href: '/notes', type: 'SUBJECT LIBRARY', desc: 'Structured course notes for ECOMM, ENNK, EHIP, FDS, and SADS.' },
-  { no: '03', title: 'Labs', href: '/labs', type: 'PRACTICE', desc: 'Hands-on ethical hacking, networking, cloud, Linux, and digital forensics work.' },
-  { no: '04', title: 'Writeups', href: '/writeups', type: 'CTF RECORDS', desc: 'Challenge solutions across web, forensics, crypto, reverse engineering, pwn, and misc.' },
-  { no: '05', title: 'Achievements', href: '/achievements', type: 'MILESTONES', desc: 'Certifications, awards, competitions, school milestones, and completed goals.' },
-  { no: '06', title: 'Skills', href: '/skills', type: 'TOOLKIT', desc: 'A living tracker of tools, techniques, topics, and what I am currently learning.' },
-  { no: '07', title: 'Hobbies', href: '/hobbies', type: 'OFF DUTY', desc: 'Kayak racing, gaming, and the interests that keep life moving outside cybersecurity.' },
-  { no: '08', title: 'Archive', href: '/archive', type: 'DOCUMENTS', desc: 'Older notes, screenshots, experiments, references, drafts, and documentation.' },
+  { no: '01', key: 'logbook', title: 'Logbook', href: '/journal', type: 'PROGRESS LOG', desc: 'Short updates from projects, competitions, training, mistakes, and lessons in progress.' },
+  { no: '02', key: 'notes', title: 'Notes', href: '/notes', type: 'CLASS LIBRARY', desc: 'The working home for everything I capture in class, organised by subject and folder.' },
+  { no: '03', key: 'labs', title: 'Labs', href: '/labs', type: 'PRACTICE', desc: 'Hands-on ethical hacking, networking, cloud, Linux, and digital forensics work.' },
+  { no: '04', key: 'projects', title: 'Projects', href: '/projects', type: 'BUILDS', desc: 'Things I have designed and built, with the decisions, stack, outcome, and next iteration kept together.' },
+  { no: '05', key: 'writeups', title: 'Writeups', href: '/writeups', type: 'SOLVED RECORDS', desc: 'Finished challenges and technical explanations, documented so the method matters as much as the result.' },
+  { no: '06', key: 'achievements', title: 'Achievements', href: '/achievements', type: 'MILESTONES', desc: 'Certifications, awards, competitions, school milestones, and completed goals.' },
+  { no: '07', key: 'skills', title: 'Skills', href: '/skills', type: 'TOOLKIT', desc: 'A living tracker of tools, techniques, topics, and what I am currently learning.' },
+  { no: '08', key: 'archive', title: 'Archive', href: '/archive', type: 'STORAGE', desc: 'Older exports, references, experiments, media, and anything kept outside active class notes.' },
 ]
-const projectRecords = records.filter((record) => !['Hobbies', 'Archive'].includes(record.title))
-const secondaryRecords = records.filter((record) => ['Hobbies', 'Archive'].includes(record.title))
+const projectRecords = records.filter((record) => record.title !== 'Archive')
+const secondaryRecords = records.filter((record) => record.title === 'Archive')
 const focusAreas = [
   { title: 'Ethical hacking', items: ['Web exploitation', 'Enumeration', 'CTF problem-solving'] },
   { title: 'Digital forensics', items: ['Evidence handling', 'File analysis', 'Steganography'] },
@@ -43,28 +43,23 @@ const focusAreas = [
   <div class="entry-loader world-entry" data-entry-loader data-state="loading" role="dialog" aria-modal="true" aria-labelledby="entry-title">
     <div class="world-entry__texture" aria-hidden="true"></div>
     <header class="world-entry__header">
-      <div><strong>YH</strong><span>Java portfolio</span></div>
+      <div><strong>YH</strong></div>
       <p>Singapore · World 2026</p>
     </header>
 
-    <section class="world-entry__generator" aria-describedby="world-entry-help">
+    <section class="world-entry__generator">
       <h1 id="entry-title" class="sr-only">Loading Yaohan’s portfolio world</h1>
       <div class="world-entry__percentage" aria-live="polite"><span data-loader-count>0</span>%</div>
       <div class="world-entry__map" data-world-map>
         <canvas width="288" height="288" data-world-canvas aria-hidden="true"></canvas>
         <span class="world-entry__scan" aria-hidden="true"></span>
       </div>
-      <p class="world-entry__status" data-loader-status>Generating terrain...</p>
-      <p id="world-entry-help" class="world-entry__help">Building a world from field notes, cybersecurity labs and life on the water.</p>
+      <p class="world-entry__status" data-loader-status>Preparing spawn area...</p>
       <button class="world-entry__enter" type="button" data-loader-enter disabled>
         <span>Enter World</span><i aria-hidden="true">›</i>
       </button>
     </section>
 
-    <footer class="world-entry__footer">
-      <span>Yaohan’s Portfolio</span>
-      <span data-world-seed>Seed: 2503587</span>
-    </footer>
   </div>
   <noscript><style>.entry-loader{display:none!important}</style></noscript>
 
@@ -87,7 +82,7 @@ const focusAreas = [
       </div>
 
       <div class="profile-copy">
-        <p class="profile-handle typing-line" data-copy={`Hi, I’m ${profile.name}.`}><span>Hi, I’m {profile.name}.</span></p>
+        <p class="profile-handle typing-line" data-copy="Hi, I’m Yaooohann."><span>Hi, I’m {profile.name}.</span></p>
         <h1 id="hero-title">{profile.name}<em aria-hidden="true">/</em></h1>
         <p class="profile-role">{profile.role}</p>
         <p class="profile-intro">Year 2 Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic, focused on ethical hacking, digital forensics, networking and server security. This is where I document the practical work, mistakes and progress behind what I learn.</p>
@@ -98,7 +93,7 @@ const focusAreas = [
         </div>
         <div class="profile-actions">
           <a class="profile-primary" href="#records">Explore my work <span aria-hidden="true">↘</span></a>
-          <a href={withBase('/hobbies')}>Off the keyboard <span aria-hidden="true">↗</span></a>
+          <a href={withBase('/achievements')}>Milestones <span aria-hidden="true">↗</span></a>
           <a href="https://www.linkedin.com/in/yaohan-wang-a22951363/" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
         </div>
         <p class="profile-status-message">
@@ -161,22 +156,43 @@ const focusAreas = [
           .catch(() => { tempNode.textContent = 'Weather unavailable'; });
 
         const typingLine = hero.querySelector('.typing-line');
-        if (!matchMedia('(prefers-reduced-motion: reduce)').matches && typingLine) {
+        if (typingLine) {
           const output = typingLine.querySelector('span');
-          const copy = typingLine.dataset.copy || '';
-          output.textContent = '';
-          let characterIndex = 0;
-          const typeNext = () => {
-            typingLine.classList.add('is-typing');
-            output.textContent = copy.slice(0, characterIndex + 1);
-            characterIndex += 1;
-            if (characterIndex < copy.length) {
-              setTimeout(typeNext, 46 + Math.random() * 38);
-              return;
-            }
-            typingLine.classList.remove('is-typing');
-          };
-          setTimeout(typeNext, 360);
+          const phrases = ['Hi, I’m Yaohan.', 'Hi, I’m Yaooohann.'];
+          if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            output.textContent = phrases[0];
+          } else {
+            let phraseIndex = 0;
+            let characterIndex = 0;
+            let deleting = false;
+            let started = false;
+            output.textContent = '';
+            const typeNext = () => {
+              const phrase = phrases[phraseIndex];
+              typingLine.classList.add('is-typing');
+              characterIndex += deleting ? -1 : 1;
+              output.textContent = phrase.slice(0, Math.max(0, characterIndex));
+              if (!deleting && characterIndex === phrase.length) {
+                typingLine.classList.remove('is-typing');
+                deleting = true;
+                setTimeout(typeNext, 1300);
+                return;
+              }
+              if (deleting && characterIndex === 0) {
+                deleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                setTimeout(typeNext, 320);
+                return;
+              }
+              setTimeout(typeNext, deleting ? 34 : 52 + Math.random() * 34);
+            };
+            const startTyping = () => {
+              if (started) return;
+              started = true;
+              setTimeout(typeNext, 220);
+            };
+            window.addEventListener('portfolio:entered', startTyping, { once: true });
+          }
         }
       })();
     </script>
@@ -185,14 +201,21 @@ const focusAreas = [
       <h2>Some projects<span>.</span></h2>
       <div class="reference-project-grid">
         {projectRecords.map((record, index) => (
-          <a class={`reference-project-card project-${index + 1}`} href={withBase(record.href)}>
+          <a class={`reference-project-card project-${index + 1}`} data-project={record.key} href={withBase(record.href)}>
             <div class="project-preview" aria-hidden="true">
-              <span>{record.no}</span><strong>{record.title.slice(0, 1)}</strong><i></i><i></i>
+              <span>{record.no}</span>
+              {record.key === 'logbook' && <div class="project-symbol symbol-logbook"><i></i><i></i><i></i><b></b></div>}
+              {record.key === 'notes' && <div class="project-symbol symbol-notes"><i></i><i></i><i></i></div>}
+              {record.key === 'labs' && <div class="project-symbol symbol-labs"><b></b><i></i><i></i><i></i></div>}
+              {record.key === 'projects' && <div class="project-symbol symbol-projects"><b></b><i></i><i></i><i></i></div>}
+              {record.key === 'writeups' && <div class="project-symbol symbol-writeups"><b>&gt;_</b><i></i><i></i></div>}
+              {record.key === 'achievements' && <div class="project-symbol symbol-achievements"><b></b>{Array.from({ length: 8 }).map(() => <i></i>)}</div>}
+              {record.key === 'skills' && <div class="project-symbol symbol-skills"><b></b><i></i><i></i><i></i><i></i></div>}
             </div>
             <div class="project-card-copy"><h3>{record.title}</h3><p>{record.desc}</p><div><span>{record.type}</span><span>2026</span></div></div>
           </a>
         ))}
-        {secondaryRecords.map((record) => <a class="reference-project-wide" href={withBase(record.href)}><div><strong>{record.title}</strong><p>{record.desc}</p></div><span>OPEN {record.title.toUpperCase()} ↗</span></a>)}
+        {secondaryRecords.map((record) => <a class="reference-project-wide" href={withBase(record.href)}><div class="archive-symbol" aria-hidden="true"><i></i><i></i><i></i></div><div><strong>{record.title}</strong><p>{record.desc}</p></div><span>OPEN {record.title.toUpperCase()} ↗</span></a>)}
       </div>
     </section>
 
@@ -248,53 +271,45 @@ const focusAreas = [
         return value - Math.floor(value);
       };
 
-      const terrainColour = (x, y) => {
-        const broad = (Math.sin(x * .22) + Math.cos(y * .19) + Math.sin((x + y) * .11)) / 3;
-        const detail = noise(x, y) * .42 - .21;
-        const height = broad + detail;
-        const moisture = noise(Math.floor(x / 3), Math.floor(y / 3), 9);
-        if (height < -.33) return noise(x, y, 2) > .72 ? '#315f72' : '#244b62';
-        if (height < -.18) return '#b6a468';
-        if (height > .54) return noise(x, y, 6) > .55 ? '#9a978e' : '#777b72';
-        if (moisture > .73) return noise(x, y, 3) > .42 ? '#294d2d' : '#1f3d26';
-        return noise(x, y, 4) > .58 ? '#547a39' : '#456d34';
-      };
-
       const drawWorld = (value) => {
         if (!context || value === lastDrawnProgress) return;
         lastDrawnProgress = value;
         context.imageSmoothingEnabled = false;
-        context.fillStyle = '#050604';
+        context.fillStyle = '#020202';
         context.fillRect(0, 0, canvas.width, canvas.height);
 
         const centre = Math.floor(gridSize / 2);
-        const radius = Math.max(1, Math.ceil((value / 100) * (gridSize / 2)));
+        if (value === 0) return;
+        const outerRadius = Math.max(1, Math.ceil((value / 100) * (gridSize / 2 - 2)));
+        const innerRadius = Math.max(1, Math.floor(outerRadius * .55));
         for (let y = 0; y < gridSize; y += 1) {
           for (let x = 0; x < gridSize; x += 1) {
             const distance = Math.max(Math.abs(x - centre), Math.abs(y - centre));
-            if (distance > radius) continue;
-            context.fillStyle = terrainColour(x, y);
+            const raggedEdge = Math.floor(noise(x, y, 4) * 3) - 1;
+            if (distance > outerRadius + (distance >= outerRadius - 1 ? raggedEdge : 0)) continue;
+            const isInner = distance <= innerRadius + (distance >= innerRadius - 1 ? Math.floor(noise(x, y, 8) * 2) - 1 : 0);
+            context.fillStyle = isInner ? '#f4f4f4' : (noise(x, y, 12) > .68 ? '#989898' : '#adadad');
             context.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-            if (noise(x, y, 12) > .91) {
-              context.fillStyle = 'rgba(255,255,255,.11)';
-              context.fillRect(x * cellSize, y * cellSize, cellSize, 1);
-            }
           }
         }
 
-        const spawnX = centre * cellSize;
-        const spawnY = centre * cellSize;
-        context.fillStyle = '#f1eee5';
-        context.fillRect(spawnX - 2, spawnY - 2, 4, 4);
-        context.fillStyle = '#d85443';
-        context.fillRect(spawnX - 1, spawnY - 1, 2, 2);
+        if (innerRadius > 2) {
+          const innerSize = (innerRadius * 2 + 1) * cellSize;
+          const innerStart = (centre - innerRadius) * cellSize;
+          context.strokeStyle = '#263d80';
+          context.lineWidth = 7;
+          context.strokeRect(innerStart - 4, innerStart - 4, innerSize + 8, innerSize + 8);
+          context.strokeStyle = '#49ce20';
+          context.lineWidth = 4;
+          context.strokeRect(innerStart - 1, innerStart - 1, innerSize + 2, innerSize + 2);
+        }
       };
 
       const phase = (value) => {
-        if (value < 18) return 'Preparing spawn area...';
-        if (value < 48) return 'Loading terrain...';
-        if (value < 76) return 'Generating world...';
-        if (value < 96) return 'Joining region files...';
+        if (value < 12) return 'Preparing spawn area...';
+        if (value < 34) return 'Loading terrain...';
+        if (value < 68) return 'Generating chunks...';
+        if (value < 96) return 'Lighting world...';
         return 'World ready';
       };
 
@@ -343,6 +358,7 @@ const focusAreas = [
         map?.setAttribute('aria-hidden', 'true');
         document.documentElement.classList.remove('entry-is-loading');
         page?.removeAttribute('inert');
+        window.setTimeout(() => window.dispatchEvent(new CustomEvent('portfolio:entered')), reduceMotion ? 0 : 820);
         window.setTimeout(() => loader.remove(), reduceMotion ? 0 : 1300);
       };
 
