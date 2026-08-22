@@ -3,7 +3,9 @@ import Layout from '../layouts/Layout.astro'
 import Navbar from '../components/Navbar.astro'
 import { getCollection } from 'astro:content'
 import { withBase } from '../utils/paths'
-const entries=(await getCollection('journal')).sort((a,b)=>a.data.order-b.data.order)
+const entries=(await getCollection('journal')).sort((a,b)=>
+  b.data.date.localeCompare(a.data.date) || a.data.order - b.data.order
+)
 const groups=['Progress','Challenges','Reflections','Events']
 const groupFor=(entry) => {
   const haystack=`${entry.data.title} ${entry.data.category} ${entry.data.tags.join(' ')}`.toLowerCase()
