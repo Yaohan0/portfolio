@@ -25,3 +25,10 @@ Agent Sudo: https://medium.com/@sunjid-ahmed/agent-sudo-tryhackme-walkthrough-d4
 
 Tools: 
 https://cryptohack.org/courses/intro/xorkey1/
+
+[OSINT]
+OhSINT
+Walkthrough: https://medium.com/@vl.shumanov/adventures-in-osint-land-pt-1-c6d68a4d4a4d
+Tools:
+https://wigle.net/ 
+https://haveibeenpwned.com/
