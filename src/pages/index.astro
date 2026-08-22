@@ -245,6 +245,19 @@ const focusAreas = [
       const loader = document.querySelector('[data-entry-loader]');
       if (!loader) return;
 
+      const entrySessionKey = 'yh.world.entered';
+      let hasEnteredThisSession = false;
+      try {
+        hasEnteredThisSession = sessionStorage.getItem(entrySessionKey) === 'true';
+      } catch {}
+
+      if (hasEnteredThisSession) {
+        loader.remove();
+        document.documentElement.classList.remove('entry-is-loading');
+        window.setTimeout(() => window.dispatchEvent(new CustomEvent('portfolio:entered')), 0);
+        return;
+      }
+
       const enter = loader.querySelector('[data-loader-enter]');
       const count = loader.querySelector('[data-loader-count]');
       const status = loader.querySelector('[data-loader-status]');
@@ -354,6 +367,7 @@ const focusAreas = [
       const leave = () => {
         if (!ready || departed) return;
         departed = true;
+        try { sessionStorage.setItem(entrySessionKey, 'true'); } catch {}
         window.dispatchEvent(new CustomEvent('portfolio:enter-requested'));
         loader.dataset.state = 'leaving';
         map?.setAttribute('aria-hidden', 'true');
