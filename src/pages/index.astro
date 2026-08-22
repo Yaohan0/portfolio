@@ -354,6 +354,7 @@ const focusAreas = [
       const leave = () => {
         if (!ready || departed) return;
         departed = true;
+        window.dispatchEvent(new CustomEvent('portfolio:enter-requested'));
         loader.dataset.state = 'leaving';
         map?.setAttribute('aria-hidden', 'true');
         document.documentElement.classList.remove('entry-is-loading');
