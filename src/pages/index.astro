@@ -120,7 +120,7 @@ const focusAreas = [
       <div class="profile-scroll" aria-hidden="true"><span>SCROLL TO EXPLORE</span><i></i></div>
     </section>
 
-    <script is:inline>
+    <script is:inline data-astro-rerun>
       (() => {
         const hero = document.querySelector('.profile-hero');
         const timeNode = document.getElementById('sg-time');
@@ -240,7 +240,7 @@ const focusAreas = [
     </footer>
   </main>
 
-  <script is:inline>
+  <script is:inline data-astro-rerun>
     (() => {
       const loader = document.querySelector('[data-entry-loader]');
       if (!loader) return;

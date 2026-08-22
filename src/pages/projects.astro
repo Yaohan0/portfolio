@@ -55,7 +55,7 @@ const categories = [...new Set(projects.map((project) => project.data.category |
     </section>
   </main>
 
-  <script is:inline>
+  <script is:inline data-astro-rerun>
     const filters=[...document.querySelectorAll('[data-category]')];const records=[...document.querySelectorAll('[data-project-category]')];
     filters.forEach(button=>button.addEventListener('click',()=>{filters.forEach(item=>item.classList.remove('active'));button.classList.add('active');records.forEach(record=>record.hidden=button.dataset.category!=='all'&&record.dataset.projectCategory!==button.dataset.category)}));
   </script>

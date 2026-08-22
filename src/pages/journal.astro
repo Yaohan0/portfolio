@@ -28,7 +28,7 @@ const linkedInCount=entries.filter(entry=>Boolean(entry.data.linkedinUrl)).lengt
     {entry.data.cover && <img src={withBase(entry.data.cover)} alt={entry.data.title} loading="lazy" />}
     <span class="entry-plus">+</span></a>)}</section>
   <p class="logbook-empty" hidden>No journal entries in this view yet.</p>
-  <script is:inline>
+  <script is:inline data-astro-rerun>
     const logButtons=[...document.querySelectorAll('[data-log-filter]')]; const logEntries=[...document.querySelectorAll('[data-log-group]')]; const logEmpty=document.querySelector('.logbook-empty');
     logButtons.forEach(button=>button.addEventListener('click',()=>{const group=button.dataset.logFilter;let shown=0;logButtons.forEach(item=>item.classList.toggle('active',item===button));logEntries.forEach(entry=>{const visible=group==='all'||entry.dataset.logGroup===group||(group==='linkedin'&&entry.dataset.logLinkedin==='true');entry.hidden=!visible;if(visible)shown+=1});logEmpty.hidden=shown>0;}));
   </script>

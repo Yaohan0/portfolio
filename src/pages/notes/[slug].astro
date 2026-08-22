@@ -17,7 +17,7 @@ const target = `${withBase('notes')}?subject=${encodeURIComponent(note.data.subj
     <p>Opening {note.data.subject} in the Notes desk…</p>
     <a href={target}>Continue to Notes desk</a>
   </main>
-  <script is:inline define:vars={{ target }}>location.replace(target)</script>
+  <script is:inline data-astro-rerun define:vars={{ target }}>location.replace(target)</script>
   <style>
     .note-forward{min-height:100vh;display:grid;place-content:center;gap:14px;text-align:center;background:#111;color:#f4f1ea}.note-forward p{font:650 1.1rem "Space Grotesk",sans-serif}.note-forward a{color:#d6f26b;font:700 9px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase}
   </style>

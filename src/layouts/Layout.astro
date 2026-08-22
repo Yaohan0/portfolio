@@ -4,6 +4,7 @@ import '../styles/profile-and-hobbies.css'
 import '../styles/minecraft-loader.css'
 import '../styles/home-motion.css'
 import '../styles/collection-refine.css'
+import { ClientRouter } from 'astro:transitions'
 import { base, withBase } from '../utils/paths'
 import SoundCloudPlayer from '../components/SoundCloudPlayer.astro'
 
@@ -38,6 +39,7 @@ const socialImage = new URL(withBase('og.png'), Astro.site ?? Astro.url.origin)
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
     <title>{title}</title>
+    <ClientRouter />
     <script is:inline>document.documentElement.classList.add('js')</script>
 
     <script
@@ -50,7 +52,7 @@ const socialImage = new URL(withBase('og.png'), Astro.site ?? Astro.url.origin)
     <slot />
     <SoundCloudPlayer />
 
-    <script is:inline>
+    <script is:inline data-astro-rerun>
       (() => {
         const selector = '.collection-hero h1, .terminal-hero h1, .skills-hero h1, .archive-hero h1, #active-subject-name';
         const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -95,7 +97,7 @@ const socialImage = new URL(withBase('og.png'), Astro.site ?? Astro.url.origin)
     </script>
     <noscript><style>.collection-hero h1,.terminal-hero h1,.skills-hero h1,.archive-hero h1,#active-subject-name{visibility:visible!important}</style></noscript>
 
-    <script is:inline define:vars={{ base }}>
+    <script is:inline data-astro-rerun define:vars={{ base }}>
       const assetBase = base.endsWith('/') ? base : `${base}/`;
       const resolveAsset = (value) => {
         if (!value || /^(https?:|mailto:|tel:|#)/.test(value)) return value;
