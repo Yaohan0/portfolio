@@ -9,7 +9,7 @@ const playlistUrl = `https://open.spotify.com/playlist/${playlistId}`
   data-music-player
   data-state="paused"
   data-collapsed="false"
-  data-expanded="false"
+  data-expanded="true"
   transition:persist="site-music-player"
   aria-label="Spotify background music player"
 >
@@ -44,6 +44,9 @@ const playlistUrl = `https://open.spotify.com/playlist/${playlistId}`
   <div class="music-player__playlist" data-player-playlist>
     <div id="spotify-playlist-player" data-player-engine></div>
   </div>
+  <p class="music-player__notice" data-player-notice>
+    Spotify Premium plays the complete songs. If Spotify shows a preview, open the playlist and sign in once in this browser.
+  </p>
 </aside>
 
 <script is:inline define:vars={{ playlistUri }}>
@@ -57,6 +60,7 @@ const playlistUrl = `https://open.spotify.com/playlist/${playlistId}`
     const list = root.querySelector('[data-player-list]');
     const collapse = root.querySelector('[data-player-collapse]');
     const expand = root.querySelector('[data-player-expand]');
+    const notice = root.querySelector('[data-player-notice]');
     const storage = {
       intent: 'yh.music.intent',
       collapsed: 'yh.music.collapsed',
@@ -93,7 +97,7 @@ const playlistUrl = `https://open.spotify.com/playlist/${playlistId}`
     };
 
     root.dataset.collapsed = localStorage.getItem(storage.collapsed) === 'true' ? 'true' : 'false';
-    setExpanded(localStorage.getItem(storage.expanded) === 'true');
+    setExpanded(localStorage.getItem(storage.expanded) !== 'false');
 
     toggle?.addEventListener('click', () => {
       if (root.dataset.state === 'playing') requestPause();
@@ -118,6 +122,11 @@ const playlistUrl = `https://open.spotify.com/playlist/${playlistId}`
         height: 352,
       }, (EmbedController) => {
         controller = EmbedController;
+        const spotifyFrame = root.querySelector('iframe');
+        if (spotifyFrame) {
+          spotifyFrame.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');
+          spotifyFrame.setAttribute('allowfullscreen', '');
+        }
         controller.addListener('ready', () => {
           ready = true;
           const hasEntryGate = Boolean(document.querySelector('[data-entry-loader]'));
@@ -130,6 +139,13 @@ const playlistUrl = `https://open.spotify.com/playlist/${playlistId}`
           root.dataset.position = String(Math.round(state.position || 0));
           root.dataset.playingUri = state.playingURI || '';
           setPlaying(!state.isPaused && !state.isBuffering);
+          if (notice && state.duration > 0) {
+            const previewMode = state.duration <= 31000;
+            notice.dataset.mode = previewMode ? 'preview' : 'full';
+            notice.textContent = previewMode
+              ? 'Preview mode detected — open the playlist, sign in to Spotify in this browser, then refresh once.'
+              : 'Full-track Spotify playback is active.';
+          }
         });
       });
     };
@@ -210,10 +226,13 @@ const playlistUrl = `https://open.spotify.com/playlist/${playlistId}`
   .music-player__playlist > div { min-height: 0; overflow: hidden; }
   .music-player[data-expanded='true'] .music-player__playlist { grid-template-rows: 1fr; opacity: 1; }
   :global(.music-player__playlist iframe) { display: block; width: 100%; height: 352px; border: 0; border-radius: 12px; }
+  .music-player__notice { margin: 8px 8px 0; color: #8b8f8c; font: 600 8px/1.45 'JetBrains Mono', monospace; letter-spacing: .06em; text-align: center; }
+  .music-player__notice[data-mode='full'] { color: var(--player-accent); }
+  .music-player__notice[data-mode='preview'] { color: #ffb05d; }
   .music-player__mini { display: none; width: 54px; height: 54px; margin-left: auto; border: 1px solid rgba(255,255,255,.15); border-radius: 50%; background: rgba(12,13,15,.92); backdrop-filter: blur(18px); }
   .music-player__mini span { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: #071108; background: var(--player-accent); font-size: 17px; }
   .music-player[data-collapsed='true'] { width: 54px; }
-  .music-player[data-collapsed='true'] .music-player__panel, .music-player[data-collapsed='true'] .music-player__playlist { display: none; }
+  .music-player[data-collapsed='true'] .music-player__panel, .music-player[data-collapsed='true'] .music-player__playlist, .music-player[data-collapsed='true'] .music-player__notice { display: none; }
   .music-player[data-collapsed='true'] .music-player__mini { display: block; }
   @keyframes player-eq { from { transform: scaleY(.55); } to { transform: scaleY(2.7); } }
   @media (max-width: 620px) {
