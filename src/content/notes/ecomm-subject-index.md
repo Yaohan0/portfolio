@@ -8,6 +8,7 @@ summary: >-
   Central index for Effective Communication notes, writing exercises,
   presentations, and supporting files.
 status: Active
+folder: Notes
 tags:
   - communication
   - writing
@@ -24,6 +25,8 @@ This folder is the home for ECOMM lesson notes, writing exercises, presentation 
 - Put the main takeaway near the top.
 - Attach presentation slides or marked-up documents under Files.
 - Use tags to group writing, speaking, teamwork, and assessment material.
+
+## 📁 Notes
 
 [Week 1 (Student).pdf](/uploads/1786753655862-week-1-student-.pdf)
 
@@ -44,3 +47,11 @@ This folder is the home for ECOMM lesson notes, writing exercises, presentation 
 [Week 6 E-Learning Visuals.pdf](/uploads/1786753918889-week-6-e-learning-visuals.pdf)
 
 [Week 11 (Student)-1.pdf](/uploads/1786753918973-week-11-student-1.pdf)
+
+## 📁 Assignments
+
+[ECOMM Sample (Achievement).pdf](/uploads/1787393263461-ecomm-sample-achievement-.pdf)
+
+[Presentation of Message (ProM) Template.docx](/uploads/1787393263495-presentation-of-message-prom-template.docx)
+
+[Seminar Presentation Template.docx](/uploads/1787393263506-seminar-presentation-template.docx)
