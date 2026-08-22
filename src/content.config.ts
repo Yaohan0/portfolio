@@ -81,6 +81,7 @@ const journal = defineCollection({
     summary: z.string(),
     tags: z.array(z.string()).default([]),
     lesson: z.string(),
+    linkedinUrl: z.string().default(''),
     cover: z.string().optional(),
 
     // New fields

@@ -68,11 +68,11 @@ const collections = {
   },
 
   journal: {
-    label: 'Logbook',
+    label: 'Journal',
     folder: path.join(rootDir, 'src/content/journal'),
     defaults: {
-      title: 'Untitled Logbook Entry',
-      slug: 'untitled-logbook-entry',
+      title: 'Untitled Journal Entry',
+      slug: 'untitled-journal-entry',
       order: 999,
       date: today(),
       mood: 'Writing',
@@ -80,6 +80,7 @@ const collections = {
       summary: '',
       tags: [],
       lesson: '',
+      linkedinUrl: '',
       cover: '',
       pinned: false,
       featured: false,

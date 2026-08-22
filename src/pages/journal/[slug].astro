@@ -24,6 +24,7 @@ const allEntries = await getCollection('journal')
 
 const hasCover = Boolean(entry.data.cover)
 const hasTags = entry.data.tags.length > 0
+const hasLinkedInPost = Boolean(entry.data.linkedinUrl)
 
 const relatedEntries = allEntries
   .filter((item) => item.id !== entry.id)
@@ -32,9 +33,9 @@ const relatedEntries = allEntries
   .slice(0, 4)
 ---
 
-<Layout title={`${entry.data.title} — Logbook`}>
+<Layout title={`${entry.data.title} — Journal`}>
   <main class="detail-page detail-journal min-h-screen bg-[#090909] text-[#f3efe4]">
-    <Navbar current="Logbook" />
+    <Navbar current="Journal" />
 
     <!-- HERO -->
     <section class="site-grid px-6 pt-36 pb-16">
@@ -43,7 +44,7 @@ const relatedEntries = allEntries
           href={withBase('journal')}
           class="font-mono text-xs uppercase tracking-widest text-[#6f6a63] transition hover:text-[#c9ff5f]"
         >
-          ← Back to Logbook
+          ← Back to Journal
         </a>
 
         <div class="mt-10 flex flex-wrap gap-2">
@@ -109,12 +110,25 @@ const relatedEntries = allEntries
             href={withBase('journal')}
             class="font-mono text-xs uppercase tracking-widest text-[#6f6a63] transition hover:text-[#c9ff5f]"
           >
-            ← Back to Logbook
+            ← Back to Journal
           </a>
         </div>
       </article>
 
       <aside class="space-y-6 lg:sticky lg:top-28 lg:self-start">
+        {hasLinkedInPost && (
+          <article class="journal-linkedin-card rounded-3xl border border-[#0a66c2]/35 bg-[#0a66c2]/10 p-6">
+            <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#0a66c2]">
+              Also on LinkedIn
+            </p>
+            <p class="mt-4 text-sm leading-6 text-[#696258]">
+              This journal entry is connected to a post on my LinkedIn profile.
+            </p>
+            <a href={entry.data.linkedinUrl} target="_blank" rel="noreferrer" class="mt-5 inline-flex rounded-full border border-[#0a66c2]/40 px-4 py-2 font-mono text-[0.65rem] font-bold uppercase tracking-widest text-[#0a66c2] transition hover:bg-[#0a66c2] hover:text-white">
+              View LinkedIn post ↗
+            </a>
+          </article>
+        )}
         <article class="rounded-3xl border border-white/10 bg-[#111111]/80 p-6">
           <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
             Entry Info

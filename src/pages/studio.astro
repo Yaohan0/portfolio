@@ -65,7 +65,7 @@ import '../styles/global.css'
           <p class="font-mono text-xs uppercase tracking-[0.35em] text-[#c9ff5f]">Local Editor</p>
 
           <p class="mt-3 text-sm leading-6 text-[#a9a196]">
-            Edit your profile, class notes, logbook, projects and every portfolio collection.
+            Edit your profile, class notes, journal, projects and every portfolio collection.
           </p>
         </div>
 
@@ -364,13 +364,13 @@ import '../styles/global.css'
         },
 
         journal: {
-          label: "Logbook",
+          label: "Journal",
           titleField: "title",
           summaryField: "summary",
           pageBase: "/journal/",
           defaults: {
-            title: "Untitled Logbook Entry",
-            slug: "untitled-logbook-entry",
+            title: "Untitled Journal Entry",
+            slug: "untitled-journal-entry",
             order: 999,
             date: new Date().toISOString().slice(0, 10),
             mood: "Writing",
@@ -378,6 +378,7 @@ import '../styles/global.css'
             summary: "",
             tags: [],
             lesson: "",
+            linkedinUrl: "",
             cover: "",
             pinned: false,
             featured: false,
@@ -389,6 +390,7 @@ import '../styles/global.css'
             { name: "category", label: "Category", type: "select", options: ["Progress", "Challenges", "Reflections", "Events"] },
             { name: "tags", label: "Tags", type: "list" },
             { name: "lesson", label: "Takeaway", type: "textarea" },
+            { name: "linkedinUrl", label: "LinkedIn post URL (optional)", type: "text" },
             { name: "pinned", label: "Pinned", type: "checkbox" },
             { name: "featured", label: "Featured", type: "checkbox" },
           ],
