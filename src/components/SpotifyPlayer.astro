@@ -122,6 +122,7 @@ const playlistUrl = `https://open.spotify.com/playlist/${playlistId}`
         height: 352,
       }, (EmbedController) => {
         controller = EmbedController;
+        ready = true;
         const spotifyFrame = root.querySelector('iframe');
         if (spotifyFrame) {
           spotifyFrame.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');
@@ -132,6 +133,8 @@ const playlistUrl = `https://open.spotify.com/playlist/${playlistId}`
           const hasEntryGate = Boolean(document.querySelector('[data-entry-loader]'));
           if (!hasEntryGate && desiredPlaying) controller.resume();
         });
+        const hasEntryGate = Boolean(document.querySelector('[data-entry-loader]'));
+        if (!hasEntryGate && desiredPlaying) controller.resume();
         controller.addListener('playback_started', () => setPlaying(true));
         controller.addListener('playback_update', (event) => {
           const state = event?.data;
