@@ -6,7 +6,7 @@ import '../styles/home-motion.css'
 import '../styles/collection-refine.css'
 import { ClientRouter } from 'astro:transitions'
 import { base, withBase } from '../utils/paths'
-import SoundCloudPlayer from '../components/SoundCloudPlayer.astro'
+import SpotifyPlayer from '../components/SpotifyPlayer.astro'
 
 interface Props {
   title?: string
@@ -50,7 +50,7 @@ const socialImage = new URL(withBase('og.png'), Astro.site ?? Astro.url.origin)
 
   <body>
     <slot />
-    <SoundCloudPlayer />
+    <SpotifyPlayer />
 
     <script is:inline data-astro-rerun>
       (() => {
