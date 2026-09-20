@@ -302,7 +302,7 @@ async function publishPendingChanges(message) {
     }
   }
 
-  await runGit(['push', 'origin', 'main'])
+  await runGit(['push', 'origin', 'HEAD:main'])
 
   files.forEach((file) => pendingPublishFiles.delete(file))
 
