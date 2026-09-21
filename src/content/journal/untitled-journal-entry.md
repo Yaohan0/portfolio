@@ -1,11 +1,11 @@
 ---
-title: "LeetCode - Longest Common Prefix\_"
+title: "LeetCode - Palindrome Number\_"
 slug: untitled-journal-entry
 order: 999
 date: '2026-09-20'
 mood: Writing
 category: Progress
-summary: Quite interesting problem...
+summary: 'slicing [::-1]'
 tags: []
 lesson: ''
 linkedinUrl: ''
@@ -13,64 +13,55 @@ cover: ''
 pinned: false
 featured: false
 ---
-Write a function to find the longest common prefix string amongst an array of strings.
-
-If there is no common prefix, return an empty string "".
+Given an integer x, return true if x is a palindrome, and false otherwise.
 
  
 
 Example 1:
 
-Input: strs = ["flower","flow","flight"]
-Output: "fl"
+Input: x = 121
+Output: true
+Explanation: 121 reads as 121 from left to right and from right to left.
 
 
 Example 2:
 
-Input: strs = ["dog","racecar","car"]
-Output: ""
-Explanation: There is no common prefix among the input strings.
+Input: x = -121
+Output: false
+Explanation: From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.
+
+
+Example 3:
+
+Input: x = 10
+Output: false
+Explanation: Reads 01 from right to left. Therefore it is not a palindrome.
 
 
  
 
 Constraints:
 
-1 <= strs.length <= 200
-0 <= strs[i].length <= 200
-strs[i] consists of only lowercase English letters if it is non-empty.
+-231 <= x <= 231 - 1
 
-Original Idea: Store the strings in a dictionary. go through each word in the hash map/dictionary & check if the first element if its the same and so on.
+Original Ideas: 
+1) Hashmap? using first and last number and middle numbers if theres more than 1 to be the same. If true, then its palindrome number 
 
-Refined Idea: [No need hashmap / Dictionary] 
-- 1: Take the first string as the initial prefix 
-- 2: Compare the prefix with each subsequent string 
--3: if the current string doesn't start with the prefix, shorten it
--4: Continue until everything matches 
+2) Reverse the number to see if theyre the same as the original using slicing! 
+
+
+FINALISED: Second option much easier
 
 ```bash
 class Solution(object):
-    def longestCommonPrefix(self, strs):
-        if not strs:
-            return ""
-
-        prefix = strs[0]
-
-        for string in strs[1:]:
-            i = 0
-
-            while i < len(prefix) and i < len(string):
-                if prefix[i] != string[i]:
-                    break
-                i += 1
-
-            prefix = prefix[:i]
-
-            if not prefix:
-                return ""
-
-        return prefix
-
+    def isPalindrome(self, x):
+        """
+        :type x: int
+        :rtype: bool
+        """
+        
+        s = str(x)
+        return s == s[::-1]
 ```
 
-![Image](/uploads/1789873801210-screenshot-2026-09-20-110952.png)
+![Image]()
