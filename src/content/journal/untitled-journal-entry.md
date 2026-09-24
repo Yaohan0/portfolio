@@ -21,8 +21,6 @@ Open brackets must be closed by the same type of brackets.
 Open brackets must be closed in the correct order.
 Every close bracket has a corresponding open bracket of the same type.
 
- 
-
 Example 1:
 
 Input: s = "()"
@@ -53,14 +51,10 @@ Input: s = "([)]"
 
 Output: false
 
- 
-
 Constraints:
 
 1 <= s.length <= 104
 s consists of parentheses only '()[]{}'.
-
-
 
 ```bash
 class Solution(object):
@@ -85,5 +79,7 @@ class Solution(object):
 
         return len(stack) == 0
 ```
+
+## 📁 Notes
 
 ![Image](/uploads/1790235086112-screenshot-2026-09-24-153114.png)
