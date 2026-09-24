@@ -339,6 +339,24 @@ function slugify(input) {
     .replace(/^-+|-+$/g, '')
 }
 
+async function uniqueDocumentSlug(folder, desiredSlug, existingSlug = '') {
+  let candidate = desiredSlug
+  let suffix = 2
+
+  while (candidate !== existingSlug) {
+    try {
+      await fs.access(path.join(folder, `${candidate}.md`))
+      candidate = `${desiredSlug}-${suffix}`
+      suffix += 1
+    } catch (error) {
+      if (error.code === 'ENOENT') return candidate
+      throw error
+    }
+  }
+
+  return candidate
+}
+
 function splitList(value) {
   if (Array.isArray(value)) return value
 
@@ -732,6 +750,7 @@ app.post('/api/docs/:collection/:slug', async (req, res) => {
   try {
     const collectionName = req.params.collection
     const oldSlug = req.params.slug
+    const creatingDocument = req.body?.create === true || oldSlug === '__new__'
     const collection = getCollection(collectionName)
 
     await fs.mkdir(collection.folder, { recursive: true })
@@ -740,18 +759,24 @@ app.post('/api/docs/:collection/:slug', async (req, res) => {
     const blocks = Array.isArray(req.body.blocks) ? req.body.blocks : []
 
     const titleValue = inputData.title || inputData.name || oldSlug
-    const finalSlug = slugify(inputData.slug || titleValue || oldSlug)
+    const requestedSlug = slugify(inputData.slug || titleValue || oldSlug)
 
-    if (!finalSlug) {
+    if (!requestedSlug) {
       throw new Error('Slug cannot be empty.')
     }
+
+    const finalSlug = await uniqueDocumentSlug(
+      collection.folder,
+      requestedSlug,
+      creatingDocument ? '' : oldSlug,
+    )
 
     const data = normalizeData(collectionName, inputData, finalSlug)
     const body = blocksToMarkdown(blocks)
     const output = matter.stringify(body, data)
 
     const newFilePath = path.join(collection.folder, `${finalSlug}.md`)
-    const oldFilePath = path.join(collection.folder, `${oldSlug}.md`)
+    const oldFilePath = creatingDocument ? '' : path.join(collection.folder, `${oldSlug}.md`)
 
     await fs.writeFile(newFilePath, output, 'utf8')
     queueForPublish(newFilePath)
@@ -771,7 +796,7 @@ app.post('/api/docs/:collection/:slug', async (req, res) => {
       }
     }
 
-    if (oldSlug !== finalSlug) {
+    if (!creatingDocument && oldSlug !== finalSlug) {
       try {
         await fs.unlink(oldFilePath)
         queueForPublish(oldFilePath)

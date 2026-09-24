@@ -571,6 +571,7 @@ import '../styles/global.css'
       let collection = "writeups";
       let docs = [];
       let currentSlug = "";
+      let creatingDocument = false;
       let currentData = {};
       let blocks = [];
       let isDirty = false;
@@ -715,6 +716,7 @@ import '../styles/global.css'
       const loadDoc = async (slug) => {
         const doc = await request(`${API}/docs/${collection}/${slug}`);
 
+        creatingDocument = false;
         currentSlug = slug;
         currentData = doc.data;
         blocks = doc.blocks;
@@ -730,12 +732,14 @@ import '../styles/global.css'
 
       const newDoc = () => {
         currentData = structuredClone(config().defaults);
-        currentSlug = currentData.slug;
+        creatingDocument = true;
+        currentSlug = "";
         blocks = [{ type: "paragraph", text: "" }];
 
         fillFields();
         renderBlocks();
         renderPreview();
+        renderDocList();
         renderFileBrowser();
         markDirty();
         saveStudioView();
@@ -814,7 +818,9 @@ import '../styles/global.css'
         const titleField = config().titleField;
         const summaryField = config().summaryField;
 
-        $("current-path").textContent = `src/content/${collection}/${currentData.slug}.md`;
+        $("current-path").textContent = creatingDocument
+          ? `src/content/${collection}/NEW DOCUMENT (unsaved)`
+          : `src/content/${collection}/${currentData.slug}.md`;
         $("editor-title").textContent = `${config().label} Editor`;
         $("title-label").textContent = titleField === "name" ? "Name" : "Title";
         $("summary-label").textContent =
@@ -1127,6 +1133,9 @@ import '../styles/global.css'
           const value = titleNode.innerText.replace(/\n/g, " ");
           $("field-title").value = value;
           currentData[config().titleField] = value;
+          if (creatingDocument && (!$("field-slug").value || $("field-slug").value.startsWith("untitled"))) {
+            $("field-slug").value = slugify(value);
+          }
           markDirty();
         });
         summaryNode?.addEventListener("input", () => {
@@ -1423,8 +1432,9 @@ import '../styles/global.css'
         try {
           setSaveState("dirty", "SAVING...");
           collectFields();
+          const saveTarget = creatingDocument ? "__new__" : currentSlug;
 
-          const result = await request(`${API}/docs/${collection}/${currentSlug}`, {
+          const result = await request(`${API}/docs/${collection}/${saveTarget}`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -1432,10 +1442,12 @@ import '../styles/global.css'
             body: JSON.stringify({
               data: currentData,
               blocks,
+              create: creatingDocument,
             }),
           });
 
           currentSlug = result.slug;
+          creatingDocument = false;
           savedLocally = true;
           saveStudioView();
 
@@ -1463,13 +1475,15 @@ import '../styles/global.css'
         collectFields();
         const copy = structuredClone(currentData);
         const titleField = config().titleField;
+        const sourceSlug = currentData.slug || currentSlug || slugify(displayTitle(copy));
         copy[titleField] = `${displayTitle(copy)} Copy`;
         copy.title = copy[titleField];
-        copy.slug = `${currentData.slug || currentSlug}-copy`;
+        copy.slug = `${sourceSlug}-copy`;
         currentData = copy;
-        currentSlug = copy.slug;
+        creatingDocument = true;
+        currentSlug = "";
         blocks = structuredClone(blocks);
-        fillFields(); renderBlocks(); renderPreview(); markDirty();
+        fillFields(); renderBlocks(); renderPreview(); renderDocList(); markDirty();
       };
 
       const deleteDoc = async () => {
@@ -1570,7 +1584,6 @@ import '../styles/global.css'
         currentData.title = `Untitled ${driveSubject} Note`;
         currentData.slug = `untitled-${driveSubject.toLowerCase()}-note`;
         currentData.summary = `New note for ${noteSubjects[driveSubject]}.`;
-        currentSlug = currentData.slug;
         fillFields();
         renderPreview();
         setStudioMode("surface");
