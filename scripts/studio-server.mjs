@@ -746,11 +746,9 @@ app.get('/api/docs/:collection/:slug', async (req, res) => {
   }
 })
 
-app.post('/api/docs/:collection/:slug', async (req, res) => {
+const saveDocument = async (req, res, { creatingDocument, oldSlug = '' }) => {
   try {
     const collectionName = req.params.collection
-    const oldSlug = req.params.slug
-    const creatingDocument = req.body?.create === true || oldSlug === '__new__'
     const collection = getCollection(collectionName)
 
     await fs.mkdir(collection.folder, { recursive: true })
@@ -758,8 +756,8 @@ app.post('/api/docs/:collection/:slug', async (req, res) => {
     const inputData = req.body.data || {}
     const blocks = Array.isArray(req.body.blocks) ? req.body.blocks : []
 
-    const titleValue = inputData.title || inputData.name || oldSlug
-    const requestedSlug = slugify(inputData.slug || titleValue || oldSlug)
+    const titleValue = inputData.title || inputData.name || oldSlug || 'untitled'
+    const requestedSlug = slugify(inputData.slug || titleValue || oldSlug || 'untitled')
 
     if (!requestedSlug) {
       throw new Error('Slug cannot be empty.')
@@ -777,6 +775,10 @@ app.post('/api/docs/:collection/:slug', async (req, res) => {
 
     const newFilePath = path.join(collection.folder, `${finalSlug}.md`)
     const oldFilePath = creatingDocument ? '' : path.join(collection.folder, `${oldSlug}.md`)
+
+    if (!creatingDocument) {
+      await fs.access(oldFilePath)
+    }
 
     await fs.writeFile(newFilePath, output, 'utf8')
     queueForPublish(newFilePath)
@@ -813,6 +815,26 @@ app.post('/api/docs/:collection/:slug', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
+}
+
+// Creating and updating deliberately use different endpoints and HTTP methods.
+// A create request can therefore never target (or overwrite) an existing file.
+app.post('/api/docs/:collection', async (req, res) => {
+  await saveDocument(req, res, { creatingDocument: true })
+})
+
+app.put('/api/docs/:collection/:slug', async (req, res) => {
+  await saveDocument(req, res, {
+    creatingDocument: false,
+    oldSlug: req.params.slug,
+  })
+})
+
+// Fail safely if a cached copy of the old Studio tries the ambiguous endpoint.
+app.post('/api/docs/:collection/:slug', (_req, res) => {
+  res.status(409).json({
+    error: 'Studio was updated to protect existing documents. Refresh the page, then save again.',
+  })
 })
 
 app.post('/api/upload', upload.single('file'), (req, res) => {

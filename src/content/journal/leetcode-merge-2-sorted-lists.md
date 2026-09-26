@@ -1,11 +1,11 @@
 ---
-title: "LeetCode - Remove Element\_  "
-slug: untitled-journal-entry
+title: 'LeetCode - Merge 2 Sorted Lists'
+slug: leetcode-merge-2-sorted-lists
 order: 999
-date: '2026-09-25'
+date: '2026-09-24'
 mood: Writing
 category: Progress
-summary: "2 Pointer method\_"
+summary: ''
 tags: []
 lesson: ''
 linkedinUrl: ''

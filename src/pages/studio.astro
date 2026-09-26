@@ -73,6 +73,7 @@ import '../styles/global.css'
 
         <button
           id="new-doc"
+          type="button"
           class="mb-5 w-full rounded-xl border border-white/10 bg-[#111111] px-4 py-3 text-left font-mono text-xs uppercase tracking-widest text-[#c9ff5f] transition hover:border-[#c9ff5f]/60"
         >
           + New document
@@ -572,6 +573,7 @@ import '../styles/global.css'
       let docs = [];
       let currentSlug = "";
       let creatingDocument = false;
+      let loadedDocumentSlug = "";
       let currentData = {};
       let blocks = [];
       let isDirty = false;
@@ -717,6 +719,7 @@ import '../styles/global.css'
         const doc = await request(`${API}/docs/${collection}/${slug}`);
 
         creatingDocument = false;
+        loadedDocumentSlug = slug;
         currentSlug = slug;
         currentData = doc.data;
         blocks = doc.blocks;
@@ -733,6 +736,7 @@ import '../styles/global.css'
       const newDoc = () => {
         currentData = structuredClone(config().defaults);
         creatingDocument = true;
+        loadedDocumentSlug = "";
         currentSlug = "";
         blocks = [{ type: "paragraph", text: "" }];
 
@@ -1432,21 +1436,26 @@ import '../styles/global.css'
         try {
           setSaveState("dirty", "SAVING...");
           collectFields();
-          const saveTarget = creatingDocument ? "__new__" : currentSlug;
+          // The immutable loaded slug decides whether this is a create or update.
+          // Editable title/slug fields can never turn a new draft into an overwrite.
+          const isCreating = !loadedDocumentSlug;
+          const saveUrl = isCreating
+            ? `${API}/docs/${collection}`
+            : `${API}/docs/${collection}/${loadedDocumentSlug}`;
 
-          const result = await request(`${API}/docs/${collection}/${saveTarget}`, {
-            method: "POST",
+          const result = await request(saveUrl, {
+            method: isCreating ? "POST" : "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               data: currentData,
               blocks,
-              create: creatingDocument,
             }),
           });
 
           currentSlug = result.slug;
+          loadedDocumentSlug = result.slug;
           creatingDocument = false;
           savedLocally = true;
           saveStudioView();
@@ -1481,17 +1490,18 @@ import '../styles/global.css'
         copy.slug = `${sourceSlug}-copy`;
         currentData = copy;
         creatingDocument = true;
+        loadedDocumentSlug = "";
         currentSlug = "";
         blocks = structuredClone(blocks);
         fillFields(); renderBlocks(); renderPreview(); renderDocList(); markDirty();
       };
 
       const deleteDoc = async () => {
-        if (!currentSlug || currentSlug.startsWith("untitled")) return;
+        if (!loadedDocumentSlug) return;
         if (!confirm(`Delete ${displayTitle(currentData)}? This cannot be undone.`)) return;
         let deletedLocally = false;
         try {
-          await request(`${API}/docs/${collection}/${currentSlug}`, { method: "DELETE" });
+          await request(`${API}/docs/${collection}/${loadedDocumentSlug}`, { method: "DELETE" });
           deletedLocally = true;
           setSaveState("publishing", "PUBLISHING...");
           await request(`${API}/publish`, {
@@ -1523,7 +1533,11 @@ import '../styles/global.css'
         saveStudioView();
       };
 
-      $("new-doc").addEventListener("click", newDoc);
+      $("new-doc").addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        newDoc();
+      });
       $("save-doc").addEventListener("click", saveDoc);
       $("duplicate-doc").addEventListener("click", duplicateDoc);
       $("delete-doc").addEventListener("click", deleteDoc);
