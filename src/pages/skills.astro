@@ -10,7 +10,7 @@ const focus = stored.length ? stored.sort((a,b)=>a.data.order-b.data.order).map(
  {name:'Security Scripting',category:'Automation',level:'Learning',status:'In progress',description:'Small Python utilities for decoding, inspection, and repeatable security tasks.',tools:['Python','Shell','Git'],evidence:['Challenge scripts','Lab helpers']},
 ]
 ---
-<Layout title="Skills — Yaohan"><main class="section-page skills-page"><Navbar current="Skills" />
-  <header class="skills-hero"><div><p class="collection-kicker">CAPABILITY MATRIX / LIVE DOCUMENT</p><h1>Skills<br/><span>in progress.</span></h1></div><p>A truthful map of what I have used, what I can explain, and what still needs deliberate practice. Evidence matters more than labels.</p></header>
+<Layout title="Technical Skills — Yaohan"><main class="section-page skills-page"><Navbar current="Skills" />
+  <header class="skills-hero"><div><p class="collection-kicker">TECHNICAL COMPETENCIES / EVIDENCE-BASED</p><h1>Technical<br/><span>skills.</span></h1></div><p>Skills organised by discipline, with honest proficiency levels, tools used, and evidence from practical work. Evidence matters more than labels.</p></header>
   <section class="skill-matrix">{focus.map((skill,index)=><article class="skill-record"><div class="skill-code">CAP-{String(index+1).padStart(2,'0')}<span>{skill.status}</span></div><div class="skill-title"><small>{skill.category}</small><h2>{skill.name}</h2><p>{skill.description}</p></div><div class="skill-level"><span>{skill.level}</span><div><i></i><i></i><i></i><i></i><i></i></div></div><div class="skill-tools">{skill.tools.map(tool=><span>{tool}</span>)}</div><div class="skill-evidence">{skill.evidence.map(item=><p>↳ {item}</p>)}</div></article>)}</section>
 </main></Layout>

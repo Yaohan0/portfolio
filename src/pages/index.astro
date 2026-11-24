@@ -20,15 +20,15 @@ const profile = profileEntries[0]?.data ?? {
 const presence = profile.status.toLowerCase()
 
 const records = [
-  { no: '01', key: 'labs', title: 'Labs', href: '/labs', type: 'PRACTICAL WORK', desc: 'Hands-on ethical hacking, networking, cloud, Linux, and digital forensics work.' },
-  { no: '02', key: 'achievements', title: 'Achievements', href: '/achievements', type: 'MILESTONES', desc: 'Certifications, awards, competitions, school milestones, and completed goals.' },
-  { no: '03', key: 'skills', title: 'Skills', href: '/skills', type: 'TECHNICAL TOOLKIT', desc: 'The tools, techniques, topics, and working knowledge I am actively developing.' },
+  { no: '01', key: 'skills', title: 'Technical Skills', href: '/skills', type: 'CAPABILITY MATRIX', desc: 'Cybersecurity, forensics, networking, systems, scripting, and the tools I have used in practical work.' },
+  { no: '02', key: 'labs', title: 'Technical Work', href: '/labs', type: 'PROJECTS & CASE STUDIES', desc: 'Hands-on work showing the objective, tools, process, evidence, challenges, and outcomes behind each task.' },
+  { no: '03', key: 'achievements', title: 'Credentials & Milestones', href: '/achievements', type: 'CERTIFICATIONS & AWARDS', desc: 'Verified certifications, competitions, academic recognition, and other evidence of consistent progress.' },
 ]
 const focusAreas = [
-  { title: 'Ethical hacking', items: ['Web exploitation', 'Enumeration', 'CTF problem-solving'] },
+  { title: 'Cybersecurity', items: ['Ethical hacking', 'Vulnerability analysis', 'CTF problem-solving'] },
   { title: 'Digital forensics', items: ['Evidence handling', 'File analysis', 'Steganography'] },
-  { title: 'Networking', items: ['VLANs', 'EtherChannel', 'Server administration'] },
-  { title: 'Working habits', items: ['Documentation', 'Reflection', 'Communication'] },
+  { title: 'Networking & systems', items: ['TCP/IP and VLANs', 'Cisco infrastructure', 'Linux and Windows'] },
+  { title: 'Tools & workflow', items: ['Wireshark and Packet Tracer', 'Git and GitHub', 'Technical documentation'] },
 ]
 ---
 
@@ -55,16 +55,17 @@ const focusAreas = [
         <p class="profile-handle typing-line" data-copy="Hi, I’m Yaooohann."><span>Hi, I’m {profile.name}.</span></p>
         <h1 id="hero-title">{profile.name}<em aria-hidden="true">/</em></h1>
         <p class="profile-role">{profile.role}</p>
-        <p class="profile-intro">Year 2 Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic, focused on ethical hacking, digital forensics, networking and server security. This is where I document the practical work, mistakes and progress behind what I learn.</p>
+        <p class="profile-intro">Year 2 Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic with hands-on experience in ethical hacking, digital forensics, networking, Linux and server security. I am seeking opportunities to apply these skills, learn from experienced teams, and contribute to meaningful IT and cybersecurity work.</p>
         <div class="profile-facts" aria-label="Current profile highlights">
           <span>Temasek Polytechnic</span>
           <span>Cybersecurity &amp; Forensics</span>
           <span>TP Kayak Racing</span>
         </div>
         <div class="profile-actions">
-          <a class="profile-primary" href="#records">Explore my work <span aria-hidden="true">↘</span></a>
-          <a href={withBase('/achievements')}>Milestones <span aria-hidden="true">↗</span></a>
+          <a class="profile-primary" href="#records">View portfolio <span aria-hidden="true">↘</span></a>
+          <a href={withBase('/skills')}>Technical skills <span aria-hidden="true">↗</span></a>
           <a href="https://www.linkedin.com/in/yaohan-wang-a22951363/" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+          <a href="https://github.com/Yaohan0" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
         </div>
         <p class="profile-status-message">
           <span class:list={['profile-presence', presence]} aria-hidden="true"><i></i></span>
@@ -189,22 +190,26 @@ const focusAreas = [
     </section>
 
     <section class="reference-story">
-      <h2>My story<span>.</span></h2>
+      <h2>Professional profile<span>.</span></h2>
       <div>
-        <p>I’m a Year 2 Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic. I started this portfolio to keep a clear record of the work behind the grades—setups, mistakes, evidence, findings and improvements.</p>
-        <p>Most of my learning happens through practical labs, CTF challenges and documenting what I find. The goal is simple: understand systems properly, explain them clearly, and get better with every attempt.</p>
-        <p>I’m currently exploring ethical hacking, digital forensics, networking, Linux and server security.</p>
+        <p>I’m a Year 2 Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic who enjoys understanding how systems work, identifying weaknesses, and documenting practical solutions clearly.</p>
+        <p>My experience comes from academic projects, personal lab environments, CTF challenges, network configuration, security testing, and structured technical documentation. Each record focuses on what I personally did and what I learned from it.</p>
+        <p>My career objective is to grow into a dependable cybersecurity professional who can investigate problems carefully, communicate findings clearly, and contribute effectively within a technical team.</p>
       </div>
     </section>
 
     <section class="reference-focus">
-      <h2>Current focus<span>.</span></h2>
+      <h2>Technical competencies<span>.</span></h2>
       <div>{focusAreas.map((area) => <section><h3>{area.title}</h3>{area.items.map((item) => <p>{item}</p>)}</section>)}</div>
     </section>
 
     <footer class="portfolio-footer">
-      <p class="footer-mark">YH.</p><h2>Let’s talk.</h2><p>Open to conversations about cybersecurity, student projects, CTFs, and opportunities to learn by building.</p>
-      <a class="footer-email" href="mailto:2503587D@student.tp.edu.sg">2503587D@student.tp.edu.sg ↗</a>
+      <p class="footer-mark">YH.</p><h2>Let’s talk.</h2><p>Open to internship opportunities, technical collaborations, and conversations about cybersecurity, digital forensics, networking, and practical IT work.</p>
+      <div class="footer-links">
+        <a class="footer-email" href="mailto:2503587D@student.tp.edu.sg">Email ↗</a>
+        <a class="footer-email" href="https://www.linkedin.com/in/yaohan-wang-a22951363/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+        <a class="footer-email" href="https://github.com/Yaohan0" target="_blank" rel="noreferrer">GitHub ↗</a>
+      </div>
       <div class="footer-bottom"><span>© 2026 Yaohan</span><span>Temasek Polytechnic · Singapore</span><span>Built with care</span></div>
     </footer>
   </main>

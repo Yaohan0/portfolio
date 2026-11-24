@@ -3,15 +3,15 @@ import { base, withBase } from '../utils/paths'
 interface Props { current?: string; theme?: 'dark' | 'light' }
 const { current = 'Home' } = Astro.props
 const links = [
-  { label: 'Home', href: base },
-  { label: 'Labs', href: withBase('labs') },
-  { label: 'Achievements', href: withBase('achievements') },
-  { label: 'Skills', href: withBase('skills') },
+  { label: 'Home', href: base, activeFor: 'Home' },
+  { label: 'Technical Skills', href: withBase('skills'), activeFor: 'Skills' },
+  { label: 'Technical Work', href: withBase('labs'), activeFor: 'Labs' },
+  { label: 'Credentials', href: withBase('achievements'), activeFor: 'Achievements' },
 ]
 ---
 <header class="site-nav">
   <nav><a href={base} class="site-brand" aria-label="Yaohan home">YH.</a>
-    <div class="nav-links" id="primary-nav">{links.map((link) => <a href={link.href} class:list={[{ active: link.label === current }]}>{link.label}</a>)}</div>
+    <div class="nav-links" id="primary-nav">{links.map((link) => <a href={link.href} class:list={[{ active: link.activeFor === current }]}>{link.label}</a>)}</div>
     <a class="nav-contact" href="mailto:2503587D@student.tp.edu.sg">CONTACT ↗</a>
   </nav>
 </header>
