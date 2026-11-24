@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css'
 import '../styles/profile-and-hobbies.css'
-import '../styles/minecraft-loader.css'
 import '../styles/home-motion.css'
 import '../styles/collection-refine.css'
 import { ClientRouter } from 'astro:transitions'
@@ -14,7 +13,7 @@ interface Props {
 
 const {
   title = 'Yaohan — Field Archive',
-  description = 'A personal cybersecurity archive for labs, CTF writeups, forensics notes, achievements, and learning documentation.',
+  description = 'Yaohan Wang’s cybersecurity portfolio featuring practical labs, technical skills, achievements, and hands-on learning.',
 } = Astro.props
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
 const socialImage = new URL(withBase('og.png'), Astro.site ?? Astro.url.origin)

@@ -20,17 +20,10 @@ const profile = profileEntries[0]?.data ?? {
 const presence = profile.status.toLowerCase()
 
 const records = [
-  { no: '01', key: 'logbook', title: 'Journal', href: '/journal', type: 'FIELD NOTES', desc: 'Updates, reflections, milestones, and selected posts from what I am learning and building.' },
-  { no: '02', key: 'notes', title: 'Notes', href: '/notes', type: 'CLASS LIBRARY', desc: 'The working home for everything I capture in class, organised by subject and folder.' },
-  { no: '03', key: 'labs', title: 'Labs', href: '/labs', type: 'PRACTICE', desc: 'Hands-on ethical hacking, networking, cloud, Linux, and digital forensics work.' },
-  { no: '04', key: 'projects', title: 'Projects', href: '/projects', type: 'BUILDS', desc: 'Things I have designed and built, with the decisions, stack, outcome, and next iteration kept together.' },
-  { no: '05', key: 'writeups', title: 'Writeups', href: '/writeups', type: 'SOLVED RECORDS', desc: 'Finished challenges and technical explanations, documented so the method matters as much as the result.' },
-  { no: '06', key: 'achievements', title: 'Achievements', href: '/achievements', type: 'MILESTONES', desc: 'Certifications, awards, competitions, school milestones, and completed goals.' },
-  { no: '07', key: 'skills', title: 'Skills', href: '/skills', type: 'TOOLKIT', desc: 'A living tracker of tools, techniques, topics, and what I am currently learning.' },
-  { no: '08', key: 'archive', title: 'Archive', href: '/archive', type: 'STORAGE', desc: 'Older exports, references, experiments, media, and anything kept outside active class notes.' },
+  { no: '01', key: 'labs', title: 'Labs', href: '/labs', type: 'PRACTICAL WORK', desc: 'Hands-on ethical hacking, networking, cloud, Linux, and digital forensics work.' },
+  { no: '02', key: 'achievements', title: 'Achievements', href: '/achievements', type: 'MILESTONES', desc: 'Certifications, awards, competitions, school milestones, and completed goals.' },
+  { no: '03', key: 'skills', title: 'Skills', href: '/skills', type: 'TECHNICAL TOOLKIT', desc: 'The tools, techniques, topics, and working knowledge I am actively developing.' },
 ]
-const projectRecords = records.filter((record) => record.title !== 'Archive')
-const secondaryRecords = records.filter((record) => record.title === 'Archive')
 const focusAreas = [
   { title: 'Ethical hacking', items: ['Web exploitation', 'Enumeration', 'CTF problem-solving'] },
   { title: 'Digital forensics', items: ['Evidence handling', 'File analysis', 'Steganography'] },
@@ -40,29 +33,6 @@ const focusAreas = [
 ---
 
 <Layout title="Yaohan — Cybersecurity Portfolio">
-  <div class="entry-loader world-entry" data-entry-loader data-state="loading" role="dialog" aria-modal="true" aria-labelledby="entry-title">
-    <div class="world-entry__texture" aria-hidden="true"></div>
-    <header class="world-entry__header">
-      <div><strong>YH</strong></div>
-      <p>Singapore · World 2026</p>
-    </header>
-
-    <section class="world-entry__generator">
-      <h1 id="entry-title" class="sr-only">Loading Yaohan’s portfolio world</h1>
-      <div class="world-entry__percentage" aria-live="polite"><span data-loader-count>0</span>%</div>
-      <div class="world-entry__map" data-world-map>
-        <canvas width="288" height="288" data-world-canvas aria-hidden="true"></canvas>
-        <span class="world-entry__scan" aria-hidden="true"></span>
-      </div>
-      <p class="world-entry__status" data-loader-status>Preparing spawn area...</p>
-      <button class="world-entry__enter" type="button" data-loader-enter disabled>
-        <span>Enter World</span><i aria-hidden="true">›</i>
-      </button>
-    </section>
-
-  </div>
-  <noscript><style>.entry-loader{display:none!important}</style></noscript>
-
   <main class="portfolio-shell home-clean">
     <Navbar current="Home" />
 
@@ -191,16 +161,16 @@ const focusAreas = [
               started = true;
               setTimeout(typeNext, 220);
             };
-            window.addEventListener('portfolio:entered', startTyping, { once: true });
+            startTyping();
           }
         }
       })();
     </script>
 
     <section id="records" class="reference-projects">
-      <h2>Some projects<span>.</span></h2>
+      <h2>Selected work<span>.</span></h2>
       <div class="reference-project-grid">
-        {projectRecords.map((record, index) => (
+        {records.map((record, index) => (
           <a class={`reference-project-card project-${index + 1}`} data-project={record.key} href={withBase(record.href)}>
             <div class="project-preview" aria-hidden="true">
               <span>{record.no}</span>
@@ -215,7 +185,6 @@ const focusAreas = [
             <div class="project-card-copy"><h3>{record.title}</h3><p>{record.desc}</p><div><span>{record.type}</span><span>2026</span></div></div>
           </a>
         ))}
-        {secondaryRecords.map((record) => <a class="reference-project-wide" href={withBase(record.href)}><div class="archive-symbol" aria-hidden="true"><i></i><i></i><i></i></div><div><strong>{record.title}</strong><p>{record.desc}</p></div><span>OPEN {record.title.toUpperCase()} ↗</span></a>)}
       </div>
     </section>
 
@@ -240,154 +209,4 @@ const focusAreas = [
     </footer>
   </main>
 
-  <script is:inline data-astro-rerun>
-    (() => {
-      const loader = document.querySelector('[data-entry-loader]');
-      if (!loader) return;
-
-      const entrySessionKey = 'yh.world.entered';
-      let hasEnteredThisSession = false;
-      try {
-        hasEnteredThisSession = sessionStorage.getItem(entrySessionKey) === 'true';
-      } catch {}
-
-      if (hasEnteredThisSession) {
-        loader.remove();
-        document.documentElement.classList.remove('entry-is-loading');
-        window.setTimeout(() => window.dispatchEvent(new CustomEvent('portfolio:entered')), 0);
-        return;
-      }
-
-      const enter = loader.querySelector('[data-loader-enter]');
-      const count = loader.querySelector('[data-loader-count]');
-      const status = loader.querySelector('[data-loader-status]');
-      const canvas = loader.querySelector('[data-world-canvas]');
-      const map = loader.querySelector('[data-world-map]');
-      const context = canvas?.getContext('2d', { alpha: false });
-      const page = document.querySelector('main');
-      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      let progress = 0;
-      let ready = false;
-      let departed = false;
-      let frame;
-      let lastDrawnProgress = -1;
-      const startedAt = performance.now();
-      const minimumTime = reduceMotion ? 160 : 3200;
-      const gridSize = 48;
-      const cellSize = 6;
-
-      document.documentElement.classList.add('entry-is-loading');
-      page?.setAttribute('inert', '');
-
-      const noise = (x, y, salt = 0) => {
-        const value = Math.sin(x * 12.9898 + y * 78.233 + salt * 37.719) * 43758.5453;
-        return value - Math.floor(value);
-      };
-
-      const drawWorld = (value) => {
-        if (!context || value === lastDrawnProgress) return;
-        lastDrawnProgress = value;
-        context.imageSmoothingEnabled = false;
-        context.fillStyle = '#020202';
-        context.fillRect(0, 0, canvas.width, canvas.height);
-
-        const centre = Math.floor(gridSize / 2);
-        if (value === 0) return;
-        const outerRadius = Math.max(1, Math.ceil((value / 100) * (gridSize / 2 - 2)));
-        const innerRadius = Math.max(1, Math.floor(outerRadius * .55));
-        for (let y = 0; y < gridSize; y += 1) {
-          for (let x = 0; x < gridSize; x += 1) {
-            const distance = Math.max(Math.abs(x - centre), Math.abs(y - centre));
-            const raggedEdge = Math.floor(noise(x, y, 4) * 3) - 1;
-            if (distance > outerRadius + (distance >= outerRadius - 1 ? raggedEdge : 0)) continue;
-            const isInner = distance <= innerRadius + (distance >= innerRadius - 1 ? Math.floor(noise(x, y, 8) * 2) - 1 : 0);
-            context.fillStyle = isInner ? '#f4f4f4' : (noise(x, y, 12) > .68 ? '#989898' : '#adadad');
-            context.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-          }
-        }
-
-        if (innerRadius > 2) {
-          const innerSize = (innerRadius * 2 + 1) * cellSize;
-          const innerStart = (centre - innerRadius) * cellSize;
-          context.strokeStyle = '#263d80';
-          context.lineWidth = 7;
-          context.strokeRect(innerStart - 4, innerStart - 4, innerSize + 8, innerSize + 8);
-          context.strokeStyle = '#49ce20';
-          context.lineWidth = 4;
-          context.strokeRect(innerStart - 1, innerStart - 1, innerSize + 2, innerSize + 2);
-        }
-      };
-
-      const phase = (value) => {
-        if (value < 12) return 'Preparing spawn area...';
-        if (value < 34) return 'Loading terrain...';
-        if (value < 68) return 'Generating chunks...';
-        if (value < 96) return 'Lighting world...';
-        return 'World ready';
-      };
-
-      const render = (value) => {
-        progress = Math.max(progress, Math.min(100, Math.round(value)));
-        count.textContent = String(progress);
-        status.textContent = phase(progress);
-        loader.style.setProperty('--entry-progress', String(progress / 100));
-        drawWorld(progress);
-      };
-
-      const tick = (now) => {
-        if (!ready) {
-          const elapsed = Math.min(1, (now - startedAt) / minimumTime);
-          const eased = 1 - Math.pow(1 - elapsed, 2.1);
-          render(Math.min(96, eased * 96));
-          frame = requestAnimationFrame(tick);
-        }
-      };
-      render(0);
-      frame = requestAnimationFrame(tick);
-
-      const heroImage = document.querySelector('.profile-portrait');
-      const imageReady = !heroImage || heroImage.complete
-        ? Promise.resolve()
-        : new Promise((resolve) => {
-            heroImage.addEventListener('load', resolve, { once: true });
-            heroImage.addEventListener('error', resolve, { once: true });
-          });
-      const fontsReady = document.fonts?.ready ?? Promise.resolve();
-      const timeReady = new Promise((resolve) => setTimeout(resolve, minimumTime));
-
-      Promise.all([imageReady, fontsReady, timeReady]).then(() => {
-        ready = true;
-        cancelAnimationFrame(frame);
-        render(100);
-        loader.dataset.state = 'ready';
-        enter.disabled = false;
-        enter.focus({ preventScroll: true });
-      });
-
-      const leave = () => {
-        if (!ready || departed) return;
-        departed = true;
-        try { sessionStorage.setItem(entrySessionKey, 'true'); } catch {}
-        window.dispatchEvent(new CustomEvent('portfolio:enter-requested'));
-        loader.dataset.state = 'leaving';
-        map?.setAttribute('aria-hidden', 'true');
-        document.documentElement.classList.remove('entry-is-loading');
-        page?.removeAttribute('inert');
-        window.setTimeout(() => window.dispatchEvent(new CustomEvent('portfolio:entered')), reduceMotion ? 0 : 820);
-        window.setTimeout(() => loader.remove(), reduceMotion ? 0 : 1300);
-      };
-
-      enter.addEventListener('click', leave);
-      window.addEventListener('keydown', (event) => {
-        if (ready && (event.key === 'Enter' || event.key === ' ')) {
-          event.preventDefault();
-          leave();
-        }
-      });
-
-      window.addEventListener('pageshow', (event) => {
-        if (event.persisted && departed) loader.remove();
-      });
-    })();
-  </script>
 </Layout>
