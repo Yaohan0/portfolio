@@ -17,18 +17,30 @@ const profile = profileEntries[0]?.data ?? {
   statusMessage: 'Learning, training and building.',
   cover: '/profile/yaohan-kayak-hero.png',
 }
-const presence = profile.status.toLowerCase()
+const caseStudies = (await getCollection('labs', ({ data }) =>
+  data.type === 'Academic project' && data.status.trim().toLowerCase() === 'completed',
+)).sort((a, b) => a.data.order - b.data.order)
 
-const records = [
-  { no: '01', key: 'skills', title: 'Technical Skills', href: '/skills', type: 'CAPABILITY MATRIX', desc: 'Cybersecurity, forensics, networking, systems, scripting, and the tools I have used in practical work.' },
-  { no: '02', key: 'labs', title: 'Technical Work', href: '/labs', type: 'PROJECTS & CASE STUDIES', desc: 'Hands-on work showing the objective, tools, process, evidence, challenges, and outcomes behind each task.' },
-  { no: '03', key: 'achievements', title: 'Credentials & Milestones', href: '/achievements', type: 'CERTIFICATIONS & AWARDS', desc: 'Verified certifications, competitions, academic recognition, and other evidence of consistent progress.' },
-]
-const focusAreas = [
-  { title: 'Cybersecurity', items: ['Ethical hacking', 'Vulnerability analysis', 'CTF problem-solving'] },
-  { title: 'Digital forensics', items: ['Evidence handling', 'File analysis', 'Steganography'] },
-  { title: 'Networking & systems', items: ['TCP/IP and VLANs', 'Cisco infrastructure', 'Linux and Windows'] },
-  { title: 'Tools & workflow', items: ['Wireshark and Packet Tracer', 'Git and GitHub', 'Technical documentation'] },
+const experiences = [
+  {
+    id: 'kayak-racing',
+    title: 'TP Kayak Racing',
+    strength: 'Teamwork and feedback',
+    description: 'In a four-person K4 crew, I adjusted my stroke timing based on feedback and worked with teammates to keep a consistent pace. I represented Temasek Polytechnic at POL-ITE, ITCC and Pesta Sukan.',
+    link: { href: withBase('achievements/outstanding-sports-team'), label: 'Outstanding Sports Team Award' },
+  },
+  {
+    id: 'ncc-sea',
+    title: 'NCC Sea Staff Sergeant',
+    strength: 'Initiative and leadership',
+    description: 'I trained junior cadets in naval knowledge and ropework. When cadets needed more practice, I broke techniques into smaller steps, demonstrated them and adjusted my feedback to help them prepare for unit activities.',
+  },
+  {
+    id: 'ctf-competition',
+    title: 'SieberrsecCTF 7.0',
+    strength: 'Analysis under pressure',
+    description: 'My team placed first in the Pre-University category. We divided the challenges, shared findings and checked uncertain solutions before submission. I changed my approach when the evidence pointed in a different direction.',
+  },
 ]
 ---
 
@@ -52,26 +64,16 @@ const focusAreas = [
       </div>
 
       <div class="profile-copy">
-        <p class="profile-handle typing-line" data-copy="Hi, I’m Yaooohann."><span>Hi, I’m {profile.name}.</span></p>
+        <p class="profile-handle">Temasek Polytechnic · Singapore</p>
         <h1 id="hero-title">{profile.name}<em aria-hidden="true">/</em></h1>
         <p class="profile-role">{profile.role}</p>
-        <p class="profile-intro">Year 2 Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic with hands-on experience in ethical hacking, digital forensics, networking, Linux and server security. I am seeking opportunities to apply these skills, learn from experienced teams, and contribute to meaningful IT and cybersecurity work.</p>
-        <div class="profile-facts" aria-label="Current profile highlights">
-          <span>Temasek Polytechnic</span>
-          <span>Cybersecurity &amp; Forensics</span>
-          <span>TP Kayak Racing</span>
-        </div>
+        <p class="profile-intro">My coursework spans Windows security hardening, enterprise networking and Power BI reporting. I’m looking for an IT security internship where I can apply that foundation to endpoint security, network infrastructure and security reporting.</p>
         <div class="profile-actions">
-          <a class="profile-primary" href="#records">View portfolio <span aria-hidden="true">↘</span></a>
-          <a href={withBase('/skills')}>Technical skills <span aria-hidden="true">↗</span></a>
+          <a class="profile-primary" href="#records">Technical work <span aria-hidden="true">↘</span></a>
+          <a href="#experience">Teamwork &amp; leadership <span aria-hidden="true">↘</span></a>
           <a href="https://www.linkedin.com/in/yaohan-wang-a22951363/" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
           <a href="https://github.com/Yaohan0" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
         </div>
-        <p class="profile-status-message">
-          <span class:list={['profile-presence', presence]} aria-hidden="true"><i></i></span>
-          <strong>{profile.status}</strong>
-          <span>{profile.statusMessage}</span>
-        </p>
       </div>
 
       <figure class="profile-visual">
@@ -126,81 +128,36 @@ const focusAreas = [
           })
           .catch(() => { tempNode.textContent = 'Weather unavailable'; });
 
-        const typingLine = hero.querySelector('.typing-line');
-        if (typingLine) {
-          const output = typingLine.querySelector('span');
-          const phrases = ['Hi, I’m Yaohan.', 'Hi, I’m Yaooohann.'];
-          if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            output.textContent = phrases[0];
-          } else {
-            let phraseIndex = 0;
-            let characterIndex = 0;
-            let deleting = false;
-            let started = false;
-            output.textContent = '';
-            const typeNext = () => {
-              const phrase = phrases[phraseIndex];
-              typingLine.classList.add('is-typing');
-              characterIndex += deleting ? -1 : 1;
-              output.textContent = phrase.slice(0, Math.max(0, characterIndex));
-              if (!deleting && characterIndex === phrase.length) {
-                typingLine.classList.remove('is-typing');
-                deleting = true;
-                setTimeout(typeNext, 1300);
-                return;
-              }
-              if (deleting && characterIndex === 0) {
-                deleting = false;
-                phraseIndex = (phraseIndex + 1) % phrases.length;
-                setTimeout(typeNext, 320);
-                return;
-              }
-              setTimeout(typeNext, deleting ? 34 : 52 + Math.random() * 34);
-            };
-            const startTyping = () => {
-              if (started) return;
-              started = true;
-              setTimeout(typeNext, 220);
-            };
-            startTyping();
-          }
-        }
       })();
     </script>
 
-    <section id="records" class="reference-projects">
-      <h2>Selected work<span>.</span></h2>
-      <div class="reference-project-grid">
-        {records.map((record, index) => (
-          <a class={`reference-project-card project-${index + 1}`} data-project={record.key} href={withBase(record.href)}>
-            <div class="project-preview" aria-hidden="true">
-              <span>{record.no}</span>
-              {record.key === 'logbook' && <div class="project-symbol symbol-logbook"><i></i><i></i><i></i><b></b></div>}
-              {record.key === 'notes' && <div class="project-symbol symbol-notes"><i></i><i></i><i></i></div>}
-              {record.key === 'labs' && <div class="project-symbol symbol-labs"><b></b><i></i><i></i><i></i></div>}
-              {record.key === 'projects' && <div class="project-symbol symbol-projects"><b></b><i></i><i></i><i></i></div>}
-              {record.key === 'writeups' && <div class="project-symbol symbol-writeups"><b>&gt;_</b><i></i><i></i></div>}
-              {record.key === 'achievements' && <div class="project-symbol symbol-achievements"><b></b>{Array.from({ length: 8 }).map(() => <i></i>)}</div>}
-              {record.key === 'skills' && <div class="project-symbol symbol-skills"><b></b><i></i><i></i><i></i><i></i></div>}
-            </div>
-            <div class="project-card-copy"><h3>{record.title}</h3><p>{record.desc}</p><div><span>{record.type}</span><span>2026</span></div></div>
+    <section id="records" class="reference-projects interview-section" aria-labelledby="work-title">
+      <h2 id="work-title">Selected technical work<span>.</span></h2>
+      <div class="reference-project-grid interview-grid">
+        {caseStudies.map(({ data }) => (
+          <a class="reference-project-card interview-card" href={withBase(`labs/${data.slug}/`)}>
+            <h3>{data.title}</h3>
+            <p>{data.description}</p>
+            <span class="interview-card-link">View case study <span aria-hidden="true">↗</span></span>
           </a>
         ))}
       </div>
+      <a class="interview-section-link" href={withBase('skills/')}>View technical skills <span aria-hidden="true">↗</span></a>
     </section>
 
-    <section class="reference-story">
-      <h2>Professional profile<span>.</span></h2>
-      <div>
-        <p>I’m a Year 2 Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic who enjoys understanding how systems work, identifying weaknesses, and documenting practical solutions clearly.</p>
-        <p>My experience comes from academic projects, personal lab environments, CTF challenges, network configuration, security testing, and structured technical documentation. Each record focuses on what I personally did and what I learned from it.</p>
-        <p>My career objective is to grow into a dependable cybersecurity professional who can investigate problems carefully, communicate findings clearly, and contribute effectively within a technical team.</p>
+    <section id="experience" class="reference-projects interview-section" aria-labelledby="experience-title">
+      <h2 id="experience-title">Teamwork &amp; leadership<span>.</span></h2>
+      <div class="reference-project-grid interview-grid">
+        {experiences.map((experience) => (
+          <article class="interview-card" id={experience.id}>
+            <span class="experience-strength">{experience.strength}</span>
+            <h3>{experience.title}</h3>
+            <p>{experience.description}</p>
+            {experience.link && <a class="interview-card-link" href={experience.link.href}>{experience.link.label} <span aria-hidden="true">↗</span></a>}
+          </article>
+        ))}
       </div>
-    </section>
-
-    <section class="reference-focus">
-      <h2>Technical competencies<span>.</span></h2>
-      <div>{focusAreas.map((area) => <section><h3>{area.title}</h3>{area.items.map((item) => <p>{item}</p>)}</section>)}</div>
+      <a class="interview-section-link" href={withBase('achievements/')}>View credentials &amp; awards <span aria-hidden="true">↗</span></a>
     </section>
 
     <footer class="portfolio-footer">
@@ -215,3 +172,34 @@ const focusAreas = [
   </main>
 
 </Layout>
+
+<style>
+  .interview-section {
+    padding-block: clamp(44px, 6vw, 80px);
+    scroll-margin-top: 100px;
+  }
+  .interview-section + .interview-section { border-top: 1px solid #29292c; }
+  .interview-grid { gap: 16px; }
+  @media (min-width: 901px) {
+    .interview-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  .interview-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: clamp(20px, 3vw, 30px);
+    border: 1px solid #303036;
+    background: #101014;
+    scroll-margin-top: 100px;
+  }
+  .interview-card h3 { color: #f3efe4; font-size: 1.28rem; line-height: 1.2; }
+  .interview-card p { color: #bdb9b4; line-height: 1.65; }
+  .experience-strength { color: #b7aca5; font-size: .85rem; }
+  .interview-card-link, .interview-section-link {
+    color: #f3efe4;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .interview-card-link { margin-top: auto; padding-top: 8px; }
+  .interview-section-link { display: inline-block; margin-top: 24px; }
+</style>

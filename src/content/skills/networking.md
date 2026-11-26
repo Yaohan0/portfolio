@@ -5,8 +5,9 @@ order: 3
 category: Infrastructure
 level: Practising
 status: Active
-description: IPv4, subnetting, VLANs, EtherChannel, ARP, and network troubleshooting.
+description: IPv4, VLAN segmentation, multi-area OSPF, DHCP relay and network troubleshooting.
 evidence:
+  - Enterprise Network Segmentation case study
   - ENNK weekly notes
   - VLAN and EtherChannel records
 tools:

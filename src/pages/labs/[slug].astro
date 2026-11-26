@@ -20,13 +20,14 @@ export async function getStaticPaths() {
 const { lab } = Astro.props
 const { Content } = await render(lab)
 
+const isCaseStudy = lab.data.type === 'Academic project'
 const hasCover = Boolean(lab.data.cover)
 const hasTools = lab.data.tools.length > 0
 const hasTopics = lab.data.topics.length > 0
 const hasFiles = lab.data.files.length > 0
 ---
 
-<Layout title={`${lab.data.title} — Labs`}>
+<Layout title={`${lab.data.title} — Technical Work`}>
   <main class="detail-page detail-lab min-h-screen bg-[#090909] text-[#f3efe4]">
     <Navbar current="Labs" />
 
@@ -37,7 +38,7 @@ const hasFiles = lab.data.files.length > 0
           href={withBase('labs')}
           class="font-mono text-xs uppercase tracking-widest text-[#6f6a63] transition hover:text-[#c9ff5f]"
         >
-          ← Back to Labs
+          ← Back to Technical Work
         </a>
 
         <div class="mt-10 flex flex-wrap gap-2">
@@ -50,7 +51,7 @@ const hasFiles = lab.data.files.length > 0
           </span>
         </div>
 
-        <h1 class="display-text neon-cream mt-8 max-w-5xl text-6xl uppercase leading-none tracking-[-0.06em] md:text-8xl">
+        <h1 class:list={['neon-cream mt-8 max-w-5xl font-bold leading-none tracking-[-0.06em]', isCaseStudy ? 'text-4xl sm:text-5xl md:text-6xl' : 'display-text text-6xl uppercase md:text-8xl']}>
           {lab.data.title}
         </h1>
 
@@ -71,11 +72,11 @@ const hasFiles = lab.data.files.length > 0
     <!-- MAIN NOTES -->
     <section class="mx-auto max-w-6xl px-6 pb-16">
       <article class="rounded-3xl border border-white/10 bg-[#0d0d0d]/90 p-8 md:p-12">
-        <p class="neon-lime font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
+        {!isCaseStudy && <p class="neon-lime font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
           Lab Notes
-        </p>
+        </p>}
 
-        <div class="mt-10 space-y-8 text-base leading-9 text-[#a9a196]
+        <div class:list={[`space-y-8 text-base leading-9 text-[#a9a196]
           [&_h2]:mt-16 [&_h2]:border-b [&_h2]:border-white/10 [&_h2]:pb-4 [&_h2]:font-serif [&_h2]:text-4xl [&_h2]:font-bold [&_h2]:tracking-[-0.04em] [&_h2]:text-[#f3efe4]
           [&_h3]:mt-12 [&_h3]:font-serif [&_h3]:text-3xl [&_h3]:font-bold [&_h3]:tracking-[-0.03em] [&_h3]:text-[#f3efe4]
           [&_p]:max-w-none [&_p]:leading-9
@@ -84,7 +85,7 @@ const hasFiles = lab.data.files.length > 0
           [&_img]:my-8 [&_img]:w-full [&_img]:rounded-2xl [&_img]:border [&_img]:border-white/10
           [&_code]:rounded-md [&_code]:border [&_code]:border-[#ead27c]/20 [&_code]:bg-[#ead27c]/10 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-sm [&_code]:text-[#ead27c]
           [&_pre]:my-8 [&_pre]:max-h-[720px] [&_pre]:overflow-auto [&_pre]:rounded-2xl [&_pre]:border [&_pre]:border-white/10 [&_pre]:bg-[#20252b] [&_pre]:p-6 [&_pre]:text-sm [&_pre]:leading-7
-          [&_pre_code]:border-0 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-[#f3efe4]">
+          [&_pre_code]:border-0 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-[#f3efe4]`, isCaseStudy ? 'case-study-copy' : 'mt-10']}>
           <Content />
         </div>
       </article>
@@ -133,7 +134,7 @@ const hasFiles = lab.data.files.length > 0
           )}
         </article>
 
-        <article class="rounded-3xl border border-white/10 bg-[#111111]/80 p-8 md:col-span-2">
+        {(hasFiles || !isCaseStudy) && <article class="rounded-3xl border border-white/10 bg-[#111111]/80 p-8 md:col-span-2">
           <p class="font-mono text-xs uppercase tracking-[0.3em] text-[#c9ff5f]">
             Attached Files
           </p>
@@ -161,7 +162,7 @@ const hasFiles = lab.data.files.length > 0
               No files attached yet.
             </p>
           )}
-        </article>
+        </article>}
       </div>
 
       <div class="mt-12 border-t border-white/10 pt-8">
@@ -169,9 +170,20 @@ const hasFiles = lab.data.files.length > 0
           href={withBase('labs')}
           class="font-mono text-xs uppercase tracking-widest text-[#6f6a63] transition hover:text-[#c9ff5f]"
         >
-          ← Back to Labs
+          ← Back to Technical Work
         </a>
       </div>
     </section>
   </main>
 </Layout>
+
+<style>
+  .case-study-copy :global(h2) {
+    margin-top: 1.5rem;
+    font-family: inherit;
+    font-size: 1.35rem;
+    letter-spacing: -.02em;
+  }
+  .case-study-copy :global(h2:first-child) { margin-top: 0; }
+  .case-study-copy :global(p) { max-width: 74ch; line-height: 1.75; }
+</style>

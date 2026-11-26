@@ -3,13 +3,53 @@ import Layout from '../layouts/Layout.astro'
 import Navbar from '../components/Navbar.astro'
 import { getCollection } from 'astro:content'
 import { withBase } from '../utils/paths'
-const labs = (await getCollection('labs')).sort((a,b) => a.data.order-b.data.order)
+const labs = (await getCollection('labs', ({ data }) => data.status.trim().toLowerCase() !== 'draft'))
+  .sort((a, b) => a.data.order - b.data.order)
 ---
 <Layout title="Technical Work — Yaohan"><main class="section-page labs-page"><Navbar current="Labs" />
-  <header class="collection-hero labs-hero"><div class="blueprint-grid"></div><div class="collection-kicker">PROJECTS / LABS / CASE STUDIES</div><h1>Technical<br/>Work<span>.</span></h1><p>Practical cybersecurity, networking, systems, and forensics work—documented through the objective, tools, process, challenges, evidence, and outcome.</p><div class="hero-counter"><strong>{String(labs.length).padStart(2,'0')}</strong><span>documented<br/>technical records</span></div></header>
-  <section class="lab-index"><div class="index-label">INDEX / SUBJECT FILES</div>{labs.map((lab,index)=><a class="lab-sheet lab-sheet-compact" href={withBase(`labs/${lab.data.slug}`)}>
-    <div class="lab-ref">LAB-{String(index+1).padStart(3,'0')}<span>{lab.data.status}</span></div>
-    {lab.data.cover ? <img src={withBase(lab.data.cover)} alt={lab.data.title} loading="lazy" /> : <div class="lab-visual"><span>{String(index+1).padStart(2,'0')}</span><i></i><i></i></div>}
-    <div class="lab-copy"><p>{lab.data.type}</p><h2>{lab.data.title}</h2><div class="tag-line">{lab.data.tools.slice(0,2).map(tool=><span>{tool}</span>)}</div></div>
-    <div class="sheet-arrow"><span>VIEW CASE</span> ↗</div></a>)}</section>
+  <header class="work-header">
+    <h1>Technical work<span>.</span></h1>
+    <p>Coursework in endpoint hardening, enterprise networking and data reporting.</p>
+  </header>
+  <section class="lab-index work-index" aria-label="Technical case studies">
+    {labs.map(({ data }) => (
+      <a class="work-row" href={withBase(`labs/${data.slug}/`)}>
+        <div>
+          <h2>{data.title}</h2>
+          <p>{data.description}</p>
+        </div>
+        <span>View case study <span aria-hidden="true">↗</span></span>
+      </a>
+    ))}
+  </section>
 </main></Layout>
+
+<style>
+  .work-header {
+    max-width: 1400px;
+    margin-inline: auto;
+    padding: 135px 32px 36px;
+  }
+  .work-header h1 {
+    color: #e4f5ff;
+    font-size: clamp(2.75rem, 8vw, 6.5rem);
+    line-height: 1;
+    letter-spacing: -.07em;
+  }
+  .work-header h1 span { color: #82dcff; }
+  .work-header p, .work-row p { margin-top: 12px; color: #a5bfca; line-height: 1.6; }
+  .work-index { padding-top: 0; }
+  .work-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px 28px;
+    flex-wrap: wrap;
+    padding: 24px 0;
+    border-top: 1px solid #294651;
+    color: #e4f5ff;
+  }
+  .work-row h2 { font-size: clamp(1.25rem, 3vw, 1.8rem); font-weight: 650; }
+  .work-row > span { color: #82dcff; text-decoration: underline; text-underline-offset: 4px; }
+  .work-row:hover h2 { color: #82dcff; }
+</style>
