@@ -2,15 +2,124 @@
 import Layout from '../layouts/Layout.astro'
 import Navbar from '../components/Navbar.astro'
 import { getCollection } from 'astro:content'
-const stored=await getCollection('skills')
-const focus = stored.length ? stored.sort((a,b)=>a.data.order-b.data.order).map(skill=>({name:skill.data.name,category:skill.data.category,level:skill.data.level,status:skill.data.status,description:skill.data.description,tools:skill.data.tools,evidence:skill.data.evidence})) : [
- {name:'Digital Forensics',category:'Investigation',level:'Developing',status:'Active',description:'Evidence handling, artifact review, steganography, logs, and structured case documentation.',tools:['Autopsy','Wireshark','Linux'],evidence:['Forensics notes','CTF evidence']},
- {name:'Ethical Hacking',category:'Offensive Security',level:'Developing',status:'Active',description:'Web testing, enumeration, SQL injection fundamentals, password attacks, and exploitation workflow.',tools:['Nmap','Hydra','Burp Suite'],evidence:['EHIP labs','Whitehacks']},
- {name:'Networking',category:'Infrastructure',level:'Practising',status:'Active',description:'IPv4, subnetting, VLANs, EtherChannel, ARP, and network troubleshooting.',tools:['Cisco IOS','Packet Tracer','Wireshark'],evidence:['ENNK notes','Lab records']},
- {name:'Security Scripting',category:'Automation',level:'Learning',status:'In progress',description:'Small Python utilities for decoding, inspection, and repeatable security tasks.',tools:['Python','Shell','Git'],evidence:['Challenge scripts','Lab helpers']},
+const skills = (await getCollection('skills')).sort((a, b) => a.data.order - b.data.order)
+const coursework = [
+  {
+    area: 'Programming & design',
+    modules: [
+      { code: 'COMT', name: 'Computational Thinking', detail: 'Python programming and problem-solving' },
+      { code: 'DSAG', name: 'Data Structures and Algorithms' },
+      { code: 'ADEV', name: 'Application Development Project' },
+      { code: 'UXID', name: 'User Experience & Interface Design' },
+    ],
+  },
+  {
+    area: 'Data & mathematics',
+    modules: [
+      { code: 'LOMA', name: 'Logic & Mathematics' },
+      { code: 'COMMA', name: 'Computing Mathematics' },
+      { code: 'DBAV', name: 'Database Application Development' },
+      { code: 'DAVA', name: 'Data Visualisation & Analytics' },
+    ],
+  },
+  {
+    area: 'Networks & systems',
+    modules: [
+      { code: 'NECT', name: 'Network & Cloud Technology' },
+      { code: 'ENNK', name: 'Enterprise Networking' },
+      { code: 'SADS', name: 'Server Administration & Security' },
+      { code: 'NWS', name: 'Network Security' },
+    ],
+  },
+  {
+    area: 'Cybersecurity & forensics',
+    modules: [
+      { code: 'CYFUN', name: 'Cyber Security Fundamentals' },
+      { code: 'FDS', name: 'Forensics in Digital Security' },
+      { code: 'EHIP', name: 'Ethical Hacking & Intrusion Prevention' },
+      { code: 'ICRM', name: 'Incident Response & Management' },
+      { code: 'SWAP', name: 'Secure Web Applications' },
+    ],
+  },
 ]
 ---
-<Layout title="Technical Skills — Yaohan"><main class="section-page skills-page"><Navbar current="Skills" />
-  <header class="skills-hero"><div><p class="collection-kicker">TECHNICAL COMPETENCIES / EVIDENCE-BASED</p><h1>Technical<br/><span>skills.</span></h1></div><p>Skills organised by discipline, with honest proficiency levels, tools used, and evidence from practical work. Evidence matters more than labels.</p></header>
-  <section class="skill-matrix">{focus.map((skill,index)=><article class="skill-record"><div class="skill-code">CAP-{String(index+1).padStart(2,'0')}<span>{skill.status}</span></div><div class="skill-title"><small>{skill.category}</small><h2>{skill.name}</h2><p>{skill.description}</p></div><div class="skill-level"><span>{skill.level}</span><div><i></i><i></i><i></i><i></i><i></i></div></div><div class="skill-tools">{skill.tools.map(tool=><span>{tool}</span>)}</div><div class="skill-evidence">{skill.evidence.map(item=><p>↳ {item}</p>)}</div></article>)}</section>
-</main></Layout>
+
+<Layout title="Technical Skills — Yaohan">
+  <main class="section-page skills-page">
+    <Navbar current="Skills" />
+    <header class="skills-hero">
+      <div><h1>Technical<br /><span>skills.</span></h1></div>
+      <p>My Temasek Polytechnic coursework spans Python, interface design, data analytics, networking, digital forensics and cybersecurity.</p>
+    </header>
+
+    <section class="coursework" aria-labelledby="coursework-title">
+      <h2 id="coursework-title">Coursework</h2>
+      <div class="coursework-grid">
+        {coursework.map(({ area, modules }) => (
+          <section class="subject-area">
+            <h3>{area}</h3>
+            <dl>
+              {modules.map(({ code, name, detail }) => (
+                <div class="subject-row">
+                  <dt>{code}</dt>
+                  <dd>{name}{detail && <small>{detail}</small>}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ))}
+      </div>
+    </section>
+
+    {skills.length > 0 && (
+      <section class="skill-matrix" aria-labelledby="practised-title">
+        <h2 id="practised-title">Skills in practice</h2>
+        {skills.map(({ data: skill }) => (
+          <article class="skill-record">
+            <div class="skill-title">
+              <small>{skill.category}</small>
+              <h3>{skill.name}</h3>
+              <p>{skill.description}</p>
+            </div>
+            <div class="skill-level"><span>{skill.level}</span></div>
+            <div class="skill-tools">{skill.tools.map((tool) => <span>{tool}</span>)}</div>
+            <div class="skill-evidence">{skill.evidence.map((item) => <p>{item}</p>)}</div>
+          </article>
+        ))}
+      </section>
+    )}
+  </main>
+</Layout>
+
+<style>
+  .coursework { max-width: 1400px; margin-inline: auto; padding: 28px clamp(20px, 4vw, 32px) 64px; }
+  .coursework > h2, .skill-matrix > h2 { margin-bottom: 24px; font-size: clamp(1.55rem, 3vw, 2.5rem); }
+  .coursework-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 370px), 1fr));
+    gap: 18px;
+  }
+  .subject-area { border: 1px solid currentColor; padding: clamp(16px, 3vw, 26px); }
+  .subject-area h3 { margin-bottom: 12px; font-size: 1.25rem; font-weight: 700; }
+  .subject-row {
+    display: grid;
+    grid-template-columns: 6ch minmax(0, 1fr);
+    gap: 14px;
+    padding-block: 10px;
+    border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    align-items: baseline;
+  }
+  .subject-row dt { font: 700 .83rem "JetBrains Mono", monospace; }
+  .subject-row small { display: block; margin-top: 3px; font-size: .85rem; }
+  .skill-matrix .skill-record {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: "title level tools evidence";
+  }
+  .skill-matrix .skill-title h3 { margin-block: 6px; font-size: 1.3rem; font-weight: 700; }
+  @media (max-width: 850px) {
+    .skill-matrix .skill-record {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "title" "level" "tools" "evidence";
+    }
+  }
+</style>

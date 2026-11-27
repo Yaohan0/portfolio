@@ -6,7 +6,7 @@ import { withBase } from '../utils/paths'
 const achievements=(await getCollection('achievements')).sort((a,b)=>a.data.order-b.data.order)
 ---
 <Layout title="Credentials & Achievements — Yaohan"><main class="section-page achievements-page"><Navbar current="Achievements" />
-  <header class="collection-hero award-hero"><p class="collection-kicker">◆ CERTIFICATIONS / AWARDS / RECOGNITION ◆</p><h1>Creden<br/><em>tials</em></h1><div class="award-intro"><p>Verified certifications, competitions, academic recognition, and milestones that demonstrate consistent work and professional development.</p><strong>{String(achievements.length).padStart(2,'0')}</strong></div></header>
+  <header class="collection-hero award-hero"><p class="collection-kicker">◆ CERTIFICATIONS / AWARDS / RECOGNITION ◆</p><h1 class="credentials-title">Credentials</h1><div class="award-intro"><p>Verified certifications, competitions, academic recognition, and milestones that demonstrate consistent work and professional development.</p><strong>{String(achievements.length).padStart(2,'0')}</strong></div></header>
   <section class="award-list">{achievements.map((item,index)=><a href={withBase(`achievements/${item.data.slug}`)} class="award-record">
     <div class="award-seal"><span>{String(index+1).padStart(2,'0')}</span></div>
     <div class="award-date">{item.data.date}<span>{item.data.type}</span></div>
@@ -14,3 +14,11 @@ const achievements=(await getCollection('achievements')).sort((a,b)=>a.data.orde
     {item.data.cover ? <img src={withBase(item.data.cover)} alt={item.data.title} loading="lazy" /> : <div class="award-monogram">YH</div>}
     <span class="award-open">VIEW RECORD ↗</span></a>)}</section>
 </main></Layout>
+
+<style>
+  .award-hero h1.credentials-title {
+    font-size: clamp(1.7rem, 10.6vw, 9rem);
+    letter-spacing: -.055em;
+    white-space: nowrap;
+  }
+</style>

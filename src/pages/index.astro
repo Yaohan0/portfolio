@@ -21,27 +21,6 @@ const caseStudies = (await getCollection('labs', ({ data }) =>
   data.type === 'Academic project' && data.status.trim().toLowerCase() === 'completed',
 )).sort((a, b) => a.data.order - b.data.order)
 
-const experiences = [
-  {
-    id: 'kayak-racing',
-    title: 'TP Kayak Racing',
-    strength: 'Teamwork and feedback',
-    description: 'In a four-person K4 crew, I adjusted my stroke timing based on feedback and worked with teammates to keep a consistent pace. I represented Temasek Polytechnic at POL-ITE, ITCC and Pesta Sukan.',
-    link: { href: withBase('achievements/outstanding-sports-team'), label: 'Outstanding Sports Team Award' },
-  },
-  {
-    id: 'ncc-sea',
-    title: 'NCC Sea Staff Sergeant',
-    strength: 'Initiative and leadership',
-    description: 'I trained junior cadets in naval knowledge and ropework. When cadets needed more practice, I broke techniques into smaller steps, demonstrated them and adjusted my feedback to help them prepare for unit activities.',
-  },
-  {
-    id: 'ctf-competition',
-    title: 'SieberrsecCTF 7.0',
-    strength: 'Analysis under pressure',
-    description: 'My team placed first in the Pre-University category. We divided the challenges, shared findings and checked uncertain solutions before submission. I changed my approach when the evidence pointed in a different direction.',
-  },
-]
 ---
 
 <Layout title="Yaohan — Cybersecurity Portfolio">
@@ -67,10 +46,10 @@ const experiences = [
         <p class="profile-handle">Temasek Polytechnic · Singapore</p>
         <h1 id="hero-title">{profile.name}<em aria-hidden="true">/</em></h1>
         <p class="profile-role">{profile.role}</p>
-        <p class="profile-intro">My coursework spans Windows security hardening, enterprise networking and Power BI reporting. I’m looking for an IT security internship where I can apply that foundation to endpoint security, network infrastructure and security reporting.</p>
+        <p class="profile-intro">I’m {profile.name}, and I study cybersecurity and digital forensics at Temasek Polytechnic. I’m curious about how networks work, how investigators piece together digital evidence, and what I can build with Python. Outside class, I train and compete with TP Kayak Racing and unwind with a few rounds of Brawl Stars.</p>
         <div class="profile-actions">
-          <a class="profile-primary" href="#records">Technical work <span aria-hidden="true">↘</span></a>
-          <a href="#experience">Teamwork &amp; leadership <span aria-hidden="true">↘</span></a>
+          <a id="experience" class="profile-primary" href={withBase('about/')}>More about me <span aria-hidden="true">↗</span></a>
+          <a href={withBase('labs/')}>Technical work <span aria-hidden="true">↗</span></a>
           <a href="https://www.linkedin.com/in/yaohan-wang-a22951363/" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
           <a href="https://github.com/Yaohan0" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
         </div>
@@ -145,21 +124,6 @@ const experiences = [
       <a class="interview-section-link" href={withBase('skills/')}>View technical skills <span aria-hidden="true">↗</span></a>
     </section>
 
-    <section id="experience" class="reference-projects interview-section" aria-labelledby="experience-title">
-      <h2 id="experience-title">Teamwork &amp; leadership<span>.</span></h2>
-      <div class="reference-project-grid interview-grid">
-        {experiences.map((experience) => (
-          <article class="interview-card" id={experience.id}>
-            <span class="experience-strength">{experience.strength}</span>
-            <h3>{experience.title}</h3>
-            <p>{experience.description}</p>
-            {experience.link && <a class="interview-card-link" href={experience.link.href}>{experience.link.label} <span aria-hidden="true">↗</span></a>}
-          </article>
-        ))}
-      </div>
-      <a class="interview-section-link" href={withBase('achievements/')}>View credentials &amp; awards <span aria-hidden="true">↗</span></a>
-    </section>
-
     <footer class="portfolio-footer">
       <p class="footer-mark">YH.</p><h2>Let’s talk.</h2><p>Open to internship opportunities, technical collaborations, and conversations about cybersecurity, digital forensics, networking, and practical IT work.</p>
       <div class="footer-links">
@@ -178,7 +142,7 @@ const experiences = [
     padding-block: clamp(44px, 6vw, 80px);
     scroll-margin-top: 100px;
   }
-  .interview-section + .interview-section { border-top: 1px solid #29292c; }
+  #experience { scroll-margin-top: 100px; }
   .interview-grid { gap: 16px; }
   @media (min-width: 901px) {
     .interview-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -194,7 +158,6 @@ const experiences = [
   }
   .interview-card h3 { color: #f3efe4; font-size: 1.28rem; line-height: 1.2; }
   .interview-card p { color: #bdb9b4; line-height: 1.65; }
-  .experience-strength { color: #b7aca5; font-size: .85rem; }
   .interview-card-link, .interview-section-link {
     color: #f3efe4;
     text-decoration: underline;

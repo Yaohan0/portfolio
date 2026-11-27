@@ -1,0 +1,71 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Navbar from '../components/Navbar.astro'
+import { withBase } from '../utils/paths'
+---
+
+<Layout title="More about me — Yaohan" description="Yaohan Wang’s interests, kayak racing, NCC Sea leadership and CTF experience.">
+  <main class="section-page about-page">
+    <Navbar current="About" />
+
+    <div class="about-content">
+      <header>
+        <h1>More about me<span>.</span></h1>
+        <p>I’m a Cybersecurity &amp; Digital Forensics student at Temasek Polytechnic. I enjoy working through problems with other people, whether I’m investigating a security challenge or trying to get four paddlers into the same rhythm.</p>
+      </header>
+
+      <div class="about-stories">
+        <section id="kayak-racing">
+          <h2>TP Kayak Racing</h2>
+          <p>In a four-person K4 crew, I adjust my stroke timing based on feedback and work with my teammates to keep a consistent pace. I’ve represented Temasek Polytechnic at POL-ITE, ITCC and Pesta Sukan.</p>
+          <a href={withBase('achievements/outstanding-sports-team/')}>Outstanding Sports Team Award <span aria-hidden="true">↗</span></a>
+        </section>
+
+        <section id="ncc-sea">
+          <h2>NCC Sea Staff Sergeant</h2>
+          <p>I trained junior cadets in naval knowledge and ropework. I broke techniques into smaller steps, demonstrated them and adapted my feedback to help each cadet prepare for unit activities.</p>
+        </section>
+
+        <section id="ctf-competition">
+          <h2>SieberrsecCTF 7.0</h2>
+          <p>My team placed first in the Pre-University category. We divided the challenges, shared findings and checked uncertain solutions before submitting. I learned to change my approach when the evidence pointed in a different direction.</p>
+        </section>
+
+        <section id="gaming">
+          <h2>Gaming</h2>
+          <p>I like playing Brawl Stars in my downtime. I enjoy trying different brawlers and figuring out how to adapt to the map and the team I’m playing with.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .about-page { background: #10100f; color: #e9e4d9; }
+  .about-content {
+    width: min(1040px, calc(100% - 40px));
+    margin-inline: auto;
+    padding-block: clamp(135px, 15vw, 180px) 92px;
+  }
+  header { margin-bottom: clamp(44px, 7vw, 82px); }
+  h1 {
+    font: 400 clamp(3.15rem, 10vw, 8rem)/.93 "Cormorant Garamond", Georgia, serif;
+    letter-spacing: -.055em;
+    margin-bottom: 24px;
+  }
+  h1 span { color: #d25b49; }
+  p { max-width: 65ch; color: #c4bcb1; line-height: 1.7; }
+  .about-stories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 28px clamp(24px, 5vw, 62px);
+  }
+  section { border-top: 1px solid #47423b; padding-top: 20px; scroll-margin-top: 110px; }
+  h2 { margin-bottom: 10px; font-size: 1.4rem; }
+  section a {
+    display: inline-block;
+    margin-top: 14px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>
